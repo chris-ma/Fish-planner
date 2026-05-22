@@ -53,9 +53,9 @@ export default async function RegionPage({ params }: { params: Promise<{ slug: s
   const allCalendarRows = await getSeasonCalendarForRegion(region.id);
   const month = currentMonth();
 
-  // Only show species that have at least one peak or good month in this region
+  // Only show species that have at least one peak month in this region
   const calendarRows = allCalendarRows.filter((row) =>
-    row.months.some((m) => m === "peak" || m === "good")
+    row.months.some((m) => m === "peak")
   );
 
   const calendarData = calendarRows.map((row) => ({
