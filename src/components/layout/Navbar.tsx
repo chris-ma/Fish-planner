@@ -10,7 +10,7 @@ export function Navbar() {
           <span className="flex items-center justify-center w-8 h-8 rounded-lg bg-ocean-500">
             <Anchor className="h-4 w-4 text-white" />
           </span>
-          <span className="font-bold text-white text-lg" style={{ fontFamily: "var(--font-sora), system-ui, sans-serif" }}>
+          <span className="font-bold text-[#F5F0E8] text-xl tracking-wide" style={{ fontFamily: "var(--font-bebas), system-ui, sans-serif" }}>
             HookLine
           </span>
         </Link>

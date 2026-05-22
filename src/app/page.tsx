@@ -41,7 +41,7 @@ export default async function HomePage({
         </div>
 
         {/* Headline */}
-        <h1 className="relative text-5xl md:text-6xl font-bold text-white mb-4 leading-tight tracking-tight">
+        <h1 className="relative text-5xl md:text-6xl font-bold text-[#F5F0E8] mb-4 leading-tight">
           Find Your<br />Perfect Catch.
         </h1>
 
@@ -111,7 +111,7 @@ export default async function HomePage({
 
         {/* How it works */}
         <section className="bg-[#040F1C] rounded-3xl p-10 text-white">
-          <h2 className="text-2xl font-bold mb-10 text-center">How it works</h2>
+          <h2 className="text-2xl font-bold mb-10 text-center text-[#F5F0E8]">How it works</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {[
               { icon: Fish, title: "1. Choose your target", desc: "Pick a species or a location. See the best months and regions based on real seasonal data." },

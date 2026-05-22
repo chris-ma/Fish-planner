@@ -82,7 +82,7 @@ export default async function RegionPage({ params }: { params: Promise<{ slug: s
           </div>
 
           {/* Heading */}
-          <h1 className="text-4xl font-bold text-white mt-3 mb-3">Fishing in {region.name}</h1>
+          <h1 className="text-4xl font-bold text-[#F5F0E8] mt-3 mb-3">Fishing in {region.name}</h1>
 
           {/* Description */}
           {region.description && (
@@ -144,7 +144,7 @@ export default async function RegionPage({ params }: { params: Promise<{ slug: s
 
         {/* CTA */}
         <section className="bg-[#040F1C] rounded-3xl p-10 text-center text-white">
-          <h2 className="text-2xl font-bold mb-3">Ready to plan a trip to {region.name}?</h2>
+          <h2 className="text-2xl font-bold mb-3 text-[#F5F0E8]">Ready to plan a trip to {region.name}?</h2>
           <p className="text-white/60 mb-6 max-w-md mx-auto">
             Create a shared workspace, invite your crew, build a gear list, and store all your bookings in one place.
           </p>

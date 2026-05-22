@@ -99,7 +99,7 @@ export default function NewTripPage() {
         <div className="absolute top-0 right-1/4 w-64 h-64 bg-blue-600/10 rounded-full blur-3xl pointer-events-none" />
         <div className="max-w-2xl mx-auto relative z-10">
           <p className="text-white/50 text-sm mb-2">🎣 No account needed</p>
-          <h1 className="text-4xl font-bold text-white mb-2">Plan a Trip</h1>
+          <h1 className="text-4xl font-bold text-[#F5F0E8] mb-2">Plan a Trip</h1>
           <p className="text-white/60">Create a shareable workspace for your crew in seconds.</p>
         </div>
       </div>

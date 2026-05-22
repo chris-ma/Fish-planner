@@ -16,8 +16,8 @@
     --secondary-foreground: 199 89% 20%;
     --muted: 210 40% 96%;
     --muted-foreground: 210 20% 46%;
-    --accent: 43 96% 56%;
-    --accent-foreground: 25 95% 15%;
+    --accent: 50 100% 52%;
+    --accent-foreground: 35 100% 10%;
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
     --border: 210 30% 91%;
@@ -34,6 +34,7 @@
     font-family: var(--font-inter), system-ui, sans-serif;
   }
   h1, h2, h3, h4 {
-    font-family: var(--font-sora), system-ui, sans-serif;
+    font-family: var(--font-bebas), system-ui, sans-serif;
+    letter-spacing: 0.03em;
   }
 }

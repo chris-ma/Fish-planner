@@ -52,8 +52,11 @@ const config: Config = {
           50: "#F0FDFF",
         },
         gold: {
-          500: "#F59E0B",
-          400: "#FBBF24",
+          500: "#FFD60A",
+          400: "#FFE033",
+        },
+        offwhite: {
+          DEFAULT: "#F5F0E8",
         },
       },
       borderRadius: {

@@ -106,7 +106,7 @@ export default async function SpeciesPage({ params }: { params: Promise<{ slug: 
           </div>
 
           {/* Heading */}
-          <h1 className="text-4xl font-bold text-white mb-3">{sp.commonName} Fishing</h1>
+          <h1 className="text-4xl font-bold text-[#F5F0E8] mb-3">{sp.commonName} Fishing</h1>
 
           {/* Description */}
           {sp.description && (

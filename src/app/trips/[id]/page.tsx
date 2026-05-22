@@ -65,7 +65,7 @@ export default async function TripOverviewPage({ params }: { params: Promise<{ i
                   </span>
                 )}
               </div>
-              <h1 className="text-3xl font-bold text-white mb-1">{trip.title}</h1>
+              <h1 className="text-3xl font-bold text-[#F5F0E8] mb-1">{trip.title}</h1>
               <p className="text-white/50 text-sm flex items-center gap-1.5">
                 <Calendar className="h-3.5 w-3.5" />
                 {formatDateRange(trip.startDate, trip.endDate)}
