@@ -1,13 +1,11 @@
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import Link from "next/link";
-import { MapPin, ArrowRight, Fish } from "lucide-react";
+import { MapPin, ArrowRight, Fish, Youtube } from "lucide-react";
 import { SeasonalCalendar } from "@/components/discovery/SeasonalCalendar";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { getRegionBySlug, getSeasonCalendarForRegion, listRegions } from "@/lib/queries/regions";
-import { getSpeciesWithTechniques } from "@/lib/queries/species";
 import { currentMonth, MONTH_NAMES_FULL } from "@/lib/utils/season";
+import { gregVinallYoutubeUrl } from "@/lib/affiliate";
 
 export const revalidate = 86400;
 
@@ -51,8 +49,13 @@ export default async function RegionPage({ params }: { params: Promise<{ slug: s
   const region = await getRegionBySlug(slug);
   if (!region) notFound();
 
-  const calendarRows = await getSeasonCalendarForRegion(region.id);
+  const allCalendarRows = await getSeasonCalendarForRegion(region.id);
   const month = currentMonth();
+
+  // Only show species that have at least one peak or good month in this region
+  const calendarRows = allCalendarRows.filter((row) =>
+    row.months.some((m) => m === "peak" || m === "good")
+  );
 
   const calendarData = calendarRows.map((row) => ({
     label: row.commonName,
@@ -145,6 +148,23 @@ export default async function RegionPage({ params }: { params: Promise<{ slug: s
               <p className="text-sm mt-1">Run the seed script to populate seasonal data.</p>
             </div>
           )}
+        </section>
+
+        {/* Greg Vinall Podcast */}
+        <section className="mb-10">
+          <h2 className="text-xl font-bold text-[#040F1C] mb-2">Watch &amp; Listen</h2>
+          <p className="text-sm text-muted-foreground mb-4">
+            Greg Vinall covers fishing spots and techniques across Australia — search his content for {region.name}.
+          </p>
+          <a
+            href={gregVinallYoutubeUrl(region.name + " fishing")}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2.5 bg-[#FF0000]/10 hover:bg-[#FF0000]/20 border border-[#FF0000]/30 text-[#cc0000] font-medium px-5 py-2.5 rounded-xl transition-colors text-sm"
+          >
+            <Youtube className="h-4 w-4" />
+            Greg Vinall — {region.name} fishing videos
+          </a>
         </section>
 
         {/* CTA */}

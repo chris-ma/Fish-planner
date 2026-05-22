@@ -1,13 +1,14 @@
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ArrowRight, Waves, Sun, Cloud, Anchor, Zap, Lightbulb, ExternalLink } from "lucide-react";
+import { ArrowRight, Waves, Sun, Cloud, Anchor, Zap, Lightbulb, ExternalLink, Youtube } from "lucide-react";
 import { SeasonalCalendar } from "@/components/discovery/SeasonalCalendar";
 import { SeasonBadge } from "@/components/discovery/SeasonBadge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { getSpeciesBySlug, getBestRegionsForSpecies, getSpeciesWithTechniques, listSpecies } from "@/lib/queries/species";
 import { currentMonth, MONTH_NAMES, MONTH_NAMES_FULL } from "@/lib/utils/season";
 import { FISHING_TIPS } from "@/lib/species-tips";
+import { gregVinallYoutubeUrl } from "@/lib/affiliate";
 
 export const revalidate = 86400;
 
@@ -295,6 +296,25 @@ export default async function SpeciesPage({ params }: { params: Promise<{ slug: 
                     Fishing Regulations <ExternalLink className="h-3 w-3" />
                   </button>
                 </Link>
+              </CardContent>
+            </Card>
+
+            {/* Greg Vinall Podcast */}
+            <Card className="bg-red-50 border-red-200">
+              <CardContent className="p-4">
+                <h3 className="font-semibold text-sm mb-1 text-red-900">Watch &amp; Listen</h3>
+                <p className="text-xs text-red-700/70 mb-3 leading-relaxed">
+                  Greg Vinall covers {sp.commonName} tactics, seasonal tips and locations across Australia.
+                </p>
+                <a
+                  href={gregVinallYoutubeUrl(sp.commonName + " fishing Australia")}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full inline-flex items-center justify-center gap-1.5 bg-[#FF0000] hover:bg-[#cc0000] text-white font-medium text-sm px-4 py-2 rounded-lg transition-colors"
+                >
+                  <Youtube className="h-3.5 w-3.5" />
+                  Greg Vinall Videos
+                </a>
               </CardContent>
             </Card>
 

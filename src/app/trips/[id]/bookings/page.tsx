@@ -1,14 +1,15 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
-import { getTripById, getTripBookings } from "@/lib/queries/trips";
+import { getTripWithRegion, getTripBookings } from "@/lib/queries/trips";
 import { BookingsList } from "./BookingsList";
 
 export default async function BookingsPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const trip = await getTripById(id);
-  if (!trip) notFound();
+  const row = await getTripWithRegion(id);
+  if (!row) notFound();
 
+  const { trip, region } = row;
   const bookings = await getTripBookings(id);
 
   return (
@@ -23,7 +24,7 @@ export default async function BookingsPage({ params }: { params: Promise<{ id: s
         <p className="text-sm text-muted-foreground mt-1">Store all your charters, accommodation, flights and confirmations.</p>
       </div>
 
-      <BookingsList tripId={id} initialBookings={bookings} />
+      <BookingsList tripId={id} initialBookings={bookings} regionName={region?.name ?? null} />
     </div>
   );
 }

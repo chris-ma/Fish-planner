@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Plus, Anchor, Hotel, Plane, Car, MoreHorizontal, DollarSign } from "lucide-react";
+import { Plus, Anchor, Hotel, Plane, Car, MoreHorizontal, DollarSign, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -10,6 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Card, CardContent } from "@/components/ui/card";
 import type { Booking } from "@/db/schema";
+import { bookingComUrl, airbnbUrl, skyscannerUrl, webjetUrl, viatorUrl } from "@/lib/affiliate";
 
 const TYPE_ICONS: Record<string, React.ReactNode> = {
   charter: <Anchor className="h-4 w-4" />,
@@ -27,12 +28,69 @@ const TYPE_LABELS: Record<string, string> = {
   other: "Other",
 };
 
+function AffiliateSuggestions({ type, regionName }: { type: string; regionName: string | null }) {
+  const location = regionName ?? "Australia";
+
+  if (type === "accommodation") {
+    return (
+      <div className="rounded-xl bg-blue-50 border border-blue-100 p-3">
+        <p className="text-xs font-semibold text-blue-800 mb-2">Find accommodation in {location}</p>
+        <div className="flex flex-wrap gap-2">
+          <a href={bookingComUrl(location)} target="_blank" rel="noopener noreferrer"
+            className="inline-flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition-colors">
+            Booking.com <ExternalLink className="h-3 w-3 opacity-70" />
+          </a>
+          <a href={airbnbUrl(location)} target="_blank" rel="noopener noreferrer"
+            className="inline-flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-lg bg-[#FF5A5F] text-white hover:bg-[#e04e53] transition-colors">
+            Airbnb <ExternalLink className="h-3 w-3 opacity-70" />
+          </a>
+        </div>
+      </div>
+    );
+  }
+
+  if (type === "flight") {
+    return (
+      <div className="rounded-xl bg-sky-50 border border-sky-100 p-3">
+        <p className="text-xs font-semibold text-sky-800 mb-2">Search flights to {location}</p>
+        <div className="flex flex-wrap gap-2">
+          <a href={skyscannerUrl(location)} target="_blank" rel="noopener noreferrer"
+            className="inline-flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-lg bg-[#00A698] text-white hover:bg-[#008c81] transition-colors">
+            Skyscanner <ExternalLink className="h-3 w-3 opacity-70" />
+          </a>
+          <a href={webjetUrl(location)} target="_blank" rel="noopener noreferrer"
+            className="inline-flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-lg bg-orange-500 text-white hover:bg-orange-600 transition-colors">
+            Webjet <ExternalLink className="h-3 w-3 opacity-70" />
+          </a>
+        </div>
+      </div>
+    );
+  }
+
+  if (type === "charter") {
+    return (
+      <div className="rounded-xl bg-cyan-50 border border-cyan-100 p-3">
+        <p className="text-xs font-semibold text-cyan-800 mb-2">Find fishing charters in {location}</p>
+        <div className="flex flex-wrap gap-2">
+          <a href={viatorUrl(location)} target="_blank" rel="noopener noreferrer"
+            className="inline-flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-lg bg-[#06B6D4] text-white hover:bg-[#0891B2] transition-colors">
+            Viator <ExternalLink className="h-3 w-3 opacity-70" />
+          </a>
+        </div>
+      </div>
+    );
+  }
+
+  return null;
+}
+
 interface BookingsListProps {
   tripId: string;
   initialBookings: Booking[];
+  regionName: string | null;
 }
 
-export function BookingsList({ tripId, initialBookings }: BookingsListProps) {
+export function BookingsList({ tripId, initialBookings, regionName }: BookingsListProps) {
   const [bookings, setBookings] = useState<Booking[]>(initialBookings);
   const [open, setOpen] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -78,6 +136,39 @@ export function BookingsList({ tripId, initialBookings }: BookingsListProps) {
           <DollarSign className="h-5 w-5 text-slate-500" />
           <span className="text-sm text-slate-600">Total estimated cost:</span>
           <span className="font-bold text-slate-900">${totalCost.toFixed(0)} AUD</span>
+        </div>
+      )}
+
+      {/* Quick-find affiliate panels */}
+      {regionName && (
+        <div className="space-y-2">
+          <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Find &amp; Book</p>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <a href={bookingComUrl(regionName)} target="_blank" rel="noopener noreferrer"
+              className="flex items-center gap-2 p-3 rounded-xl border border-blue-200 bg-blue-50 hover:bg-blue-100 transition-colors">
+              <Hotel className="h-4 w-4 text-blue-600 shrink-0" />
+              <div className="min-w-0">
+                <div className="text-xs font-semibold text-blue-800">Accommodation</div>
+                <div className="text-xs text-blue-600 truncate">Booking.com · Airbnb</div>
+              </div>
+            </a>
+            <a href={skyscannerUrl(regionName)} target="_blank" rel="noopener noreferrer"
+              className="flex items-center gap-2 p-3 rounded-xl border border-sky-200 bg-sky-50 hover:bg-sky-100 transition-colors">
+              <Plane className="h-4 w-4 text-sky-600 shrink-0" />
+              <div className="min-w-0">
+                <div className="text-xs font-semibold text-sky-800">Flights</div>
+                <div className="text-xs text-sky-600 truncate">Skyscanner · Webjet</div>
+              </div>
+            </a>
+            <a href={viatorUrl(regionName)} target="_blank" rel="noopener noreferrer"
+              className="flex items-center gap-2 p-3 rounded-xl border border-cyan-200 bg-cyan-50 hover:bg-cyan-100 transition-colors">
+              <Anchor className="h-4 w-4 text-cyan-600 shrink-0" />
+              <div className="min-w-0">
+                <div className="text-xs font-semibold text-cyan-800">Charters</div>
+                <div className="text-xs text-cyan-600 truncate">Viator</div>
+              </div>
+            </a>
+          </div>
         </div>
       )}
 
@@ -150,6 +241,10 @@ export function BookingsList({ tripId, initialBookings }: BookingsListProps) {
                 </SelectContent>
               </Select>
             </div>
+
+            {/* Context-aware affiliate links inside the form */}
+            <AffiliateSuggestions type={form.type} regionName={regionName} />
+
             <div className="space-y-2">
               <Label>Title *</Label>
               <Input
