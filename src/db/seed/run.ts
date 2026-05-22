@@ -20,6 +20,10 @@ const TECHNIQUES_DATA = [
   { slug: "bait-fishing-estuary", name: "Estuary Bait Fishing", category: "estuary", description: "Traditional bait fishing in estuaries using prawns, worms, and cut bait." },
   { slug: "float-fishing", name: "Float / Bobber Fishing", category: "estuary", description: "Presenting bait under a float — common for luderick with green weed." },
   { slug: "beach-casting", name: "Beach / Surf Casting", category: "inshore", description: "Casting from beaches and rock platforms into gutters and breaks for tailor, mulloway, and trevally." },
+  { slug: "fly-fishing", name: "Fly Fishing", category: "freshwater", description: "Casting weighted fly line with artificial flies. Technique for trout, bass, and saratoga in streams, lakes, and estuaries." },
+  { slug: "lure-casting-freshwater", name: "Lure Casting (Freshwater)", category: "freshwater", description: "Casting hard-body and soft-plastic lures to structure and snags in rivers and impoundments. Primary technique for Murray cod, golden perch, and bass." },
+  { slug: "bait-fishing-freshwater", name: "Bait Fishing (Freshwater)", category: "freshwater", description: "Bottom or suspended bait fishing with worms, yabbies, scrub worms, and live bait in rivers and lakes." },
+  { slug: "trolling-freshwater", name: "Trolling (Freshwater)", category: "freshwater", description: "Slowly pulling lures behind a boat over flats and drop-offs in impoundments. Effective for trout and golden perch." },
 ];
 
 const SPECIES_TECHNIQUES: Record<string, string[]> = {
@@ -48,6 +52,21 @@ const SPECIES_TECHNIQUES: Record<string, string[]> = {
   "luderick": ["float-fishing"],
   "jewfish": ["live-bait", "bait-fishing-estuary"],
   "kingfish-qld": ["popping", "stickbaiting", "slow-pitch-jigging", "jigging"],
+  "southern-bluefin-tuna": ["trolling", "jigging"],
+  "australian-salmon": ["beach-casting", "casting-hard-bodies", "jigging"],
+  "gummy-shark": ["bait-fishing-estuary", "beach-casting"],
+  "blue-eye-trevalla": ["slow-pitch-jigging", "bottom-bait"],
+  "striped-trumpeter": ["bottom-bait", "slow-pitch-jigging"],
+  "murray-cod": ["lure-casting-freshwater", "bait-fishing-freshwater", "fly-fishing"],
+  "golden-perch": ["lure-casting-freshwater", "bait-fishing-freshwater", "trolling-freshwater"],
+  "silver-perch": ["lure-casting-freshwater", "bait-fishing-freshwater"],
+  "australian-bass": ["lure-casting-freshwater", "fly-fishing", "casting-hard-bodies"],
+  "brown-trout": ["fly-fishing", "lure-casting-freshwater", "bait-fishing-freshwater"],
+  "rainbow-trout": ["fly-fishing", "lure-casting-freshwater", "trolling-freshwater", "bait-fishing-freshwater"],
+  "redfin": ["lure-casting-freshwater", "bait-fishing-freshwater"],
+  "saratoga": ["lure-casting-freshwater", "fly-fishing"],
+  "catfish": ["bait-fishing-freshwater"],
+  "ocean-trout": ["fly-fishing", "trolling-freshwater", "lure-casting-freshwater"],
 };
 
 async function seed() {

@@ -10,33 +10,98 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 const SPECIES_OPTIONS = [
+  // Pelagic
   "Black Marlin", "Blue Marlin", "Sailfish", "Yellowfin Tuna", "Longtail Tuna",
-  "Spanish Mackerel", "Wahoo", "Mahi-Mahi", "Yellowtail Kingfish", "Giant Trevally",
-  "Coral Trout", "Red Emperor", "Nannygai", "Snapper", "Cobia",
+  "Spanish Mackerel", "Wahoo", "Mahi-Mahi", "Southern Bluefin Tuna",
+  // Inshore
+  "Yellowtail Kingfish", "Giant Trevally", "Cobia", "Tailor", "Australian Salmon",
+  "Gummy Shark",
+  // Reef
+  "Coral Trout", "Red Emperor", "Nannygai", "Snapper", "Amberjack (Samson Fish)",
+  "Blue-eye Trevalla", "Striped Trumpeter",
+  // Estuary
   "Barramundi", "Mangrove Jack", "Flathead", "Mulloway", "Bream",
-  "Tailor", "Whiting", "Luderick", "Jewfish",
+  "Whiting", "Luderick", "Black Jewfish",
+  // Freshwater
+  "Murray Cod", "Golden Perch", "Silver Perch", "Australian Bass",
+  "Brown Trout", "Rainbow Trout", "Redfin", "Saratoga", "Catfish", "Ocean Trout",
 ];
 
 const REGION_OPTIONS = [
+  // Far North QLD
   { slug: "cairns", name: "Cairns, QLD" },
   { slug: "port-douglas", name: "Port Douglas, QLD" },
+  { slug: "cooktown", name: "Cooktown, QLD" },
+  { slug: "weipa", name: "Weipa, QLD" },
+  // Central QLD
   { slug: "townsville", name: "Townsville, QLD" },
+  { slug: "bowen", name: "Bowen, QLD" },
   { slug: "mackay", name: "Mackay, QLD" },
   { slug: "airlie-beach", name: "Airlie Beach / Whitsundays, QLD" },
   { slug: "yeppoon", name: "Yeppoon, QLD" },
   { slug: "gladstone", name: "Gladstone, QLD" },
+  // Southeast QLD
   { slug: "hervey-bay", name: "Hervey Bay, QLD" },
   { slug: "sunshine-coast", name: "Sunshine Coast, QLD" },
   { slug: "brisbane-moreton-bay", name: "Brisbane / Moreton Bay, QLD" },
   { slug: "gold-coast", name: "Gold Coast, QLD" },
+  // NSW
   { slug: "ballina-byron-bay", name: "Ballina / Byron Bay, NSW" },
   { slug: "coffs-harbour", name: "Coffs Harbour, NSW" },
+  { slug: "south-west-rocks", name: "South West Rocks, NSW" },
   { slug: "port-macquarie", name: "Port Macquarie, NSW" },
+  { slug: "port-stephens", name: "Port Stephens, NSW" },
+  { slug: "lake-macquarie", name: "Lake Macquarie, NSW" },
   { slug: "newcastle", name: "Newcastle, NSW" },
+  { slug: "hawkesbury-river", name: "Hawkesbury River, NSW" },
   { slug: "sydney", name: "Sydney, NSW" },
+  { slug: "wollongong", name: "Wollongong, NSW" },
   { slug: "jervis-bay", name: "Jervis Bay, NSW" },
+  { slug: "ulladulla", name: "Ulladulla, NSW" },
   { slug: "batemans-bay", name: "Batemans Bay, NSW" },
+  { slug: "narooma", name: "Narooma, NSW" },
   { slug: "eden", name: "Eden, NSW" },
+  { slug: "tathra-merimbula", name: "Tathra / Merimbula, NSW" },
+  // Lord Howe Island
+  { slug: "lord-howe-island", name: "Lord Howe Island, NSW" },
+  // Victoria
+  { slug: "port-phillip-bay", name: "Port Phillip Bay, VIC" },
+  { slug: "mornington-peninsula", name: "Mornington Peninsula, VIC" },
+  { slug: "phillip-island", name: "Phillip Island, VIC" },
+  { slug: "westernport-bay", name: "Westernport Bay, VIC" },
+  { slug: "wilsons-promontory", name: "Wilsons Promontory, VIC" },
+  { slug: "lakes-entrance", name: "Lakes Entrance, VIC" },
+  { slug: "mallacoota", name: "Mallacoota, VIC" },
+  { slug: "apollo-bay", name: "Apollo Bay, VIC" },
+  { slug: "portland-vic", name: "Portland, VIC" },
+  { slug: "warrnambool", name: "Warrnambool, VIC" },
+  // Tasmania
+  { slug: "hobart", name: "Hobart, TAS" },
+  { slug: "st-helens", name: "St Helens, TAS" },
+  { slug: "bicheno", name: "Bicheno, TAS" },
+  { slug: "bruny-island", name: "Bruny Island, TAS" },
+  { slug: "strahan", name: "Strahan, TAS" },
+  { slug: "devonport", name: "Devonport, TAS" },
+  { slug: "launceston-tamar", name: "Launceston / Tamar, TAS" },
+  { slug: "port-arthur", name: "Port Arthur, TAS" },
+  // Murray–Darling
+  { slug: "murray-river-albury", name: "Murray River – Albury, NSW/VIC" },
+  { slug: "murray-river-echuca", name: "Murray River – Echuca, VIC" },
+  { slug: "murray-river-mildura", name: "Murray River – Mildura, VIC" },
+  { slug: "lake-hume", name: "Lake Hume, NSW/VIC" },
+  { slug: "lake-mulwala", name: "Lake Mulwala, VIC" },
+  { slug: "murrumbidgee-river", name: "Murrumbidgee River, NSW" },
+  { slug: "macquarie-river", name: "Macquarie River, NSW" },
+  { slug: "darling-river-bourke", name: "Darling River – Bourke, NSW" },
+  // Alpine
+  { slug: "lake-eucumbene", name: "Lake Eucumbene, NSW" },
+  { slug: "lake-jindabyne", name: "Lake Jindabyne, NSW" },
+  { slug: "snowy-mountains-rivers", name: "Snowy Mountains Rivers, NSW" },
+  { slug: "lake-eildon", name: "Lake Eildon, VIC" },
+  { slug: "ovens-king-rivers", name: "Ovens & King Rivers, VIC" },
+  { slug: "goulburn-river-vic", name: "Goulburn River, VIC" },
+  { slug: "arthurs-lake-tas", name: "Arthurs Lake, TAS" },
+  { slug: "lake-st-clair", name: "Lake St Clair, TAS" },
 ];
 
 export default function NewTripPage() {

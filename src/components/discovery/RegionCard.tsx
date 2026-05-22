@@ -9,6 +9,11 @@ const ZONE_LABELS: Record<string, string> = {
   central_qld: "Central QLD",
   southeast_qld: "Southeast QLD",
   nsw: "New South Wales",
+  vic_coast: "Victoria",
+  tas: "Tasmania",
+  lord_howe: "Lord Howe Island",
+  murray_darling: "Murray–Darling",
+  alpine: "Alpine",
 };
 
 const ZONE_GRADIENTS: Record<string, string> = {
@@ -16,6 +21,11 @@ const ZONE_GRADIENTS: Record<string, string> = {
   central_qld: "from-teal-500 to-cyan-800",
   southeast_qld: "from-sky-500 to-blue-800",
   nsw: "from-slate-500 to-blue-900",
+  vic_coast: "from-indigo-500 to-slate-800",
+  tas: "from-violet-500 to-indigo-900",
+  lord_howe: "from-emerald-400 to-teal-800",
+  murray_darling: "from-amber-500 to-green-800",
+  alpine: "from-sky-300 to-slate-600",
 };
 
 const ZONE_EMOJI: Record<string, string> = {
@@ -23,6 +33,11 @@ const ZONE_EMOJI: Record<string, string> = {
   central_qld: "🦈",
   southeast_qld: "🌊",
   nsw: "🎣",
+  vic_coast: "🐙",
+  tas: "🦞",
+  lord_howe: "🌴",
+  murray_darling: "🐟",
+  alpine: "🏔️",
 };
 
 interface RegionCardProps {
