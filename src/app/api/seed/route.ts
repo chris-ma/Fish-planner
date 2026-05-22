@@ -92,7 +92,7 @@ async function batchExec(client: ReturnType<typeof createClient>, stmts: { sql: 
   }
 }
 
-export async function POST(request: Request) {
+async function runSeed(request: Request) {
   const { searchParams } = new URL(request.url);
   if (searchParams.get("secret") !== SECRET) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -183,3 +183,6 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: String(err), log }, { status: 500 });
   }
 }
+
+export async function POST(request: Request) { return runSeed(request); }
+export async function GET(request: Request) { return runSeed(request); }
