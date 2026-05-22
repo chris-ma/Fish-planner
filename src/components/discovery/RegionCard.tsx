@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 import { Heart } from "lucide-react";
 import type { Region } from "@/db/schema";
