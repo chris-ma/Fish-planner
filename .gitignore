@@ -26,3 +26,7 @@ next-env.d.ts
 
 # Drizzle generated
 drizzle/
+
+# Generated SQL scripts
+seed.sql
+full-setup.sql
