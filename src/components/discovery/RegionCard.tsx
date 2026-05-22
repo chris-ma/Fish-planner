@@ -14,6 +14,16 @@ const ZONE_LABELS: Record<string, string> = {
   lord_howe: "Lord Howe Island",
   murray_darling: "Murray–Darling",
   alpine: "Alpine",
+  nt_top_end: "NT — Top End",
+  nt_gulf: "NT — Gulf",
+  wa_kimberley: "WA — Kimberley",
+  wa_pilbara: "WA — Pilbara / Ningaloo",
+  wa_mid_west: "WA — Mid West",
+  wa_southwest: "WA — Southwest",
+  sa_spencer_gulf: "SA — Spencer Gulf",
+  sa_south: "SA — South Coast",
+  christmas_island: "Christmas Island",
+  cocos_islands: "Cocos Islands",
 };
 
 // Category colour overlays per zone
@@ -27,6 +37,16 @@ const ZONE_GRADIENTS: Record<string, string> = {
   lord_howe: "from-emerald-900/75 to-teal-900/60",
   murray_darling: "from-amber-900/75 to-green-900/60",
   alpine: "from-sky-900/75 to-slate-700/60",
+  nt_top_end: "from-amber-900/75 to-orange-900/60",
+  nt_gulf: "from-orange-900/75 to-amber-900/60",
+  wa_kimberley: "from-red-900/75 to-orange-900/60",
+  wa_pilbara: "from-cyan-900/75 to-teal-900/60",
+  wa_mid_west: "from-blue-900/75 to-cyan-900/60",
+  wa_southwest: "from-slate-900/75 to-blue-900/60",
+  sa_spencer_gulf: "from-teal-900/75 to-slate-900/60",
+  sa_south: "from-indigo-900/75 to-teal-900/60",
+  christmas_island: "from-emerald-900/75 to-cyan-900/60",
+  cocos_islands: "from-cyan-900/75 to-emerald-900/60",
 };
 
 // Zone-level photography
@@ -40,6 +60,16 @@ const ZONE_IMAGES: Record<string, string> = {
   lord_howe: "https://images.unsplash.com/photo-1516026672322-18933d4c52f3?w=600&auto=format&fit=crop&q=80",
   murray_darling: "https://images.unsplash.com/photo-1542601906897-ec823b17a0b7?w=600&auto=format&fit=crop&q=80",
   alpine: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=600&auto=format&fit=crop&q=80",
+  nt_top_end: "https://images.unsplash.com/photo-1529108190281-9a4f620bc2d8?w=600&auto=format&fit=crop&q=80",
+  nt_gulf: "https://images.unsplash.com/photo-1559827291-72416316ece9?w=600&auto=format&fit=crop&q=80",
+  wa_kimberley: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600&auto=format&fit=crop&q=80",
+  wa_pilbara: "https://images.unsplash.com/photo-1516026672322-18933d4c52f3?w=600&auto=format&fit=crop&q=80",
+  wa_mid_west: "https://images.unsplash.com/photo-1518020382113-a7e8fc38eac9?w=600&auto=format&fit=crop&q=80",
+  wa_southwest: "https://images.unsplash.com/photo-1549816954-9e9a7cb3ef4c?w=600&auto=format&fit=crop&q=80",
+  sa_spencer_gulf: "https://images.unsplash.com/photo-1542601906897-ec823b17a0b7?w=600&auto=format&fit=crop&q=80",
+  sa_south: "https://images.unsplash.com/photo-1505118380757-91f5f5632de0?w=600&auto=format&fit=crop&q=80",
+  christmas_island: "https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=600&auto=format&fit=crop&q=80",
+  cocos_islands: "https://images.unsplash.com/photo-1491566102020-21838872658e?w=600&auto=format&fit=crop&q=80",
 };
 
 interface RegionCardProps {

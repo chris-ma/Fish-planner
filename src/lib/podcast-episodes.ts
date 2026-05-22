@@ -126,6 +126,27 @@ export const SPECIES_EPISODES: Record<string, PodcastEpisode[]> = {
   redfin: [
     { title: "Lake Purrumbete Redfin Perch – Ep 243", url: "https://doclures.com/lake-purrumbete-redfin-perch-michael-evans/" },
   ],
+  "queenfish": [
+    { title: "Beach Pelagics incl. Queenfish – Ep 558", url: "https://doclures.com/beach-pelagics-ben-svenson/" },
+  ],
+  "threadfin-salmon": [
+    { title: "Broome Blue Nosed Threadfin – Ep 89", url: "https://doclures.com/broome-blue-nosed-threadfin-mark-bantich/" },
+    { title: "Fitzroy River Threadfin Salmon – Ep 29", url: "https://doclures.com/fitzroy-river-threadfin-salmon-john-haenke/" },
+    { title: "Brisbane River King Threadfin – Ep 4", url: "https://doclures.com/brisbane-river-king-threadfin-fishing-steve-morgan/" },
+  ],
+  "spangled-emperor": [
+    { title: "Exmouth Shore-based Spangled Emperor – Ep 39", url: "https://doclures.com/exmouth-shore-based-spangled-emperor-steve-riley/" },
+  ],
+  "dhufish": [
+    { title: "Exmouth Goldband Snapper & Dhufish", url: "https://doclures.com/exmouth-goldband-snapper-steve-riley/" },
+  ],
+  "king-george-whiting": [
+    { title: "King George Whiting on Lures – Bomber Farrell", url: "https://doclures.com/king-george-whiting-on-lures-unravelling-the-mysteries/" },
+    { title: "Port Sorell King George Whiting – Ep 441", url: "https://doclures.com/port-sorell-king-george-whiting-jarvis-wall/" },
+  ],
+  "milkfish": [
+    { title: "Beach Pelagics – Ben Svenson (milkfish tactics)", url: "https://doclures.com/beach-pelagics-ben-svenson/" },
+  ],
 };
 
 // Region slug → relevant episodes
@@ -261,5 +282,73 @@ export const REGION_EPISODES: Record<string, PodcastEpisode[]> = {
   "arthurs-lake-tas": [
     { title: "Mastering Eucumbene Trout", url: "https://open.spotify.com/episode/4JlniqozYvMGqpD2e6oFHj" },
     { title: "Fishing in Hobart: Bream Masterclass", url: "https://doclures.com/fishing-in-hobart/" },
+  ],
+  "darwin": [
+    { title: "Darwin Barramundi – Ep 165", url: "https://doclures.com/darwin-barramundi-charlotte-klose/" },
+    { title: "Darwin Harbour Barramundi – Ep 114", url: "https://doclures.com/darwin-harbour-barramundi-alex-julius/" },
+    { title: "Victoria & Roper Rivers Barramundi", url: "https://doclures.com/victoria-river-barramundi/" },
+  ],
+  "daly-river": [
+    { title: "Daly River Barramundi – Ep 496", url: "https://doclures.com/daly-river-barramundi-glenn-watt/" },
+    { title: "Darwin Barramundi – Ep 165", url: "https://doclures.com/darwin-barramundi-charlotte-klose/" },
+  ],
+  "katherine-river": [
+    { title: "Victoria & Roper Rivers Barramundi", url: "https://doclures.com/victoria-river-barramundi/" },
+  ],
+  "kakadu": [
+    { title: "Darwin Harbour Barramundi – Ep 114", url: "https://doclures.com/darwin-harbour-barramundi-alex-julius/" },
+    { title: "Daly River Barramundi – Ep 496", url: "https://doclures.com/daly-river-barramundi-glenn-watt/" },
+  ],
+  "groote-eylandt": [
+    { title: "Groote Eylandt Red Emperor & Fingermark", url: "https://doclures.com/groote-eylandt-reds-flats-bomber-farrell/" },
+    { title: "Victoria & Roper Rivers Barramundi", url: "https://doclures.com/victoria-river-barramundi/" },
+  ],
+  "borroloola": [
+    { title: "Victoria & Roper Rivers Barramundi", url: "https://doclures.com/victoria-river-barramundi/" },
+    { title: "Groote Eylandt Red Emperor & Fingermark", url: "https://doclures.com/groote-eylandt-reds-flats-bomber-farrell/" },
+  ],
+  "broome": [
+    { title: "Broome Blue Nosed Threadfin – Ep 89", url: "https://doclures.com/broome-blue-nosed-threadfin-mark-bantich/" },
+    { title: "Fitzroy River Threadfin Salmon – Ep 29", url: "https://doclures.com/fitzroy-river-threadfin-salmon-john-haenke/" },
+  ],
+  "kununurra": [
+    { title: "Daly River Barramundi (Kimberley tactics) – Ep 496", url: "https://doclures.com/daly-river-barramundi-glenn-watt/" },
+  ],
+  "exmouth-ningaloo": [
+    { title: "Fishing Around Exmouth in Spring – Ep 547", url: "https://doclures.com/exmouth-spring-fishing-spots-steve-riley/" },
+    { title: "Exmouth Sailfish", url: "https://doclures.com/exmouth-sailfish-steve-riley/" },
+    { title: "Exmouth Shore-based Spangled Emperor – Ep 39", url: "https://doclures.com/exmouth-shore-based-spangled-emperor-steve-riley/" },
+    { title: "Exmouth Goldband Snapper", url: "https://doclures.com/exmouth-goldband-snapper-steve-riley/" },
+  ],
+  "geraldton": [
+    { title: "King George Whiting on Lures – Bomber Farrell", url: "https://doclures.com/king-george-whiting-on-lures-unravelling-the-mysteries/" },
+  ],
+  "perth-rottnest": [
+    { title: "Swan River Bream Fishing – Ep 123", url: "https://doclures.com/swan-river-bream-fishing-paul-burton/" },
+  ],
+  "mandurah": [
+    { title: "Swan River Bream Fishing – Ep 123", url: "https://doclures.com/swan-river-bream-fishing-paul-burton/" },
+  ],
+  "whyalla": [
+    { title: "King George Whiting on Lures – Bomber Farrell", url: "https://doclures.com/king-george-whiting-on-lures-unravelling-the-mysteries/" },
+  ],
+  "yorke-peninsula": [
+    { title: "King George Whiting on Lures – Bomber Farrell", url: "https://doclures.com/king-george-whiting-on-lures-unravelling-the-mysteries/" },
+  ],
+  "port-lincoln": [
+    { title: "King George Whiting on Lures – Bomber Farrell", url: "https://doclures.com/king-george-whiting-on-lures-unravelling-the-mysteries/" },
+    { title: "Eaglehawk Neck Southern Bluefin Tuna – Ep 13", url: "https://doclures.com/eaglehawk-neck-southern-bluefin-tuna-with-stu-nichols/" },
+  ],
+  "kangaroo-island": [
+    { title: "Eaglehawk Neck Southern Bluefin Tuna – Ep 13", url: "https://doclures.com/eaglehawk-neck-southern-bluefin-tuna-with-stu-nichols/" },
+    { title: "King George Whiting on Lures – Bomber Farrell", url: "https://doclures.com/king-george-whiting-on-lures-unravelling-the-mysteries/" },
+  ],
+  "christmas-island": [
+    { title: "Conquering Land-based Giant Trevally", url: "https://open.spotify.com/episode/2Lgd3uuGCjGDPUqLFDyErl" },
+    { title: "Beach Pelagics – Ben Svenson (island tactics)", url: "https://doclures.com/beach-pelagics-ben-svenson/" },
+  ],
+  "cocos-keeling-islands": [
+    { title: "Conquering Land-based Giant Trevally", url: "https://open.spotify.com/episode/2Lgd3uuGCjGDPUqLFDyErl" },
+    { title: "Beach Pelagics – Ben Svenson (island tactics)", url: "https://doclures.com/beach-pelagics-ben-svenson/" },
   ],
 };

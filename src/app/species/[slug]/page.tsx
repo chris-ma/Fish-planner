@@ -61,8 +61,8 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     const sp = await getSpeciesBySlug(slug);
     if (!sp) return {};
     return {
-      title: `${sp.commonName} Fishing — East Coast Australia | EastCoast Fishing`,
-      description: `Best times and places to target ${sp.commonName} on the Australian east coast. Seasonal calendar, top regions, fishing techniques, and gear guide.`,
+      title: `${sp.commonName} Fishing in Australia | HookLine`,
+      description: `Best times and places to target ${sp.commonName} across Australia. Seasonal calendar, top regions, fishing techniques, and gear guide.`,
     };
   } catch {
     return {};
@@ -220,7 +220,7 @@ export default async function SpeciesPage({ params }: { params: Promise<{ slug: 
             <section>
               <h2 className="text-xl font-bold text-[#040F1C] mb-4">Best Regions by Month</h2>
               <p className="text-sm text-muted-foreground mb-5">
-                Seasonal ratings across all east coast regions. Click a region to see the full calendar.
+                Seasonal ratings across all Australian regions. Click a region to see the full calendar.
               </p>
               {calendarData.length > 0 ? (
                 <SeasonalCalendar rows={calendarData} highlightMonth={month} linkRowsTo="regions" />

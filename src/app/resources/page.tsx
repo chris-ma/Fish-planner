@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import { ExternalLink, Fish, BookOpen, ShieldCheck, Map } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Fishing Regulations & Resources | EastCoast Fishing Planner",
-  description: "Official links to state and federal fishing regulations, licensing portals, marine park rules, and bag limit information for Queensland, New South Wales, Victoria, and Tasmania.",
+  title: "Fishing Regulations & Resources | HookLine",
+  description: "Official links to state and federal fishing regulations, licensing portals, marine park rules, and bag limit information for all Australian states and territories.",
 };
 
 const RESOURCES = [
@@ -92,6 +92,42 @@ const RESOURCES = [
         label: "Tasmanian Fishing Licence",
         url: "https://www.ifs.tas.gov.au/recreational-fishing/fishing-licences",
         desc: "Freshwater fishing licence for rivers, lakes, and highland lakes in Tasmania",
+      },
+    ],
+  },
+  {
+    state: "Northern Territory",
+    flag: "NT",
+    color: "from-amber-500 to-amber-700",
+    links: [
+      {
+        label: "NT Recreational Fishing",
+        url: "https://nt.gov.au/recreation/fishing",
+        desc: "NT's Department of Industry, Tourism and Trade manages barramundi, reef, and tidal fisheries across the Top End and Gulf regions.",
+      },
+    ],
+  },
+  {
+    state: "Western Australia",
+    flag: "WA",
+    color: "from-blue-600 to-blue-800",
+    links: [
+      {
+        label: "WA Fisheries — Recreational Fishing",
+        url: "https://www.fish.wa.gov.au",
+        desc: "WA Department of Primary Industries and Regional Development. Covers dhufish, baldchin groper, pink snapper, and all WA-specific species limits.",
+      },
+    ],
+  },
+  {
+    state: "South Australia",
+    flag: "SA",
+    color: "from-red-600 to-red-800",
+    links: [
+      {
+        label: "SA Recreational Fishing",
+        url: "https://pir.sa.gov.au/fishing",
+        desc: "SA Department of Primary Industries and Regions. Covers King George whiting, snapper, southern bluefin tuna, and SA-specific regulations.",
       },
     ],
   },
@@ -213,7 +249,7 @@ export default function ResourcesPage() {
         <div className="bg-amber-50 border border-amber-200 rounded-2xl p-5 text-sm text-amber-800">
           <p className="font-semibold mb-1">Important notice</p>
           <p className="leading-relaxed">
-            Fishing regulations change regularly. The links above go directly to official government fisheries websites. EastCoast Fishing Planner does not hold or display bag limits or size limits — always verify current rules on the official state fisheries website before heading out.
+            Fishing regulations change regularly. The links above go directly to official government fisheries websites. HookLine does not hold or display bag limits or size limits — always verify current rules on the official state fisheries website before heading out.
           </p>
         </div>
       </div>

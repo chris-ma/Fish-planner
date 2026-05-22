@@ -20,6 +20,16 @@ const ZONE_LABELS: Record<string, string> = {
   lord_howe: "Lord Howe Island",
   murray_darling: "Murray–Darling Basin",
   alpine: "Alpine & Highlands",
+  nt_top_end: "NT — Top End",
+  nt_gulf: "NT — Gulf of Carpentaria",
+  wa_kimberley: "WA — Kimberley",
+  wa_pilbara: "WA — Pilbara & Ningaloo",
+  wa_mid_west: "WA — Mid West",
+  wa_southwest: "WA — Southwest",
+  sa_spencer_gulf: "SA — Spencer Gulf",
+  sa_south: "SA — South Coast",
+  christmas_island: "Christmas Island",
+  cocos_islands: "Cocos (Keeling) Islands",
 };
 
 export async function generateStaticParams() {
@@ -37,7 +47,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     const region = await getRegionBySlug(slug);
     if (!region) return {};
     return {
-      title: `Fishing in ${region.name} | EastCoast Fishing Planner`,
+      title: `Fishing in ${region.name} | HookLine`,
       description: `Best times to fish in ${region.name}, ${region.state}. Monthly seasonal calendar, top species, fishing methods and trip planning guide.`,
     };
   } catch {

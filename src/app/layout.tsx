@@ -18,9 +18,9 @@ const bebasNeue = Bebas_Neue({
 });
 
 export const metadata: Metadata = {
-  title: "HookLine — East Coast Fishing Planner",
+  title: "HookLine — Australian Fishing Planner",
   description:
-    "Plan your Australian east coast fishing trip around the best seasonal windows. Discover top species, seasonal calendars, gear guides, and collaborative trip planning.",
+    "Plan your Australian fishing trip around the best seasonal windows. Discover top species, seasonal calendars, gear guides, and collaborative trip planning.",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

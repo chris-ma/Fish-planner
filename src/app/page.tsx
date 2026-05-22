@@ -34,7 +34,7 @@ export default async function HomePage({
           Find Your<br />Perfect Catch.
         </h1>
         <p className="text-white/60 text-lg mb-10 max-w-lg mx-auto leading-relaxed">
-          Find the best time and place to target any species on the east coast — then plan the whole trip with your crew.
+          Find the best time and place to target any species across Australia — then plan the whole trip with your crew.
         </p>
         <div className="flex justify-center w-full">
           <HeroSearch speciesList={speciesList} regionList={regionList} />

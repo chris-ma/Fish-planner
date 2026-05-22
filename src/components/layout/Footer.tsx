@@ -17,7 +17,7 @@ export function Footer() {
               HookLine 🌊
             </div>
             <p className="text-xs text-white/50 leading-relaxed">
-              Season-aware trip planning for Australian east coast fishing groups.
+              Season-aware trip planning for Australian fishing groups.
             </p>
           </div>
 

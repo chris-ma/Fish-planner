@@ -67,6 +67,16 @@ const SPECIES_TECHNIQUES: Record<string, string[]> = {
   "saratoga": ["lure-casting-freshwater", "fly-fishing"],
   "catfish": ["bait-fishing-freshwater"],
   "ocean-trout": ["fly-fishing", "trolling-freshwater", "lure-casting-freshwater"],
+  "queenfish": ["popping", "stickbaiting", "casting-hard-bodies", "jigging"],
+  "threadfin-salmon": ["soft-plastics", "casting-hard-bodies", "live-bait"],
+  "spangled-emperor": ["bottom-bait", "soft-plastics", "slow-pitch-jigging"],
+  "dhufish": ["bottom-bait", "slow-pitch-jigging", "jigging"],
+  "baldchin-groper": ["bottom-bait", "slow-pitch-jigging"],
+  "king-george-whiting": ["bait-fishing-estuary"],
+  "black-bream": ["soft-plastics", "casting-hard-bodies", "bait-fishing-estuary"],
+  "bonefish": ["fly-fishing", "casting-hard-bodies"],
+  "milkfish": ["fly-fishing"],
+  "rankin-cod": ["bottom-bait", "slow-pitch-jigging", "jigging"],
 };
 
 async function seed() {
