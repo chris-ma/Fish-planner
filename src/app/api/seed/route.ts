@@ -79,11 +79,11 @@ const SPECIES_TECHNIQUES: Record<string, string[]> = {
   "rankin-cod": ["bottom-bait", "slow-pitch-jigging", "jigging"],
 };
 
+const SECRET = "SEED_V3_AUS_FULL";
+
 export async function POST(request: Request) {
-  // Simple token check to prevent unauthorised runs
-  const authHeader = request.headers.get("authorization");
-  const token = process.env.SEED_SECRET;
-  if (!token || authHeader !== `Bearer ${token}`) {
+  const { searchParams } = new URL(request.url);
+  if (searchParams.get("secret") !== SECRET) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
