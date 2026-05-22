@@ -22,6 +22,9 @@ export function Navbar() {
           <Link href="/gear" className="text-white/70 hover:text-white transition-colors">
             Gear Guide
           </Link>
+          <Link href="/resources" className="text-white/70 hover:text-white transition-colors">
+            Resources
+          </Link>
         </nav>
 
         <Link href="/trips/new">
