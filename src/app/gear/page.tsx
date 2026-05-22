@@ -1,129 +1,72 @@
 "use client";
 
-import { useState } from "react";
-import { CheckCircle2, Circle, Package } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { useState, useMemo } from "react";
+import { CheckCircle2, Circle, ChevronDown, ChevronUp, Fish, Package } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
-import { TRIP_TYPES } from "@/lib/queries/gear";
+import {
+  SPECIES_GEAR,
+  ENV_CHECKLIST,
+  UNIVERSAL_CHECKLIST,
+  ENVIRONMENT_LABELS,
+  ENVIRONMENT_EMOJI,
+  TECHNIQUE_LABELS,
+  TECHNIQUE_COLORS,
+  type Environment,
+  type TechniqueStyle,
+} from "@/lib/gear-specs";
 
-const GEAR_DATA = {
-  offshore_pelagic: {
-    tackle: [
-      { item: "Heavy trolling rod 80–130lb class", qty: 2, essential: true },
-      { item: "Overhead trolling reel (Penn International / Shimano Tiagra)", qty: 2, essential: true },
-      { item: "Skirted trolling lures (assorted colours, 9–14 inch)", qty: 6, essential: true, notes: "Black/red, purple/black, pink/white" },
-      { item: "Large bibbed diving minnows (Halco, Pakula, Nomad DTX)", qty: 4, essential: false },
-      { item: "Wire traces and heavy fluorocarbon leader", qty: 1, essential: true },
-      { item: "Gaffs (2 short + 1 flying gaff for billfish)", qty: 1, essential: true },
-      { item: "Live bait hooks (7/0–10/0) and rigging kit", qty: 1, essential: false },
-      { item: "Light jigging spin setup 20–30lb", qty: 1, essential: false },
-    ],
-    safety: [],
-    clothing: [],
-    food: [{ item: "Large insulated fish box (100L+) with ice", qty: 1, essential: true }],
-    logistics: [],
-  },
-  reef: {
-    tackle: [
-      { item: "Medium-heavy overhead rod 30–50lb, 6–7ft", qty: 2, essential: true },
-      { item: "Shimano Electric or manual overhead reel", qty: 2, essential: true },
-      { item: "50lb braid mainline + 60lb mono leader", qty: 1, essential: true },
-      { item: "Double hook paternoster rigs + snapper leads 100–400g", qty: 1, essential: true },
-      { item: "Frozen pilchards (2–3 boxes)", qty: 3, essential: true },
-      { item: "Squid tubes and whole squid", qty: 2, essential: true },
-      { item: "Large paddle tails 5–7 inch (Zerek, Zman)", qty: 1, essential: false },
-      { item: "Bait board with knife and scissors", qty: 1, essential: true },
-    ],
-    safety: [],
-    clothing: [],
-    food: [],
-    logistics: [],
-  },
-  estuary: {
-    tackle: [
-      { item: "7ft light-medium spinning rod (6–10lb or 10–15lb)", qty: 2, essential: true },
-      { item: "Spinning reel 2500–4000 size with 10–15lb braid", qty: 2, essential: true },
-      { item: "Soft plastics — paddle tails, curl tails, grubs 2–5 inch", qty: 1, essential: true, notes: "Natural + bright colours" },
-      { item: "Jigheads 1/6–3/8 oz", qty: 1, essential: true },
-      { item: "Shallow diving hard bodies 50–80mm", qty: 1, essential: false },
-      { item: "Fluorocarbon leader 8–20lb", qty: 1, essential: true },
-      { item: "Prawns, worms, mullet strips (optional bait)", qty: 1, essential: false },
-      { item: "Rubber mesh landing net", qty: 1, essential: true },
-    ],
-    safety: [],
-    clothing: [{ item: "Wading booties or neoprene waders", qty: 1, essential: false }],
-    food: [],
-    logistics: [],
-  },
-  inshore_sport: {
-    tackle: [
-      { item: "Heavy popper rod 40–80lb (topwater game rod)", qty: 1, essential: true },
-      { item: "Shimano Stella / Daiwa Saltiga 8000–14000 with 65–80lb braid", qty: 1, essential: true },
-      { item: "Cup face poppers 80–120g (Halco Roosta Popper, GT Raider)", qty: 4, essential: true },
-      { item: "Sinking and floating stickbaits 100–160g", qty: 3, essential: false },
-      { item: "Speed jigs 100–200g", qty: 4, essential: false },
-      { item: "Heavy fluorocarbon trace 60–100lb", qty: 1, essential: true },
-      { item: "Wire trace 60–100lb (Spanish mackerel cut-off prevention)", qty: 1, essential: false },
-      { item: "Assist hook rigs for jigs", qty: 1, essential: true },
-    ],
-    safety: [],
-    clothing: [],
-    food: [],
-    logistics: [],
-  },
+const ENVIRONMENTS: { value: Environment | "all"; label: string; emoji: string }[] = [
+  { value: "all", label: "All", emoji: "🎣" },
+  { value: "offshore_boat", label: "Offshore Boat", emoji: "⛵" },
+  { value: "inshore_boat", label: "Inshore Boat", emoji: "🚤" },
+  { value: "estuary_boat", label: "Estuary Boat", emoji: "🛶" },
+  { value: "land_based", label: "Land-Based", emoji: "🪨" },
+  { value: "freshwater_boat", label: "Freshwater Boat", emoji: "⛵" },
+  { value: "freshwater_shore", label: "Freshwater Shore", emoji: "🌿" },
+];
+
+const TECHNIQUES: { value: TechniqueStyle | "all"; label: string; color: string }[] = [
+  { value: "all", label: "All Styles", color: "bg-slate-100 text-slate-700 border-slate-200" },
+  { value: "trolling", label: "Trolling", color: "bg-purple-100 text-purple-700 border-purple-200" },
+  { value: "heavy", label: "Heavy", color: "bg-red-100 text-red-700 border-red-200" },
+  { value: "medium", label: "Medium", color: "bg-amber-100 text-amber-700 border-amber-200" },
+  { value: "light", label: "Light", color: "bg-sky-100 text-sky-700 border-sky-200" },
+  { value: "finesse", label: "Finesse", color: "bg-emerald-100 text-emerald-700 border-emerald-200" },
+  { value: "fly", label: "Fly", color: "bg-teal-100 text-teal-700 border-teal-200" },
+];
+
+const CATEGORY_COLORS: Record<string, string> = {
+  pelagic: "bg-blue-500",
+  inshore: "bg-cyan-500",
+  reef: "bg-orange-500",
+  estuary: "bg-teal-500",
+  freshwater: "bg-emerald-500",
 };
 
-const SHARED_GEAR = {
-  safety: [
-    { item: "Life jackets / PFDs for all crew (AMSA approved)", qty: 1, essential: true },
-    { item: "EPIRB (boat) or PLB (personal) — registered with AMSA", qty: 1, essential: true },
-    { item: "VHF marine radio (handheld or fixed-mount)", qty: 1, essential: true },
-    { item: "Marine flare kit (within expiry date)", qty: 1, essential: true },
-    { item: "Marine first aid kit with hook removal", qty: 1, essential: true },
-    { item: "Fully charged mobile in waterproof case", qty: 1, essential: true },
-  ],
-  clothing: [
-    { item: "Polarised sunglasses (amber or grey lens)", qty: 1, essential: true },
-    { item: "Long-sleeve UV sun shirt (UPF 50+)", qty: 1, essential: true },
-    { item: "Wide-brim hat or cap (UPF 50+)", qty: 1, essential: true },
-    { item: "SPF 50+ sunscreen (reef-safe)", qty: 2, essential: true },
-    { item: "Fishing gloves (sun and grip protection)", qty: 1, essential: false },
-  ],
-  tackle: [
-    { item: "Long-nose pliers and hook remover", qty: 1, essential: true },
-    { item: "Sharp braid scissors", qty: 1, essential: true },
-    { item: "Digital fishing scales (0–30kg)", qty: 1, essential: false },
-    { item: "Folding fish ruler or measure tape", qty: 1, essential: true },
-  ],
-  food: [
-    { item: "Drinking water — 2L per person per day", qty: 1, essential: true },
-    { item: "High-energy snacks, sandwiches, easy-to-eat meals", qty: 1, essential: true },
-    { item: "Esky with ice for catch and drinks", qty: 1, essential: true },
-    { item: "Motion sickness tablets (Kwells/Stugeron) — take night before", qty: 1, essential: false },
-  ],
-  logistics: [
-    { item: "Valid state fishing licence (QLD / NSW)", qty: 1, essential: true },
-    { item: "Fillet knife, cutting board, fish bags, zip-lock bags", qty: 1, essential: true },
-    { item: "Camera or GoPro for catch photos", qty: 1, essential: false },
-    { item: "Waterproof torch or headlamp (early starts / night fishing)", qty: 1, essential: false },
-  ],
+const CATEGORY_LABEL: Record<string, string> = {
+  pelagic: "Pelagic",
+  inshore: "Inshore",
+  reef: "Reef",
+  estuary: "Estuary",
+  freshwater: "Freshwater",
 };
-
-const CATEGORY_LABELS: Record<string, string> = {
-  tackle: "Tackle & Lures",
-  safety: "Safety Equipment",
-  clothing: "Clothing & Sun Protection",
-  food: "Food, Water & Ice",
-  logistics: "Logistics & Admin",
-};
-
-type TripType = keyof typeof GEAR_DATA;
 
 export default function GearPage() {
-  const [selectedType, setSelectedType] = useState<TripType>("offshore_pelagic");
+  const [env, setEnv] = useState<Environment | "all">("all");
+  const [technique, setTechnique] = useState<TechniqueStyle | "all">("all");
+  const [expandedSlug, setExpandedSlug] = useState<string | null>(null);
+  const [checklistOpen, setChecklistOpen] = useState(false);
   const [checked, setChecked] = useState<Set<string>>(new Set());
 
-  const toggle = (key: string) => {
+  const filteredSpecies = useMemo(() => {
+    return SPECIES_GEAR.filter((s) => {
+      const envMatch = env === "all" || s.environments.includes(env as Environment);
+      const techMatch = technique === "all" || s.techniques.includes(technique as TechniqueStyle);
+      return envMatch && techMatch;
+    });
+  }, [env, technique]);
+
+  const toggleChecked = (key: string) => {
     setChecked((prev) => {
       const next = new Set(prev);
       if (next.has(key)) next.delete(key);
@@ -132,105 +75,314 @@ export default function GearPage() {
     });
   };
 
-  const specificGear = GEAR_DATA[selectedType];
+  // Build checklist from selected environment
+  const checklistItems = useMemo(() => {
+    const envItems = env !== "all" ? ENV_CHECKLIST[env] ?? [] : [];
+    return { envItems, universal: UNIVERSAL_CHECKLIST };
+  }, [env]);
 
-  const allCategories = ["tackle", "safety", "clothing", "food", "logistics"] as const;
+  const totalChecklist = checklistItems.envItems.length + checklistItems.universal.length;
+  const checkedCount = [...checklistItems.envItems, ...checklistItems.universal].filter((_, i) =>
+    checked.has(`cl-${i}`)
+  ).length;
 
   return (
-    <div className="max-w-4xl mx-auto px-4 sm:px-6 py-10">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-slate-900 mb-2">Gear Guide</h1>
-        <p className="text-slate-600">
-          Select your trip type to get a recommended tackle and equipment checklist.
-        </p>
+    <div>
+      {/* Hero */}
+      <div className="relative bg-[#020B14] py-12 px-4 overflow-hidden">
+        <div className="absolute bottom-0 left-1/4 w-96 h-64 bg-teal-600/15 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute top-0 right-1/4 w-64 h-48 bg-blue-600/10 rounded-full blur-3xl pointer-events-none" />
+        <div className="max-w-5xl mx-auto relative z-10">
+          <p className="text-[#FFD60A] text-sm font-semibold mb-2 tracking-wide uppercase">Gear Guide</p>
+          <h1 className="text-4xl md:text-5xl font-bold text-[#F5F0E8] mb-3">What to Pack</h1>
+          <p className="text-white/60 max-w-xl">
+            Filter by where you're fishing and your technique style to find exact rod, reel, line, and lure specs for every species.
+          </p>
+        </div>
       </div>
 
-      {/* Trip type selector */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-8">
-        {TRIP_TYPES.map((t) => (
-          <button
-            key={t.value}
-            onClick={() => setSelectedType(t.value as TripType)}
-            className={cn(
-              "p-4 rounded-xl border-2 text-left transition-all",
-              selectedType === t.value
-                ? "border-blue-600 bg-blue-50"
-                : "border-slate-200 hover:border-slate-300"
-            )}
-          >
-            <div className="font-semibold text-sm mb-1">{t.label}</div>
-            <div className="text-xs text-muted-foreground">{t.description}</div>
-          </button>
-        ))}
-      </div>
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 py-8 space-y-8">
 
-      {/* Checklist */}
-      <div className="space-y-6">
-        {allCategories.map((cat) => {
-          const specific = (specificGear as Record<string, { item: string; qty: number; essential: boolean; notes?: string }[]>)[cat] ?? [];
-          const shared = SHARED_GEAR[cat] ?? [];
-          const items = [...specific, ...shared];
-          if (items.length === 0) return null;
+        {/* Filter Section */}
+        <div className="space-y-4">
+          {/* Environment filter */}
+          <div>
+            <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">Fishing environment</p>
+            <div className="flex flex-wrap gap-2">
+              {ENVIRONMENTS.map((e) => (
+                <button
+                  key={e.value}
+                  onClick={() => setEnv(e.value as Environment | "all")}
+                  className={cn(
+                    "flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm border transition-all font-medium",
+                    env === e.value
+                      ? "bg-[#020B14] text-white border-[#020B14]"
+                      : "bg-white text-slate-600 border-slate-200 hover:border-slate-400"
+                  )}
+                >
+                  <span>{e.emoji}</span>
+                  {e.label}
+                </button>
+              ))}
+            </div>
+          </div>
 
-          const categoryChecked = items.filter((_, i) => checked.has(`${cat}-${i}`)).length;
+          {/* Technique filter */}
+          <div>
+            <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">Technique style</p>
+            <div className="flex flex-wrap gap-2">
+              {TECHNIQUES.map((t) => (
+                <button
+                  key={t.value}
+                  onClick={() => setTechnique(t.value as TechniqueStyle | "all")}
+                  className={cn(
+                    "px-3 py-1.5 rounded-full text-sm border transition-all font-medium",
+                    technique === t.value
+                      ? cn(t.color, "ring-2 ring-offset-1 ring-current")
+                      : cn(t.value === "all" ? "bg-white text-slate-600 border-slate-200" : t.color, "opacity-60 hover:opacity-100")
+                  )}
+                >
+                  {t.label}
+                </button>
+              ))}
+            </div>
+          </div>
 
-          return (
-            <div key={cat}>
-              <div className="flex items-center justify-between mb-3">
-                <h2 className="font-semibold text-slate-900 flex items-center gap-2">
-                  <Package className="h-4 w-4 text-blue-600" />
-                  {CATEGORY_LABELS[cat]}
-                </h2>
-                <span className="text-xs text-muted-foreground">
-                  {categoryChecked}/{items.length}
-                </span>
-              </div>
-              <div className="border rounded-xl divide-y">
-                {items.map((item, i) => {
-                  const key = `${cat}-${i}`;
-                  const isChecked = checked.has(key);
-                  return (
-                    <button
-                      key={key}
-                      onClick={() => toggle(key)}
+          <p className="text-sm text-slate-500">
+            {filteredSpecies.length} species match
+          </p>
+        </div>
+
+        {/* Species gear cards */}
+        {filteredSpecies.length === 0 ? (
+          <div className="text-center py-16 text-slate-400">
+            <Fish className="h-10 w-10 mx-auto mb-3 opacity-30" />
+            <p className="font-medium">No species match those filters</p>
+            <p className="text-sm mt-1">Try broadening your selection</p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {filteredSpecies.map((sp) => {
+              const isOpen = expandedSlug === sp.slug;
+              return (
+                <div
+                  key={sp.slug}
+                  className="border border-border rounded-2xl overflow-hidden bg-white shadow-sm hover:shadow-md transition-shadow"
+                >
+                  {/* Card header */}
+                  <button
+                    className="w-full text-left p-4 flex items-start gap-3"
+                    onClick={() => setExpandedSlug(isOpen ? null : sp.slug)}
+                  >
+                    {/* Category dot */}
+                    <div
                       className={cn(
-                        "w-full flex items-center gap-3 px-4 py-3 text-left hover:bg-slate-50 transition-colors first:rounded-t-xl last:rounded-b-xl",
-                        isChecked && "bg-slate-50"
+                        "w-2.5 h-2.5 rounded-full mt-1.5 shrink-0",
+                        CATEGORY_COLORS[sp.category] ?? "bg-slate-400"
                       )}
-                    >
-                      {isChecked ? (
-                        <CheckCircle2 className="h-5 w-5 text-emerald-500 shrink-0" />
-                      ) : (
-                        <Circle className="h-5 w-5 text-slate-300 shrink-0" />
-                      )}
-                      <div className="flex-1 min-w-0">
-                        <div className={cn("text-sm", isChecked && "line-through text-muted-foreground")}>
-                          {item.item}
-                          {item.qty > 1 && (
-                            <span className="text-muted-foreground ml-1.5">× {item.qty}</span>
-                          )}
+                    />
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-start justify-between gap-2">
+                        <div>
+                          <p className="font-semibold text-slate-900 leading-tight">{sp.name}</p>
+                          <p className="text-xs text-slate-500 mt-0.5">
+                            {CATEGORY_LABEL[sp.category]}
+                          </p>
                         </div>
-                        {(item as { notes?: string }).notes && !isChecked && (
-                          <div className="text-xs text-muted-foreground mt-0.5">{(item as { notes?: string }).notes}</div>
+                        {isOpen ? (
+                          <ChevronUp className="h-4 w-4 text-slate-400 shrink-0 mt-1" />
+                        ) : (
+                          <ChevronDown className="h-4 w-4 text-slate-400 shrink-0 mt-1" />
                         )}
                       </div>
-                      {item.essential && !isChecked && (
-                        <span className="text-xs bg-red-50 text-red-600 px-2 py-0.5 rounded-full shrink-0 font-medium">
-                          Essential
-                        </span>
-                      )}
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-          );
-        })}
-      </div>
+                      {/* Technique + Environment badges */}
+                      <div className="flex flex-wrap gap-1 mt-2">
+                        {sp.techniques.map((t) => (
+                          <span
+                            key={t}
+                            className={cn(
+                              "text-xs px-2 py-0.5 rounded-full font-medium",
+                              TECHNIQUE_COLORS[t]
+                            )}
+                          >
+                            {TECHNIQUE_LABELS[t]}
+                          </span>
+                        ))}
+                        {sp.environments.map((e) => (
+                          <span
+                            key={e}
+                            className="text-xs px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 font-medium"
+                          >
+                            {ENVIRONMENT_EMOJI[e]} {ENVIRONMENT_LABELS[e]}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  </button>
 
-      <div className="mt-8 p-4 bg-amber-50 border border-amber-200 rounded-xl text-sm text-amber-800">
-        <strong>Reminder:</strong> Always check current bag limits, size restrictions, and licence requirements for your state before your trip. Regulations can change seasonally.
+                  {/* Expanded gear details */}
+                  {isOpen && (
+                    <div className="border-t border-slate-100 bg-slate-50 px-4 pb-4 pt-3">
+                      <table className="w-full text-sm">
+                        <tbody className="divide-y divide-slate-100">
+                          <GearRow label="Rod" value={sp.rod} />
+                          <GearRow label="Reel" value={sp.reel} />
+                          <GearRow label="Line" value={sp.mainline} />
+                          <GearRow label="Leader" value={sp.leader} />
+                          {sp.lures && <GearRow label="Lures" value={sp.lures} />}
+                          {sp.hooks && <GearRow label="Hooks/Bait" value={sp.hooks} />}
+                        </tbody>
+                      </table>
+                      {sp.notes && (
+                        <p className="mt-3 text-xs text-amber-800 bg-amber-50 border border-amber-100 rounded-lg px-3 py-2">
+                          💡 {sp.notes}
+                        </p>
+                      )}
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        )}
+
+        {/* Gear Checklist */}
+        <div className="border border-border rounded-2xl overflow-hidden">
+          <button
+            className="w-full flex items-center justify-between px-5 py-4 bg-white hover:bg-slate-50 transition-colors"
+            onClick={() => setChecklistOpen((v) => !v)}
+          >
+            <div className="flex items-center gap-2">
+              <Package className="h-5 w-5 text-slate-500" />
+              <span className="font-semibold text-slate-900">Packing Checklist</span>
+              {env !== "all" && (
+                <span className="text-xs bg-slate-100 text-slate-600 px-2 py-0.5 rounded-full">
+                  {ENVIRONMENT_LABELS[env as Environment]}
+                </span>
+              )}
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="text-sm text-slate-500">
+                {checkedCount}/{totalChecklist}
+              </span>
+              {checklistOpen ? (
+                <ChevronUp className="h-4 w-4 text-slate-400" />
+              ) : (
+                <ChevronDown className="h-4 w-4 text-slate-400" />
+              )}
+            </div>
+          </button>
+
+          {checklistOpen && (
+            <div className="border-t border-slate-100 divide-y bg-white">
+              {/* Environment-specific items */}
+              {checklistItems.envItems.length > 0 && (
+                <>
+                  <div className="px-5 py-2 bg-slate-50">
+                    <p className="text-xs font-semibold text-slate-500 uppercase tracking-wide">
+                      {ENVIRONMENT_LABELS[env as Environment]} — Specific Items
+                    </p>
+                  </div>
+                  {checklistItems.envItems.map((item, i) => (
+                    <ChecklistRow
+                      key={`env-${i}`}
+                      item={item.item}
+                      notes={item.notes}
+                      essential={item.essential}
+                      category={item.category}
+                      checked={checked.has(`cl-${i}`)}
+                      onToggle={() => toggleChecked(`cl-${i}`)}
+                    />
+                  ))}
+                </>
+              )}
+
+              {/* Universal items */}
+              <div className="px-5 py-2 bg-slate-50">
+                <p className="text-xs font-semibold text-slate-500 uppercase tracking-wide">
+                  Universal — All Trips
+                </p>
+              </div>
+              {checklistItems.universal.map((item, i) => {
+                const idx = checklistItems.envItems.length + i;
+                return (
+                  <ChecklistRow
+                    key={`uni-${i}`}
+                    item={item.item}
+                    essential={item.essential}
+                    category={item.category}
+                    checked={checked.has(`cl-${idx}`)}
+                    onToggle={() => toggleChecked(`cl-${idx}`)}
+                  />
+                );
+              })}
+            </div>
+          )}
+        </div>
+
+        <div className="p-4 bg-amber-50 border border-amber-200 rounded-xl text-sm text-amber-800">
+          <strong>Reminder:</strong> Always check current bag limits, size restrictions, and licence requirements for your state before your trip. Regulations can change seasonally.
+        </div>
       </div>
     </div>
+  );
+}
+
+function GearRow({ label, value }: { label: string; value: string }) {
+  return (
+    <tr>
+      <td className="py-1.5 pr-3 text-slate-500 font-medium whitespace-nowrap w-20 align-top">
+        {label}
+      </td>
+      <td className="py-1.5 text-slate-800 leading-snug">{value}</td>
+    </tr>
+  );
+}
+
+function ChecklistRow({
+  item,
+  notes,
+  essential,
+  category,
+  checked,
+  onToggle,
+}: {
+  item: string;
+  notes?: string;
+  essential: boolean;
+  category: string;
+  checked: boolean;
+  onToggle: () => void;
+}) {
+  return (
+    <button
+      onClick={onToggle}
+      className={cn(
+        "w-full flex items-center gap-3 px-5 py-3 text-left hover:bg-slate-50 transition-colors",
+        checked && "bg-slate-50"
+      )}
+    >
+      {checked ? (
+        <CheckCircle2 className="h-5 w-5 text-emerald-500 shrink-0" />
+      ) : (
+        <Circle className="h-5 w-5 text-slate-300 shrink-0" />
+      )}
+      <div className="flex-1 min-w-0">
+        <span className={cn("text-sm", checked && "line-through text-slate-400")}>
+          {item}
+        </span>
+        {notes && !checked && (
+          <p className="text-xs text-slate-500 mt-0.5">{notes}</p>
+        )}
+      </div>
+      <div className="flex items-center gap-2 shrink-0">
+        <span className="text-xs text-slate-400">{category}</span>
+        {essential && !checked && (
+          <span className="text-xs bg-red-50 text-red-600 px-2 py-0.5 rounded-full font-medium">
+            Essential
+          </span>
+        )}
+      </div>
+    </button>
   );
 }
