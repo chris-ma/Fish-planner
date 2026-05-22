@@ -86,12 +86,22 @@ export async function GET(request: NextRequest) {
     `CREATE TABLE IF NOT EXISTS trip_participants (id TEXT PRIMARY KEY NOT NULL, trip_id TEXT NOT NULL REFERENCES trips(id) ON DELETE CASCADE, name TEXT NOT NULL, role TEXT NOT NULL DEFAULT 'crew', joined_at TEXT NOT NULL, UNIQUE(trip_id, name))`,
   ], "write");
 
+  // Clear seed tables so re-runs are idempotent (trips/bookings are preserved)
+  await client.batch([
+    `DELETE FROM season_windows`,
+    `DELETE FROM species_techniques`,
+    `DELETE FROM gear_templates`,
+    `DELETE FROM techniques`,
+    `DELETE FROM species`,
+    `DELETE FROM regions`,
+  ], "write");
+
   // ── 2. Regions ─────────────────────────────────────────────────────────────
   const regionIds: Record<string, string> = {};
   const regionBatch = REGIONS.map((r) => {
     const id = nanoid();
     regionIds[r.slug] = id;
-    return `INSERT OR IGNORE INTO regions (id, slug, name, state, zone, description, latitude, longitude, tags, created_at) VALUES (${q(id)}, ${q(r.slug)}, ${q(r.name)}, ${q(r.state)}, ${q(r.zone)}, ${q(r.description)}, ${r.latitude ?? "NULL"}, ${r.longitude ?? "NULL"}, NULL, ${q(now)})`;
+    return `INSERT INTO regions (id, slug, name, state, zone, description, latitude, longitude, tags, created_at) VALUES (${q(id)}, ${q(r.slug)}, ${q(r.name)}, ${q(r.state)}, ${q(r.zone)}, ${q(r.description)}, ${r.latitude ?? "NULL"}, ${r.longitude ?? "NULL"}, NULL, ${q(now)})`;
   });
   await client.batch(regionBatch, "write");
 
@@ -100,7 +110,7 @@ export async function GET(request: NextRequest) {
   const speciesBatch = SPECIES.map((s) => {
     const id = nanoid();
     speciesIds[s.slug] = id;
-    return `INSERT OR IGNORE INTO species (id, slug, common_name, scientific_name, category, description, min_legal_size_mm, bag_limit, created_at) VALUES (${q(id)}, ${q(s.slug)}, ${q(s.commonName)}, ${q(s.scientificName)}, ${q(s.category)}, ${q(s.description)}, ${s.minLegalSizeMm ?? "NULL"}, ${s.bagLimit ?? "NULL"}, ${q(now)})`;
+    return `INSERT INTO species (id, slug, common_name, scientific_name, category, description, min_legal_size_mm, bag_limit, created_at) VALUES (${q(id)}, ${q(s.slug)}, ${q(s.commonName)}, ${q(s.scientificName)}, ${q(s.category)}, ${q(s.description)}, ${s.minLegalSizeMm ?? "NULL"}, ${s.bagLimit ?? "NULL"}, ${q(now)})`;
   });
   await client.batch(speciesBatch, "write");
 
@@ -109,7 +119,7 @@ export async function GET(request: NextRequest) {
   const techniqueBatch = TECHNIQUES_DATA.map((t) => {
     const id = nanoid();
     techniqueIds[t.slug] = id;
-    return `INSERT OR IGNORE INTO techniques (id, slug, name, description, category) VALUES (${q(id)}, ${q(t.slug)}, ${q(t.name)}, ${q(t.description)}, ${q(t.category)})`;
+    return `INSERT INTO techniques (id, slug, name, description, category) VALUES (${q(id)}, ${q(t.slug)}, ${q(t.name)}, ${q(t.description)}, ${q(t.category)})`;
   });
   await client.batch(techniqueBatch, "write");
 
@@ -121,7 +131,7 @@ export async function GET(request: NextRequest) {
     for (const techSlug of techSlugs) {
       const techniqueId = techniqueIds[techSlug];
       if (!techniqueId) continue;
-      stBatch.push(`INSERT OR IGNORE INTO species_techniques (species_id, technique_id, effectiveness, notes) VALUES (${q(speciesId)}, ${q(techniqueId)}, NULL, NULL)`);
+      stBatch.push(`INSERT INTO species_techniques (species_id, technique_id, effectiveness, notes) VALUES (${q(speciesId)}, ${q(techniqueId)}, NULL, NULL)`);
     }
   }
   if (stBatch.length) await client.batch(stBatch, "write");
@@ -139,7 +149,7 @@ export async function GET(request: NextRequest) {
       for (let month = 1; month <= 12; month++) {
         const rating = zoneData[month];
         if (!rating) continue;
-        swBatch.push(`INSERT OR IGNORE INTO season_windows (id, region_id, species_id, month, rating, notes) VALUES (${q(nanoid())}, ${q(regionId)}, ${q(speciesId)}, ${month}, ${q(rating)}, NULL)`);
+        swBatch.push(`INSERT INTO season_windows (id, region_id, species_id, month, rating, notes) VALUES (${q(nanoid())}, ${q(regionId)}, ${q(speciesId)}, ${month}, ${q(rating)}, NULL)`);
       }
     }
   }
@@ -151,7 +161,7 @@ export async function GET(request: NextRequest) {
   // ── 7. Gear templates ──────────────────────────────────────────────────────
   const gtBatch = GEAR_TEMPLATES.map((item) => {
     const notes = (item as { notes?: string }).notes ?? null;
-    return `INSERT OR IGNORE INTO gear_templates (id, name, category, trip_type, item_name, quantity, notes, is_essential) VALUES (${q(nanoid())}, ${q(item.name)}, ${q(item.category)}, ${q(item.tripType)}, ${q(item.itemName)}, ${item.quantity ?? 1}, ${q(notes)}, ${item.isEssential ? 1 : 0})`;
+    return `INSERT INTO gear_templates (id, name, category, trip_type, item_name, quantity, notes, is_essential) VALUES (${q(nanoid())}, ${q(item.name)}, ${q(item.category)}, ${q(item.tripType)}, ${q(item.itemName)}, ${item.quantity ?? 1}, ${q(notes)}, ${item.isEssential ? 1 : 0})`;
   });
   await client.batch(gtBatch, "write");
 
