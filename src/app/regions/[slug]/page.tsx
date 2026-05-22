@@ -60,88 +60,101 @@ export default async function RegionPage({ params }: { params: Promise<{ slug: s
     .slice(0, 6);
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 py-10">
-      {/* Breadcrumb */}
-      <nav className="text-sm text-muted-foreground mb-6 flex items-center gap-2">
-        <Link href="/" className="hover:text-foreground">Home</Link>
-        <span>/</span>
-        <span>{region.name}</span>
-      </nav>
+    <div>
+      {/* Hero Banner */}
+      <section className="relative bg-[#020B14] overflow-hidden">
+        {/* Glow orbs */}
+        <div className="absolute bottom-0 left-1/4 w-[400px] h-[400px] bg-cyan-600/20 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute top-0 right-1/3 w-80 h-80 bg-blue-600/15 rounded-full blur-3xl pointer-events-none" />
 
-      {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4 mb-8">
-        <div>
-          <div className="flex items-center gap-2 text-muted-foreground text-sm mb-2">
-            <MapPin className="h-4 w-4" />
-            <span>{ZONE_LABELS[region.zone] ?? region.zone}</span>
-            <Badge variant="outline">{region.state}</Badge>
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 py-12">
+          {/* Breadcrumb */}
+          <nav className="text-sm text-white/50 mb-5 flex items-center gap-2">
+            <Link href="/" className="hover:text-white/80 transition-colors">Home</Link>
+            <span>/</span>
+            <span>{region.name}</span>
+          </nav>
+
+          {/* Zone badge */}
+          <div className="inline-flex items-center gap-1.5 bg-white/20 backdrop-blur rounded-full px-3 py-1 text-white/80 text-sm mb-3 border border-white/20">
+            <MapPin className="h-3.5 w-3.5" />
+            {ZONE_LABELS[region.zone] ?? region.zone} · {region.state}
           </div>
-          <h1 className="text-3xl font-bold text-slate-900 mb-3">Fishing in {region.name}</h1>
+
+          {/* Heading */}
+          <h1 className="text-4xl font-bold text-white mt-3 mb-3">Fishing in {region.name}</h1>
+
+          {/* Description */}
           {region.description && (
-            <p className="text-slate-600 max-w-2xl leading-relaxed">{region.description}</p>
+            <p className="text-white/60 max-w-2xl leading-relaxed mb-6">{region.description}</p>
           )}
-        </div>
-        <Link href="/trips/new">
-          <Button className="shrink-0 gap-2">
-            Plan a Trip Here
-            <ArrowRight className="h-4 w-4" />
-          </Button>
-        </Link>
-      </div>
 
-      {/* In season now */}
-      {peakThisMonth.length > 0 && (
-        <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-5 mb-8">
-          <h2 className="font-semibold text-emerald-900 mb-3 flex items-center gap-2">
-            <Fish className="h-4 w-4" />
-            Active this month — {MONTH_NAMES_FULL[month]}
-          </h2>
-          <div className="flex flex-wrap gap-2">
-            {peakThisMonth.map((sp) => (
-              <Link
-                key={sp.speciesSlug}
-                href={`/species/${sp.speciesSlug}`}
-                className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-opacity hover:opacity-80 ${
-                  sp.months[month] === "peak"
-                    ? "bg-emerald-500 text-white"
-                    : "bg-amber-400 text-white"
-                }`}
-              >
-                {sp.commonName}
-              </Link>
-            ))}
-          </div>
+          {/* CTA */}
+          <Link href="/trips/new">
+            <button className="inline-flex items-center gap-2 bg-[#06B6D4] hover:bg-[#0891B2] text-white font-medium px-5 py-2.5 rounded-xl transition-colors">
+              Plan a Trip Here
+              <ArrowRight className="h-4 w-4" />
+            </button>
+          </Link>
         </div>
-      )}
+      </section>
 
-      {/* Seasonal Calendar */}
-      <section className="mb-10">
-        <h2 className="text-xl font-bold text-slate-900 mb-4">12-Month Seasonal Calendar</h2>
-        <p className="text-sm text-muted-foreground mb-5">
-          Monthly ratings for each species. Click a species name to see where else it can be targeted.
-        </p>
-        {calendarData.length > 0 ? (
-          <SeasonalCalendar rows={calendarData} highlightMonth={month} linkRowsTo="species" />
-        ) : (
-          <div className="border rounded-xl p-8 text-center text-muted-foreground">
-            <p>No season data available for this region yet.</p>
-            <p className="text-sm mt-1">Run the seed script to populate seasonal data.</p>
+      {/* Page content */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-10">
+        {/* In season now */}
+        {peakThisMonth.length > 0 && (
+          <div className="bg-cyan-950/50 border border-cyan-800/50 rounded-2xl p-5 mb-8">
+            <h2 className="font-semibold text-cyan-300 mb-3 flex items-center gap-2">
+              <Fish className="h-4 w-4" />
+              Active this month — {MONTH_NAMES_FULL[month]}
+            </h2>
+            <div className="flex flex-wrap gap-2">
+              {peakThisMonth.map((sp) => (
+                <Link
+                  key={sp.speciesSlug}
+                  href={`/species/${sp.speciesSlug}`}
+                  className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-opacity hover:opacity-80 ${
+                    sp.months[month] === "peak"
+                      ? "bg-[#06B6D4] text-white"
+                      : "bg-[#0891B2] text-white"
+                  }`}
+                >
+                  {sp.commonName}
+                </Link>
+              ))}
+            </div>
           </div>
         )}
-      </section>
 
-      {/* CTA */}
-      <section className="bg-blue-950 text-white rounded-2xl p-8 text-center">
-        <h2 className="text-2xl font-bold mb-3">Ready to plan a trip to {region.name}?</h2>
-        <p className="text-blue-200 mb-6 max-w-md mx-auto">
-          Create a shared workspace, invite your crew, build a gear list, and store all your bookings in one place.
-        </p>
-        <Link href="/trips/new">
-          <Button variant="outline" size="lg" className="text-white border-white hover:bg-white hover:text-blue-950">
-            Plan This Trip
-          </Button>
-        </Link>
-      </section>
+        {/* Seasonal Calendar */}
+        <section className="mb-10">
+          <h2 className="text-xl font-bold text-[#040F1C] mb-4">12-Month Seasonal Calendar</h2>
+          <p className="text-sm text-muted-foreground mb-5">
+            Monthly ratings for each species. Click a species name to see where else it can be targeted.
+          </p>
+          {calendarData.length > 0 ? (
+            <SeasonalCalendar rows={calendarData} highlightMonth={month} linkRowsTo="species" />
+          ) : (
+            <div className="border rounded-xl p-8 text-center text-muted-foreground">
+              <p>No season data available for this region yet.</p>
+              <p className="text-sm mt-1">Run the seed script to populate seasonal data.</p>
+            </div>
+          )}
+        </section>
+
+        {/* CTA */}
+        <section className="bg-[#040F1C] rounded-3xl p-10 text-center text-white">
+          <h2 className="text-2xl font-bold mb-3">Ready to plan a trip to {region.name}?</h2>
+          <p className="text-white/60 mb-6 max-w-md mx-auto">
+            Create a shared workspace, invite your crew, build a gear list, and store all your bookings in one place.
+          </p>
+          <Link href="/trips/new">
+            <button className="inline-flex items-center gap-2 border border-white/30 text-white hover:bg-white hover:text-[#040F1C] font-medium px-6 py-2.5 rounded-xl transition-colors">
+              Plan This Trip
+            </button>
+          </Link>
+        </section>
+      </div>
     </div>
   );
 }

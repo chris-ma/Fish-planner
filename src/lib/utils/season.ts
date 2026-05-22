@@ -5,8 +5,8 @@ export const RATING_ORDER: Rating[] = ["poor", "fair", "good", "peak"];
 export function ratingColor(rating: Rating | null): string {
   switch (rating) {
     case "peak": return "bg-emerald-500 text-white";
-    case "good": return "bg-amber-400 text-white";
-    case "fair": return "bg-slate-300 text-slate-700";
+    case "good": return "bg-[#06B6D4] text-white";
+    case "fair": return "bg-sky-200 text-sky-800";
     case "poor": return "bg-slate-100 text-slate-400";
     default: return "bg-transparent text-slate-200";
   }

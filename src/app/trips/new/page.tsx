@@ -92,14 +92,19 @@ export default function NewTripPage() {
   };
 
   return (
-    <div className="max-w-2xl mx-auto px-4 sm:px-6 py-12">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-slate-900 mb-2">Plan a Trip</h1>
-        <p className="text-slate-600">
-          Create a shareable trip workspace for your crew. No account needed.
-        </p>
+    <div>
+      {/* Ocean hero header */}
+      <div className="relative bg-[#020B14] py-12 px-4 overflow-hidden">
+        <div className="absolute bottom-0 left-1/4 w-96 h-64 bg-cyan-600/20 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute top-0 right-1/4 w-64 h-64 bg-blue-600/10 rounded-full blur-3xl pointer-events-none" />
+        <div className="max-w-2xl mx-auto relative z-10">
+          <p className="text-white/50 text-sm mb-2">🎣 No account needed</p>
+          <h1 className="text-4xl font-bold text-white mb-2">Plan a Trip</h1>
+          <p className="text-white/60">Create a shareable workspace for your crew in seconds.</p>
+        </div>
       </div>
 
+      <div className="max-w-2xl mx-auto px-4 sm:px-6 py-10">
       <form onSubmit={handleSubmit} className="space-y-6">
         <div className="space-y-2">
           <Label htmlFor="title">Trip name *</Label>
@@ -159,8 +164,8 @@ export default function NewTripPage() {
                 onClick={() => toggleSpecies(name)}
                 className={`px-3 py-1.5 rounded-full text-sm border transition-all ${
                   selectedSpecies.includes(name)
-                    ? "bg-blue-600 text-white border-blue-600"
-                    : "border-slate-200 text-slate-600 hover:border-slate-400"
+                    ? "bg-[#06B6D4] text-white border-[#06B6D4]"
+                    : "border-slate-200 text-slate-600 hover:border-[#06B6D4] hover:text-[#0891B2]"
                 }`}
               >
                 {name}
@@ -190,6 +195,7 @@ export default function NewTripPage() {
           )}
         </Button>
       </form>
+      </div>
     </div>
   );
 }

@@ -30,32 +30,37 @@ export default async function HomePage({
   return (
     <div>
       {/* Hero */}
-      <section className="bg-gradient-to-b from-blue-950 to-blue-800 text-white py-16 px-4">
-        <div className="max-w-3xl mx-auto text-center">
-          <div className="inline-flex items-center gap-2 bg-blue-700/50 rounded-full px-4 py-1.5 text-sm mb-6">
-            <Fish className="h-4 w-4" />
-            Australian East Coast Fishing Planner
-          </div>
-          <h1 className="text-4xl md:text-5xl font-bold mb-4 leading-tight">
-            Plan your trip around<br />the fishing, not the calendar.
-          </h1>
-          <p className="text-blue-200 text-lg mb-10 max-w-xl mx-auto">
-            Find the best time and place to target any species on the east coast — then plan the whole trip with your crew.
-          </p>
-          <div className="flex justify-center">
-            <HeroSearch speciesList={speciesList} regionList={regionList} />
-          </div>
+      <section className="relative overflow-hidden bg-[#020B14] min-h-[480px] flex flex-col items-center justify-center text-center px-4 pb-24">
+        {/* Radial glow orbs */}
+        <div className="absolute bottom-0 left-1/3 w-[500px] h-[500px] bg-cyan-600/20 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute top-0 right-1/4 w-96 h-96 bg-blue-600/15 rounded-full blur-3xl pointer-events-none" />
+
+        {/* Badge pill */}
+        <div className="relative inline-flex items-center gap-1.5 bg-white/10 backdrop-blur rounded-full px-4 py-1.5 text-white/80 text-sm mb-5 border border-white/20">
+          🎣 Australian East Coast · 21 Regions · 25 Species
+        </div>
+
+        {/* Headline */}
+        <h1 className="relative text-5xl md:text-6xl font-bold text-white mb-4 leading-tight tracking-tight">
+          Find Your<br />Perfect Catch.
+        </h1>
+
+        {/* Subtitle */}
+        <p className="relative text-white/60 text-lg mb-10 max-w-lg mx-auto leading-relaxed">
+          Find the best time and place to target any species on the east coast — then plan the whole trip with your crew.
+        </p>
+
+        {/* Search */}
+        <div className="relative flex justify-center w-full">
+          <HeroSearch speciesList={speciesList} regionList={regionList} />
         </div>
       </section>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-12 space-y-14">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 -mt-8 pb-16 space-y-16">
         {/* In Season Now */}
         <section>
-          <div className="flex items-center justify-between mb-6">
-            <div>
-              <h2 className="text-2xl font-bold text-slate-900">In Season — {MONTH_NAMES_FULL[month]}</h2>
-              <p className="text-sm text-slate-500 mt-1">Species with good or peak ratings this month</p>
-            </div>
+          <div className="flex items-center justify-between mb-5">
+            <h2 className="text-2xl font-bold text-[#040F1C]">In Season — {MONTH_NAMES_FULL[month]}</h2>
             <div className="flex gap-2 flex-wrap justify-end">
               {[10, 11, 12, 1, 2, 3].map((m) => (
                 <Link
@@ -63,8 +68,8 @@ export default async function HomePage({
                   href={`/?month=${m}`}
                   className={`text-xs px-3 py-1 rounded-full border transition-colors ${
                     m === month
-                      ? "bg-blue-600 text-white border-blue-600"
-                      : "text-slate-600 hover:bg-slate-50"
+                      ? "bg-[#06B6D4] text-white border-[#06B6D4]"
+                      : "text-slate-600 border-slate-200 hover:bg-slate-100"
                   }`}
                 >
                   {["", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"][m]}
@@ -74,7 +79,7 @@ export default async function HomePage({
           </div>
 
           {inSeasonSpecies.length > 0 ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
               {inSeasonSpecies.map((sp) => (
                 <SpeciesCard key={sp.id} species={sp} />
               ))}
@@ -86,18 +91,15 @@ export default async function HomePage({
 
         {/* Top Regions This Month */}
         <section>
-          <div className="flex items-center justify-between mb-6">
-            <div>
-              <h2 className="text-2xl font-bold text-slate-900">Top Regions — {MONTH_NAMES_FULL[month]}</h2>
-              <p className="text-sm text-slate-500 mt-1">Ranked by overall species activity</p>
-            </div>
-            <Link href="/" className="text-sm text-blue-600 hover:underline flex items-center gap-1">
-              All regions <ArrowRight className="h-3 w-3" />
+          <div className="flex items-center justify-between mb-5">
+            <h2 className="text-2xl font-bold text-[#040F1C]">Top Regions — {MONTH_NAMES_FULL[month]}</h2>
+            <Link href="/" className="text-sm text-[#0891B2] hover:underline flex items-center gap-1">
+              View all <ArrowRight className="h-3 w-3" />
             </Link>
           </div>
 
           {topRegions.length > 0 ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
               {topRegions.map((region) => (
                 <RegionCard key={region.id} region={region} />
               ))}
@@ -108,20 +110,20 @@ export default async function HomePage({
         </section>
 
         {/* How it works */}
-        <section className="bg-slate-50 rounded-2xl p-8">
-          <h2 className="text-2xl font-bold text-slate-900 mb-8 text-center">How it works</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <section className="bg-[#040F1C] rounded-3xl p-10 text-white">
+          <h2 className="text-2xl font-bold mb-10 text-center">How it works</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {[
               { icon: Fish, title: "1. Choose your target", desc: "Pick a species or a location. See the best months and regions based on real seasonal data." },
               { icon: Calendar, title: "2. Find the window", desc: "Our monthly calendar shows peak, good, fair, and poor ratings for every combination." },
               { icon: MapPin, title: "3. Plan the trip", desc: "Create a shared trip workspace, add bookings, generate a gear list, and invite your crew." },
             ].map(({ icon: Icon, title, desc }) => (
               <div key={title} className="text-center">
-                <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center mx-auto mb-4">
-                  <Icon className="h-6 w-6 text-blue-600" />
+                <div className="w-12 h-12 bg-cyan-500/20 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                  <Icon className="h-6 w-6 text-[#06B6D4]" />
                 </div>
-                <h3 className="font-semibold text-slate-900 mb-2">{title}</h3>
-                <p className="text-sm text-slate-500 leading-relaxed">{desc}</p>
+                <h3 className="font-semibold text-white mb-2">{title}</h3>
+                <p className="text-sm text-white/60 leading-relaxed">{desc}</p>
               </div>
             ))}
           </div>

@@ -33,9 +33,9 @@ export function HeroSearch({ speciesList, regionList }: HeroSearchProps) {
   };
 
   return (
-    <div className="bg-white rounded-2xl shadow-xl border p-6 w-full max-w-2xl">
+    <div className="bg-white rounded-2xl shadow-2xl border border-slate-100 p-5 w-full max-w-2xl">
       {/* Mode tabs */}
-      <div className="flex gap-1 mb-5 bg-slate-100 rounded-xl p-1">
+      <div className="flex gap-1 mb-4 bg-slate-100 rounded-xl p-1">
         {(
           [
             { mode: "species" as const, icon: Fish, label: "By Species" },
@@ -49,7 +49,7 @@ export function HeroSearch({ speciesList, regionList }: HeroSearchProps) {
             className={cn(
               "flex-1 flex items-center justify-center gap-2 py-2 rounded-lg text-sm font-medium transition-all",
               mode === m
-                ? "bg-white text-slate-900 shadow-sm"
+                ? "bg-white text-[#040F1C] shadow-sm"
                 : "text-slate-500 hover:text-slate-700"
             )}
           >
@@ -64,7 +64,7 @@ export function HeroSearch({ speciesList, regionList }: HeroSearchProps) {
         <div className="flex-1">
           {mode === "species" && (
             <Select value={speciesSlug} onValueChange={setSpeciesSlug}>
-              <SelectTrigger className="h-11 text-base">
+              <SelectTrigger className="h-12 rounded-xl border-slate-200 text-base">
                 <SelectValue placeholder="Select a target species…" />
               </SelectTrigger>
               <SelectContent>
@@ -79,7 +79,7 @@ export function HeroSearch({ speciesList, regionList }: HeroSearchProps) {
 
           {mode === "location" && (
             <Select value={regionSlug} onValueChange={setRegionSlug}>
-              <SelectTrigger className="h-11 text-base">
+              <SelectTrigger className="h-12 rounded-xl border-slate-200 text-base">
                 <SelectValue placeholder="Select a region or town…" />
               </SelectTrigger>
               <SelectContent>
@@ -94,7 +94,7 @@ export function HeroSearch({ speciesList, regionList }: HeroSearchProps) {
 
           {mode === "month" && (
             <Select value={month} onValueChange={setMonth}>
-              <SelectTrigger className="h-11 text-base">
+              <SelectTrigger className="h-12 rounded-xl border-slate-200 text-base">
                 <SelectValue placeholder="Select a month to plan around…" />
               </SelectTrigger>
               <SelectContent>
@@ -116,7 +116,7 @@ export function HeroSearch({ speciesList, regionList }: HeroSearchProps) {
             (mode === "location" && !regionSlug) ||
             (mode === "month" && !month)
           }
-          className="h-11 px-5"
+          className="h-12 px-6 bg-[#06B6D4] hover:bg-[#0891B2] text-white rounded-xl"
         >
           <Search className="h-4 w-4" />
           <span className="hidden sm:inline ml-1">Search</span>
