@@ -1,0 +1,199 @@
+import { NextResponse } from "next/server";
+import { db } from "@/db";
+import * as schema from "@/db/schema";
+import { nanoid } from "nanoid";
+import { REGIONS } from "@/db/seed/regions";
+import { SPECIES } from "@/db/seed/species";
+import { SEASON_DATA } from "@/db/seed/season-windows";
+import { GEAR_TEMPLATES } from "@/db/seed/gear-templates";
+
+const TECHNIQUES_DATA = [
+  { slug: "trolling", name: "Trolling", category: "offshore", description: "Dragging lures or baits at speed behind a moving boat. Primary technique for pelagics." },
+  { slug: "popping", name: "Surface Popping", category: "offshore", description: "Casting cup-faced poppers to create surface commotion targeting aggressive surface feeders." },
+  { slug: "stickbaiting", name: "Stickbaiting", category: "offshore", description: "Casting and working walk-the-dog style stickbaits on the surface or just subsurface." },
+  { slug: "jigging", name: "Vertical Jigging", category: "offshore", description: "Working metal jigs up and down in the water column over reefs or structure." },
+  { slug: "slow-pitch-jigging", name: "Slow Pitch Jigging", category: "reef", description: "Methodical jigging technique using specially designed slow-pitch jigs over reef structure." },
+  { slug: "bottom-bait", name: "Bottom Bait Fishing", category: "reef", description: "Presenting bait (pilchards, squid, cut fish) on the bottom over reef structure." },
+  { slug: "soft-plastics", name: "Soft Plastic Lures", category: "estuary", description: "Working soft plastic lures on jigheads through estuaries, flats, and inshore areas." },
+  { slug: "live-bait", name: "Live Baiting", category: "offshore", description: "Presenting live baitfish (yakkas, mullet, mackerel) to attract larger predators." },
+  { slug: "casting-hard-bodies", name: "Casting Hard Bodies", category: "estuary", description: "Casting hard body lures to structure, mangroves, and rocky areas in estuaries." },
+  { slug: "bait-fishing-estuary", name: "Estuary Bait Fishing", category: "estuary", description: "Traditional bait fishing in estuaries using prawns, worms, and cut bait." },
+  { slug: "float-fishing", name: "Float / Bobber Fishing", category: "estuary", description: "Presenting bait under a float — common for luderick with green weed." },
+  { slug: "beach-casting", name: "Beach / Surf Casting", category: "inshore", description: "Casting from beaches and rock platforms into gutters and breaks for tailor, mulloway, and trevally." },
+  { slug: "fly-fishing", name: "Fly Fishing", category: "freshwater", description: "Casting weighted fly line with artificial flies. Technique for trout, bass, and saratoga in streams, lakes, and estuaries." },
+  { slug: "lure-casting-freshwater", name: "Lure Casting (Freshwater)", category: "freshwater", description: "Casting hard-body and soft-plastic lures to structure and snags in rivers and impoundments." },
+  { slug: "bait-fishing-freshwater", name: "Bait Fishing (Freshwater)", category: "freshwater", description: "Bottom or suspended bait fishing with worms, yabbies, scrub worms, and live bait in rivers and lakes." },
+  { slug: "trolling-freshwater", name: "Trolling (Freshwater)", category: "freshwater", description: "Slowly pulling lures behind a boat over flats and drop-offs in impoundments." },
+];
+
+const SPECIES_TECHNIQUES: Record<string, string[]> = {
+  "black-marlin": ["trolling", "live-bait"],
+  "blue-marlin": ["trolling", "live-bait"],
+  "sailfish": ["trolling", "live-bait"],
+  "yellowfin-tuna": ["trolling", "popping", "stickbaiting", "jigging"],
+  "longtail-tuna": ["trolling", "popping", "casting-hard-bodies"],
+  "spanish-mackerel": ["trolling", "live-bait", "jigging"],
+  "wahoo": ["trolling", "jigging"],
+  "mahi-mahi": ["trolling", "popping", "jigging"],
+  "yellowtail-kingfish": ["popping", "stickbaiting", "jigging", "slow-pitch-jigging", "live-bait"],
+  "giant-trevally": ["popping", "stickbaiting", "live-bait"],
+  "coral-trout": ["soft-plastics", "live-bait", "bottom-bait"],
+  "red-emperor": ["bottom-bait", "slow-pitch-jigging"],
+  "nannygai": ["bottom-bait", "slow-pitch-jigging", "jigging"],
+  "snapper": ["bottom-bait", "soft-plastics", "slow-pitch-jigging"],
+  "cobia": ["live-bait", "jigging", "casting-hard-bodies"],
+  "barramundi": ["soft-plastics", "casting-hard-bodies", "live-bait"],
+  "mangrove-jack": ["soft-plastics", "casting-hard-bodies", "live-bait"],
+  "flathead": ["soft-plastics", "bait-fishing-estuary"],
+  "mulloway": ["soft-plastics", "live-bait", "bait-fishing-estuary", "beach-casting"],
+  "bream": ["soft-plastics", "bait-fishing-estuary", "casting-hard-bodies"],
+  "tailor": ["beach-casting", "casting-hard-bodies", "jigging"],
+  "whiting": ["bait-fishing-estuary"],
+  "luderick": ["float-fishing"],
+  "jewfish": ["live-bait", "bait-fishing-estuary"],
+  "kingfish-qld": ["popping", "stickbaiting", "slow-pitch-jigging", "jigging"],
+  "southern-bluefin-tuna": ["trolling", "jigging"],
+  "australian-salmon": ["beach-casting", "casting-hard-bodies", "jigging"],
+  "gummy-shark": ["bait-fishing-estuary", "beach-casting"],
+  "blue-eye-trevalla": ["slow-pitch-jigging", "bottom-bait"],
+  "striped-trumpeter": ["bottom-bait", "slow-pitch-jigging"],
+  "murray-cod": ["lure-casting-freshwater", "bait-fishing-freshwater", "fly-fishing"],
+  "golden-perch": ["lure-casting-freshwater", "bait-fishing-freshwater", "trolling-freshwater"],
+  "silver-perch": ["lure-casting-freshwater", "bait-fishing-freshwater"],
+  "australian-bass": ["lure-casting-freshwater", "fly-fishing", "casting-hard-bodies"],
+  "brown-trout": ["fly-fishing", "lure-casting-freshwater", "bait-fishing-freshwater"],
+  "rainbow-trout": ["fly-fishing", "lure-casting-freshwater", "trolling-freshwater", "bait-fishing-freshwater"],
+  "redfin": ["lure-casting-freshwater", "bait-fishing-freshwater"],
+  "saratoga": ["lure-casting-freshwater", "fly-fishing"],
+  "catfish": ["bait-fishing-freshwater"],
+  "ocean-trout": ["fly-fishing", "trolling-freshwater", "lure-casting-freshwater"],
+  "queenfish": ["popping", "stickbaiting", "casting-hard-bodies", "jigging"],
+  "threadfin-salmon": ["soft-plastics", "casting-hard-bodies", "live-bait"],
+  "spangled-emperor": ["bottom-bait", "soft-plastics", "slow-pitch-jigging"],
+  "dhufish": ["bottom-bait", "slow-pitch-jigging", "jigging"],
+  "baldchin-groper": ["bottom-bait", "slow-pitch-jigging"],
+  "king-george-whiting": ["bait-fishing-estuary"],
+  "black-bream": ["soft-plastics", "casting-hard-bodies", "bait-fishing-estuary"],
+  "bonefish": ["fly-fishing", "casting-hard-bodies"],
+  "milkfish": ["fly-fishing"],
+  "rankin-cod": ["bottom-bait", "slow-pitch-jigging", "jigging"],
+};
+
+export async function POST(request: Request) {
+  // Simple token check to prevent unauthorised runs
+  const authHeader = request.headers.get("authorization");
+  const token = process.env.SEED_SECRET;
+  if (!token || authHeader !== `Bearer ${token}`) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  const log: string[] = [];
+
+  try {
+    // 1. Regions
+    const regionRecords = REGIONS.map((r) => ({
+      id: nanoid(),
+      slug: r.slug,
+      name: r.name,
+      state: r.state,
+      zone: r.zone,
+      description: r.description ?? null,
+      latitude: r.latitude ?? null,
+      longitude: r.longitude ?? null,
+      tags: null,
+      createdAt: new Date().toISOString(),
+    }));
+    for (const region of regionRecords) {
+      await db.insert(schema.regions).values(region).onConflictDoNothing();
+    }
+    log.push(`regions: ${regionRecords.length} upserted`);
+
+    // 2. Species
+    const speciesRecords = SPECIES.map((s) => ({
+      id: nanoid(),
+      slug: s.slug,
+      commonName: s.commonName,
+      scientificName: s.scientificName ?? null,
+      category: s.category,
+      description: s.description ?? null,
+      minLegalSizeMm: s.minLegalSizeMm ?? null,
+      bagLimit: s.bagLimit ?? null,
+      createdAt: new Date().toISOString(),
+    }));
+    for (const sp of speciesRecords) {
+      await db.insert(schema.species).values(sp).onConflictDoNothing();
+    }
+    log.push(`species: ${speciesRecords.length} upserted`);
+
+    // 3. Techniques
+    const techniqueRecords = TECHNIQUES_DATA.map((t) => ({
+      id: nanoid(),
+      slug: t.slug,
+      name: t.name,
+      description: t.description,
+      category: t.category,
+    }));
+    for (const t of techniqueRecords) {
+      await db.insert(schema.techniques).values(t).onConflictDoNothing();
+    }
+    log.push(`techniques: ${techniqueRecords.length} upserted`);
+
+    // 4. Species-Techniques
+    const allSpecies = await db.select().from(schema.species);
+    const allTechniques = await db.select().from(schema.techniques);
+    const speciesMap = Object.fromEntries(allSpecies.map((s) => [s.slug, s.id]));
+    const techniqueMap = Object.fromEntries(allTechniques.map((t) => [t.slug, t.id]));
+    let stCount = 0;
+    for (const [speciesSlug, techniquesSlugs] of Object.entries(SPECIES_TECHNIQUES)) {
+      const speciesId = speciesMap[speciesSlug];
+      if (!speciesId) continue;
+      for (const techSlug of techniquesSlugs) {
+        const techniqueId = techniqueMap[techSlug];
+        if (!techniqueId) continue;
+        await db.insert(schema.speciesTechniques).values({ speciesId, techniqueId, effectiveness: null, notes: null }).onConflictDoNothing();
+        stCount++;
+      }
+    }
+    log.push(`species_techniques: ${stCount} upserted`);
+
+    // 5. Season windows
+    const allRegions = await db.select().from(schema.regions);
+    let swCount = 0;
+    for (const [speciesSlug, zoneRatings] of Object.entries(SEASON_DATA)) {
+      const speciesId = speciesMap[speciesSlug];
+      if (!speciesId) continue;
+      for (const region of allRegions) {
+        const zoneData = zoneRatings[region.zone as string];
+        if (!zoneData) continue;
+        for (let month = 1; month <= 12; month++) {
+          const rating = zoneData[month];
+          if (!rating) continue;
+          await db.insert(schema.seasonWindows).values({ id: nanoid(), regionId: region.id, speciesId, month, rating, notes: null }).onConflictDoNothing();
+          swCount++;
+        }
+      }
+    }
+    log.push(`season_windows: ${swCount} upserted`);
+
+    // 6. Gear templates
+    let gearCount = 0;
+    for (const item of GEAR_TEMPLATES) {
+      await db.insert(schema.gearTemplates).values({
+        id: nanoid(),
+        name: item.name,
+        category: item.category,
+        tripType: item.tripType ?? null,
+        itemName: item.itemName,
+        quantity: item.quantity ?? 1,
+        notes: (item as { notes?: string }).notes ?? null,
+        isEssential: item.isEssential ?? false,
+      }).onConflictDoNothing();
+      gearCount++;
+    }
+    log.push(`gear_templates: ${gearCount} upserted`);
+
+    return NextResponse.json({ ok: true, log });
+  } catch (err) {
+    return NextResponse.json({ error: String(err), log }, { status: 500 });
+  }
+}
