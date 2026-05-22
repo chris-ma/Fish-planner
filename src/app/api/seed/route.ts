@@ -79,14 +79,11 @@ const SPECIES_TECHNIQUES: Record<string, string[]> = {
 };
 
 const SECRET = "SEED_V3_AUS_FULL";
-const BATCH_SIZE = 200;
+const BATCH_SIZE = 100;
 
-function esc(v: string | null | undefined): string {
-  if (v === null || v === undefined) return "NULL";
-  return `'${String(v).replace(/'/g, "''")}'`;
-}
+type Stmt = { sql: string; args: (string | number | null)[] };
 
-async function batchExec(client: ReturnType<typeof createClient>, stmts: { sql: string; args?: unknown[] }[]) {
+async function batchExec(client: ReturnType<typeof createClient>, stmts: Stmt[]) {
   for (let i = 0; i < stmts.length; i += BATCH_SIZE) {
     await client.batch(stmts.slice(i, i + BATCH_SIZE) as Parameters<typeof client.batch>[0], "write");
   }
@@ -107,22 +104,26 @@ async function runSeed(request: Request) {
 
   try {
     // 1. Regions
-    const regionStmts = REGIONS.map((r) => ({
-      sql: `INSERT OR IGNORE INTO regions (id,slug,name,state,zone,description,latitude,longitude,tags,createdAt) VALUES (${esc(nanoid())},${esc(r.slug)},${esc(r.name)},${esc(r.state)},${esc(r.zone)},${esc(r.description)},${r.latitude ?? "NULL"},${r.longitude ?? "NULL"},NULL,${esc(new Date().toISOString())})`,
+    const now = new Date().toISOString();
+    const regionStmts: Stmt[] = REGIONS.map((r) => ({
+      sql: "INSERT OR IGNORE INTO regions (id,slug,name,state,zone,description,latitude,longitude,tags,createdAt) VALUES (?,?,?,?,?,?,?,?,NULL,?)",
+      args: [nanoid(), r.slug, r.name, r.state, r.zone, r.description, r.latitude ?? null, r.longitude ?? null, now],
     }));
     await batchExec(client, regionStmts);
     log.push(`regions: ${regionStmts.length} upserted`);
 
     // 2. Species
-    const speciesStmts = SPECIES.map((s) => ({
-      sql: `INSERT OR IGNORE INTO species (id,slug,commonName,scientificName,category,description,minLegalSizeMm,bagLimit,createdAt) VALUES (${esc(nanoid())},${esc(s.slug)},${esc(s.commonName)},${esc(s.scientificName)},${esc(s.category)},${esc(s.description)},${s.minLegalSizeMm ?? "NULL"},${s.bagLimit ?? "NULL"},${esc(new Date().toISOString())})`,
+    const speciesStmts: Stmt[] = SPECIES.map((s) => ({
+      sql: "INSERT OR IGNORE INTO species (id,slug,commonName,scientificName,category,description,minLegalSizeMm,bagLimit,createdAt) VALUES (?,?,?,?,?,?,?,?,?)",
+      args: [nanoid(), s.slug, s.commonName, s.scientificName, s.category, s.description, s.minLegalSizeMm ?? null, s.bagLimit ?? null, now],
     }));
     await batchExec(client, speciesStmts);
     log.push(`species: ${speciesStmts.length} upserted`);
 
     // 3. Techniques
-    const techStmts = TECHNIQUES_DATA.map((t) => ({
-      sql: `INSERT OR IGNORE INTO techniques (id,slug,name,description,category) VALUES (${esc(nanoid())},${esc(t.slug)},${esc(t.name)},${esc(t.description)},${esc(t.category)})`,
+    const techStmts: Stmt[] = TECHNIQUES_DATA.map((t) => ({
+      sql: "INSERT OR IGNORE INTO techniques (id,slug,name,description,category) VALUES (?,?,?,?,?)",
+      args: [nanoid(), t.slug, t.name, t.description, t.category],
     }));
     await batchExec(client, techStmts);
     log.push(`techniques: ${techStmts.length} upserted`);
@@ -137,14 +138,17 @@ async function runSeed(request: Request) {
     const techMap: Record<string, string> = {};
     for (const row of allTechRows.rows) techMap[row[1] as string] = row[0] as string;
 
-    const stStmts: { sql: string }[] = [];
+    const stStmts: Stmt[] = [];
     for (const [speciesSlug, techSlugs] of Object.entries(SPECIES_TECHNIQUES)) {
       const speciesId = speciesMap[speciesSlug];
       if (!speciesId) continue;
       for (const techSlug of techSlugs) {
         const techId = techMap[techSlug];
         if (!techId) continue;
-        stStmts.push({ sql: `INSERT OR IGNORE INTO speciesTechniques (speciesId,techniqueId,effectiveness,notes) VALUES (${esc(speciesId)},${esc(techId)},NULL,NULL)` });
+        stStmts.push({
+          sql: "INSERT OR IGNORE INTO speciesTechniques (speciesId,techniqueId,effectiveness,notes) VALUES (?,?,NULL,NULL)",
+          args: [speciesId, techId],
+        });
       }
     }
     await batchExec(client, stStmts);
@@ -154,7 +158,7 @@ async function runSeed(request: Request) {
     const allRegionsRows = await client.execute("SELECT id, zone FROM regions");
     const regions: { id: string; zone: string }[] = allRegionsRows.rows.map((r) => ({ id: r[0] as string, zone: r[1] as string }));
 
-    const swStmts: { sql: string }[] = [];
+    const swStmts: Stmt[] = [];
     for (const [speciesSlug, zoneRatings] of Object.entries(SEASON_DATA)) {
       const speciesId = speciesMap[speciesSlug];
       if (!speciesId) continue;
@@ -164,7 +168,10 @@ async function runSeed(request: Request) {
         for (let month = 1; month <= 12; month++) {
           const rating = zoneData[month];
           if (!rating) continue;
-          swStmts.push({ sql: `INSERT OR IGNORE INTO seasonWindows (id,regionId,speciesId,month,rating,notes) VALUES (${esc(nanoid())},${esc(region.id)},${esc(speciesId)},${month},${esc(rating)},NULL)` });
+          swStmts.push({
+            sql: "INSERT OR IGNORE INTO seasonWindows (id,regionId,speciesId,month,rating,notes) VALUES (?,?,?,?,?,NULL)",
+            args: [nanoid(), region.id, speciesId, month, rating],
+          });
         }
       }
     }
@@ -172,15 +179,17 @@ async function runSeed(request: Request) {
     log.push(`season_windows: ${swStmts.length} upserted`);
 
     // 6. Gear templates
-    const gearStmts = GEAR_TEMPLATES.map((item) => ({
-      sql: `INSERT OR IGNORE INTO gearTemplates (id,name,category,tripType,itemName,quantity,notes,isEssential) VALUES (${esc(nanoid())},${esc(item.name)},${esc(item.category)},${esc(item.tripType)},${esc(item.itemName)},${item.quantity ?? 1},${esc((item as { notes?: string }).notes)},${item.isEssential ? 1 : 0})`,
+    const gearStmts: Stmt[] = GEAR_TEMPLATES.map((item) => ({
+      sql: "INSERT OR IGNORE INTO gearTemplates (id,name,category,tripType,itemName,quantity,notes,isEssential) VALUES (?,?,?,?,?,?,?,?)",
+      args: [nanoid(), item.name, item.category, item.tripType, item.itemName, item.quantity ?? 1, (item as { notes?: string }).notes ?? null, item.isEssential ? 1 : 0],
     }));
     await batchExec(client, gearStmts);
     log.push(`gear_templates: ${gearStmts.length} upserted`);
 
     return NextResponse.json({ ok: true, log });
   } catch (err) {
-    return NextResponse.json({ error: String(err), log }, { status: 500 });
+    const stack = err instanceof Error ? err.stack : String(err);
+    return NextResponse.json({ error: String(err), stack, log }, { status: 500 });
   }
 }
 
