@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server";
-import { db } from "@/db";
-import * as schema from "@/db/schema";
+import { createClient } from "@libsql/client";
 import { nanoid } from "nanoid";
 import { REGIONS } from "@/db/seed/regions";
 import { SPECIES } from "@/db/seed/species";
@@ -80,6 +79,18 @@ const SPECIES_TECHNIQUES: Record<string, string[]> = {
 };
 
 const SECRET = "SEED_V3_AUS_FULL";
+const BATCH_SIZE = 200;
+
+function esc(v: string | null | undefined): string {
+  if (v === null || v === undefined) return "NULL";
+  return `'${String(v).replace(/'/g, "''")}'`;
+}
+
+async function batchExec(client: ReturnType<typeof createClient>, stmts: { sql: string; args?: unknown[] }[]) {
+  for (let i = 0; i < stmts.length; i += BATCH_SIZE) {
+    await client.batch(stmts.slice(i, i + BATCH_SIZE) as Parameters<typeof client.batch>[0], "write");
+  }
+}
 
 export async function POST(request: Request) {
   const { searchParams } = new URL(request.url);
@@ -87,110 +98,85 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
+  const url = process.env.TURSO_DATABASE_URL;
+  const authToken = process.env.TURSO_AUTH_TOKEN;
+  if (!url) return NextResponse.json({ error: "TURSO_DATABASE_URL not set" }, { status: 500 });
+
+  const client = createClient({ url, authToken });
   const log: string[] = [];
 
   try {
     // 1. Regions
-    const regionRecords = REGIONS.map((r) => ({
-      id: nanoid(),
-      slug: r.slug,
-      name: r.name,
-      state: r.state,
-      zone: r.zone,
-      description: r.description ?? null,
-      latitude: r.latitude ?? null,
-      longitude: r.longitude ?? null,
-      tags: null,
-      createdAt: new Date().toISOString(),
+    const regionStmts = REGIONS.map((r) => ({
+      sql: `INSERT OR IGNORE INTO regions (id,slug,name,state,zone,description,latitude,longitude,tags,createdAt) VALUES (${esc(nanoid())},${esc(r.slug)},${esc(r.name)},${esc(r.state)},${esc(r.zone)},${esc(r.description)},${r.latitude ?? "NULL"},${r.longitude ?? "NULL"},NULL,${esc(new Date().toISOString())})`,
     }));
-    for (const region of regionRecords) {
-      await db.insert(schema.regions).values(region).onConflictDoNothing();
-    }
-    log.push(`regions: ${regionRecords.length} upserted`);
+    await batchExec(client, regionStmts);
+    log.push(`regions: ${regionStmts.length} upserted`);
 
     // 2. Species
-    const speciesRecords = SPECIES.map((s) => ({
-      id: nanoid(),
-      slug: s.slug,
-      commonName: s.commonName,
-      scientificName: s.scientificName ?? null,
-      category: s.category,
-      description: s.description ?? null,
-      minLegalSizeMm: s.minLegalSizeMm ?? null,
-      bagLimit: s.bagLimit ?? null,
-      createdAt: new Date().toISOString(),
+    const speciesStmts = SPECIES.map((s) => ({
+      sql: `INSERT OR IGNORE INTO species (id,slug,commonName,scientificName,category,description,minLegalSizeMm,bagLimit,createdAt) VALUES (${esc(nanoid())},${esc(s.slug)},${esc(s.commonName)},${esc(s.scientificName)},${esc(s.category)},${esc(s.description)},${s.minLegalSizeMm ?? "NULL"},${s.bagLimit ?? "NULL"},${esc(new Date().toISOString())})`,
     }));
-    for (const sp of speciesRecords) {
-      await db.insert(schema.species).values(sp).onConflictDoNothing();
-    }
-    log.push(`species: ${speciesRecords.length} upserted`);
+    await batchExec(client, speciesStmts);
+    log.push(`species: ${speciesStmts.length} upserted`);
 
     // 3. Techniques
-    const techniqueRecords = TECHNIQUES_DATA.map((t) => ({
-      id: nanoid(),
-      slug: t.slug,
-      name: t.name,
-      description: t.description,
-      category: t.category,
+    const techStmts = TECHNIQUES_DATA.map((t) => ({
+      sql: `INSERT OR IGNORE INTO techniques (id,slug,name,description,category) VALUES (${esc(nanoid())},${esc(t.slug)},${esc(t.name)},${esc(t.description)},${esc(t.category)})`,
     }));
-    for (const t of techniqueRecords) {
-      await db.insert(schema.techniques).values(t).onConflictDoNothing();
-    }
-    log.push(`techniques: ${techniqueRecords.length} upserted`);
+    await batchExec(client, techStmts);
+    log.push(`techniques: ${techStmts.length} upserted`);
 
-    // 4. Species-Techniques
-    const allSpecies = await db.select().from(schema.species);
-    const allTechniques = await db.select().from(schema.techniques);
-    const speciesMap = Object.fromEntries(allSpecies.map((s) => [s.slug, s.id]));
-    const techniqueMap = Object.fromEntries(allTechniques.map((t) => [t.slug, t.id]));
-    let stCount = 0;
-    for (const [speciesSlug, techniquesSlugs] of Object.entries(SPECIES_TECHNIQUES)) {
+    // 4. Species-Techniques (need IDs from DB)
+    const [allSpeciesRows, allTechRows] = await Promise.all([
+      client.execute("SELECT id, slug FROM species"),
+      client.execute("SELECT id, slug FROM techniques"),
+    ]);
+    const speciesMap: Record<string, string> = {};
+    for (const row of allSpeciesRows.rows) speciesMap[row[1] as string] = row[0] as string;
+    const techMap: Record<string, string> = {};
+    for (const row of allTechRows.rows) techMap[row[1] as string] = row[0] as string;
+
+    const stStmts: { sql: string }[] = [];
+    for (const [speciesSlug, techSlugs] of Object.entries(SPECIES_TECHNIQUES)) {
       const speciesId = speciesMap[speciesSlug];
       if (!speciesId) continue;
-      for (const techSlug of techniquesSlugs) {
-        const techniqueId = techniqueMap[techSlug];
-        if (!techniqueId) continue;
-        await db.insert(schema.speciesTechniques).values({ speciesId, techniqueId, effectiveness: null, notes: null }).onConflictDoNothing();
-        stCount++;
+      for (const techSlug of techSlugs) {
+        const techId = techMap[techSlug];
+        if (!techId) continue;
+        stStmts.push({ sql: `INSERT OR IGNORE INTO speciesTechniques (speciesId,techniqueId,effectiveness,notes) VALUES (${esc(speciesId)},${esc(techId)},NULL,NULL)` });
       }
     }
-    log.push(`species_techniques: ${stCount} upserted`);
+    await batchExec(client, stStmts);
+    log.push(`species_techniques: ${stStmts.length} upserted`);
 
     // 5. Season windows
-    const allRegions = await db.select().from(schema.regions);
-    let swCount = 0;
+    const allRegionsRows = await client.execute("SELECT id, zone FROM regions");
+    const regions: { id: string; zone: string }[] = allRegionsRows.rows.map((r) => ({ id: r[0] as string, zone: r[1] as string }));
+
+    const swStmts: { sql: string }[] = [];
     for (const [speciesSlug, zoneRatings] of Object.entries(SEASON_DATA)) {
       const speciesId = speciesMap[speciesSlug];
       if (!speciesId) continue;
-      for (const region of allRegions) {
-        const zoneData = zoneRatings[region.zone as string];
+      for (const region of regions) {
+        const zoneData = (zoneRatings as Record<string, (string | null)[]>)[region.zone];
         if (!zoneData) continue;
         for (let month = 1; month <= 12; month++) {
           const rating = zoneData[month];
           if (!rating) continue;
-          await db.insert(schema.seasonWindows).values({ id: nanoid(), regionId: region.id, speciesId, month, rating, notes: null }).onConflictDoNothing();
-          swCount++;
+          swStmts.push({ sql: `INSERT OR IGNORE INTO seasonWindows (id,regionId,speciesId,month,rating,notes) VALUES (${esc(nanoid())},${esc(region.id)},${esc(speciesId)},${month},${esc(rating)},NULL)` });
         }
       }
     }
-    log.push(`season_windows: ${swCount} upserted`);
+    await batchExec(client, swStmts);
+    log.push(`season_windows: ${swStmts.length} upserted`);
 
     // 6. Gear templates
-    let gearCount = 0;
-    for (const item of GEAR_TEMPLATES) {
-      await db.insert(schema.gearTemplates).values({
-        id: nanoid(),
-        name: item.name,
-        category: item.category,
-        tripType: item.tripType ?? null,
-        itemName: item.itemName,
-        quantity: item.quantity ?? 1,
-        notes: (item as { notes?: string }).notes ?? null,
-        isEssential: item.isEssential ?? false,
-      }).onConflictDoNothing();
-      gearCount++;
-    }
-    log.push(`gear_templates: ${gearCount} upserted`);
+    const gearStmts = GEAR_TEMPLATES.map((item) => ({
+      sql: `INSERT OR IGNORE INTO gearTemplates (id,name,category,tripType,itemName,quantity,notes,isEssential) VALUES (${esc(nanoid())},${esc(item.name)},${esc(item.category)},${esc(item.tripType)},${esc(item.itemName)},${item.quantity ?? 1},${esc((item as { notes?: string }).notes)},${item.isEssential ? 1 : 0})`,
+    }));
+    await batchExec(client, gearStmts);
+    log.push(`gear_templates: ${gearStmts.length} upserted`);
 
     return NextResponse.json({ ok: true, log });
   } catch (err) {
