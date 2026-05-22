@@ -9,6 +9,7 @@ import { getSpeciesBySlug, getBestRegionsForSpecies, getSpeciesWithTechniques, l
 import { currentMonth, MONTH_NAMES, MONTH_NAMES_FULL } from "@/lib/utils/season";
 import { FISHING_TIPS } from "@/lib/species-tips";
 import { gregVinallYoutubeUrl } from "@/lib/affiliate";
+import { SPECIES_EPISODES, PODCAST_SHOW_URL } from "@/lib/podcast-episodes";
 
 export const revalidate = 86400;
 
@@ -300,23 +301,55 @@ export default async function SpeciesPage({ params }: { params: Promise<{ slug: 
             </Card>
 
             {/* Greg Vinall Podcast */}
-            <Card className="bg-red-50 border-red-200">
-              <CardContent className="p-4">
-                <h3 className="font-semibold text-sm mb-1 text-red-900">Watch &amp; Listen</h3>
-                <p className="text-xs text-red-700/70 mb-3 leading-relaxed">
-                  Greg Vinall covers {sp.commonName} tactics, seasonal tips and locations across Australia.
-                </p>
-                <a
-                  href={gregVinallYoutubeUrl(sp.commonName + " fishing Australia")}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-full inline-flex items-center justify-center gap-1.5 bg-[#FF0000] hover:bg-[#cc0000] text-white font-medium text-sm px-4 py-2 rounded-lg transition-colors"
-                >
-                  <Youtube className="h-3.5 w-3.5" />
-                  Greg Vinall Videos
-                </a>
-              </CardContent>
-            </Card>
+            {(() => {
+              const episodes = SPECIES_EPISODES[sp.slug] ?? [];
+              return (
+                <Card className="bg-[#1a1a2e] border-[#1DB954]/30">
+                  <CardContent className="p-4">
+                    <div className="flex items-center gap-2 mb-1">
+                      <svg viewBox="0 0 24 24" className="h-4 w-4 fill-[#1DB954] shrink-0"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg>
+                      <h3 className="font-semibold text-sm text-white">Australian Lure Fishing Podcast</h3>
+                    </div>
+                    <p className="text-xs text-white/50 mb-3">Greg Vinall — Doc Lures</p>
+                    {episodes.length > 0 ? (
+                      <ul className="space-y-2">
+                        {episodes.map((ep) => (
+                          <li key={ep.url}>
+                            <a
+                              href={ep.url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="flex items-start gap-2 text-xs text-[#1DB954] hover:text-white transition-colors leading-snug"
+                            >
+                              <svg viewBox="0 0 24 24" className="h-3.5 w-3.5 fill-[#1DB954] shrink-0 mt-0.5"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg>
+                              {ep.title}
+                            </a>
+                          </li>
+                        ))}
+                      </ul>
+                    ) : (
+                      <a
+                        href={gregVinallYoutubeUrl(sp.commonName + " fishing Australia")}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-1.5 text-xs text-[#1DB954] hover:text-white transition-colors"
+                      >
+                        <Youtube className="h-3.5 w-3.5" />
+                        Search Greg Vinall — {sp.commonName}
+                      </a>
+                    )}
+                    <a
+                      href={PODCAST_SHOW_URL}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="mt-3 pt-3 border-t border-white/10 flex items-center gap-1.5 text-xs text-white/40 hover:text-white/70 transition-colors"
+                    >
+                      Browse all episodes on Spotify
+                    </a>
+                  </CardContent>
+                </Card>
+              );
+            })()}
 
             {/* Gear Guide */}
             <Card className="bg-cyan-950 border-cyan-800">

@@ -1,11 +1,12 @@
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import Link from "next/link";
-import { MapPin, ArrowRight, Fish, Youtube } from "lucide-react";
+import { MapPin, ArrowRight, Fish } from "lucide-react";
 import { SeasonalCalendar } from "@/components/discovery/SeasonalCalendar";
 import { getRegionBySlug, getSeasonCalendarForRegion, listRegions } from "@/lib/queries/regions";
 import { currentMonth, MONTH_NAMES_FULL } from "@/lib/utils/season";
 import { gregVinallYoutubeUrl } from "@/lib/affiliate";
+import { REGION_EPISODES, PODCAST_SHOW_URL } from "@/lib/podcast-episodes";
 
 export const revalidate = 86400;
 
@@ -151,21 +152,70 @@ export default async function RegionPage({ params }: { params: Promise<{ slug: s
         </section>
 
         {/* Greg Vinall Podcast */}
-        <section className="mb-10">
-          <h2 className="text-xl font-bold text-[#040F1C] mb-2">Watch &amp; Listen</h2>
-          <p className="text-sm text-muted-foreground mb-4">
-            Greg Vinall covers fishing spots and techniques across Australia — search his content for {region.name}.
-          </p>
-          <a
-            href={gregVinallYoutubeUrl(region.name + " fishing")}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2.5 bg-[#FF0000]/10 hover:bg-[#FF0000]/20 border border-[#FF0000]/30 text-[#cc0000] font-medium px-5 py-2.5 rounded-xl transition-colors text-sm"
-          >
-            <Youtube className="h-4 w-4" />
-            Greg Vinall — {region.name} fishing videos
-          </a>
-        </section>
+        {(() => {
+          const episodes = REGION_EPISODES[region.slug] ?? [];
+          const SpotifyLogo = () => (
+            <svg viewBox="0 0 24 24" className="h-4 w-4 fill-[#1DB954] shrink-0">
+              <path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/>
+            </svg>
+          );
+          return (
+            <section className="mb-10">
+              <h2 className="text-xl font-bold text-[#040F1C] mb-4">Australian Lure Fishing Podcast</h2>
+              <div className="rounded-2xl bg-[#1a1a2e] border border-[#1DB954]/20 p-5">
+                <div className="flex items-center gap-2 mb-1">
+                  <SpotifyLogo />
+                  <span className="text-sm font-semibold text-white">Greg Vinall — Doc Lures</span>
+                </div>
+                {episodes.length > 0 ? (
+                  <>
+                    <p className="text-xs text-white/50 mb-4">Relevant episodes for {region.name}</p>
+                    <ul className="space-y-2.5">
+                      {episodes.map((ep) => (
+                        <li key={ep.url}>
+                          <a
+                            href={ep.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex items-start gap-2.5 group"
+                          >
+                            <SpotifyLogo />
+                            <span className="text-sm text-[#1DB954] group-hover:text-white transition-colors leading-snug">
+                              {ep.title}
+                            </span>
+                          </a>
+                        </li>
+                      ))}
+                    </ul>
+                  </>
+                ) : (
+                  <>
+                    <p className="text-xs text-white/50 mb-3">
+                      Greg Vinall covers fishing spots and techniques across Australia — search his content for {region.name}.
+                    </p>
+                    <a
+                      href={gregVinallYoutubeUrl(region.name + " fishing")}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-2 text-sm text-[#1DB954] hover:text-white transition-colors"
+                    >
+                      <SpotifyLogo />
+                      Search Greg Vinall — {region.name}
+                    </a>
+                  </>
+                )}
+                <a
+                  href={PODCAST_SHOW_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-4 pt-3 border-t border-white/10 flex items-center gap-1.5 text-xs text-white/40 hover:text-white/60 transition-colors"
+                >
+                  Browse all episodes on Spotify
+                </a>
+              </div>
+            </section>
+          );
+        })()}
 
         {/* CTA */}
         <section className="bg-[#040F1C] rounded-3xl p-10 text-center text-white">
