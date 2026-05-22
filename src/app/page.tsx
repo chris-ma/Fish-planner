@@ -1,12 +1,11 @@
-import { Suspense } from "react";
 import { ArrowRight, Fish, MapPin, Calendar } from "lucide-react";
 import Link from "next/link";
+import { VideoParallaxHero } from "@/components/layout/VideoParallaxHero";
 import { HeroSearch } from "@/components/discovery/HeroSearch";
 import { RegionCard } from "@/components/discovery/RegionCard";
 import { SpeciesCard } from "@/components/discovery/SpeciesCard";
-import { listRegions } from "@/lib/queries/regions";
+import { listRegions, getTopRegionsForMonth } from "@/lib/queries/regions";
 import { listSpecies, getInSeasonSpecies } from "@/lib/queries/species";
-import { getTopRegionsForMonth } from "@/lib/queries/regions";
 import { currentMonth, MONTH_NAMES_FULL } from "@/lib/utils/season";
 
 export default async function HomePage({
@@ -29,32 +28,18 @@ export default async function HomePage({
 
   return (
     <div>
-      {/* Hero */}
-      <section className="relative overflow-hidden bg-[#020B14] min-h-[480px] flex flex-col items-center justify-center text-center px-4 pb-24">
-        {/* Radial glow orbs */}
-        <div className="absolute bottom-0 left-1/3 w-[500px] h-[500px] bg-cyan-600/20 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute top-0 right-1/4 w-96 h-96 bg-blue-600/15 rounded-full blur-3xl pointer-events-none" />
-
-        {/* Badge pill */}
-        <div className="relative inline-flex items-center gap-1.5 bg-white/10 backdrop-blur rounded-full px-4 py-1.5 text-white/80 text-sm mb-5 border border-white/20">
-          🎣 Australian East Coast · 21 Regions · 25 Species
-        </div>
-
-        {/* Headline */}
-        <h1 className="relative text-5xl md:text-6xl font-bold text-[#F5F0E8] mb-4 leading-tight">
+      {/* Hero with parallax video */}
+      <VideoParallaxHero>
+        <h1 className="text-5xl md:text-6xl font-bold text-[#F5F0E8] mb-4 leading-tight">
           Find Your<br />Perfect Catch.
         </h1>
-
-        {/* Subtitle */}
-        <p className="relative text-white/60 text-lg mb-10 max-w-lg mx-auto leading-relaxed">
+        <p className="text-white/60 text-lg mb-10 max-w-lg mx-auto leading-relaxed">
           Find the best time and place to target any species on the east coast — then plan the whole trip with your crew.
         </p>
-
-        {/* Search */}
-        <div className="relative flex justify-center w-full">
+        <div className="flex justify-center w-full">
           <HeroSearch speciesList={speciesList} regionList={regionList} />
         </div>
-      </section>
+      </VideoParallaxHero>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 -mt-8 pb-16 space-y-16">
         {/* In Season Now */}
@@ -85,7 +70,7 @@ export default async function HomePage({
               ))}
             </div>
           ) : (
-            <p className="text-slate-500 py-8 text-center">No season data loaded yet — add your Turso credentials and run the seed script.</p>
+            <p className="text-slate-500 py-8 text-center">No season data loaded yet.</p>
           )}
         </section>
 
@@ -105,7 +90,7 @@ export default async function HomePage({
               ))}
             </div>
           ) : (
-            <p className="text-slate-500 py-8 text-center">No region data loaded yet — run the seed script to populate.</p>
+            <p className="text-slate-500 py-8 text-center">No region data loaded yet.</p>
           )}
         </section>
 

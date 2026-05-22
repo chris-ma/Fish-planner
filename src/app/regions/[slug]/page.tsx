@@ -16,6 +16,11 @@ const ZONE_LABELS: Record<string, string> = {
   central_qld: "Central Queensland",
   southeast_qld: "Southeast Queensland",
   nsw: "New South Wales",
+  vic_coast: "Victoria",
+  tas: "Tasmania",
+  lord_howe: "Lord Howe Island",
+  murray_darling: "Murray–Darling Basin",
+  alpine: "Alpine & Highlands",
 };
 
 export async function generateStaticParams() {

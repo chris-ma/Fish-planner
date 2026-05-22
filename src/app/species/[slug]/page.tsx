@@ -1,14 +1,13 @@
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ArrowRight, Ruler, Package } from "lucide-react";
+import { ArrowRight, Waves, Sun, Cloud, Anchor, Zap, Lightbulb, ExternalLink } from "lucide-react";
 import { SeasonalCalendar } from "@/components/discovery/SeasonalCalendar";
 import { SeasonBadge } from "@/components/discovery/SeasonBadge";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { getSpeciesBySlug, getBestRegionsForSpecies, getSpeciesWithTechniques, listSpecies } from "@/lib/queries/species";
 import { currentMonth, MONTH_NAMES, MONTH_NAMES_FULL } from "@/lib/utils/season";
+import { FISHING_TIPS } from "@/lib/species-tips";
 
 export const revalidate = 86400;
 
@@ -27,6 +26,23 @@ const CATEGORY_GRADIENTS: Record<string, string> = {
   inshore: "from-sky-950 via-[#020B14] to-[#020B14]",
   freshwater: "from-emerald-950 via-[#020B14] to-[#020B14]",
 };
+
+const CATEGORY_IMAGES: Record<string, string> = {
+  pelagic: "https://images.unsplash.com/photo-1559827291-72416316ece9?w=1200&auto=format&fit=crop&q=80",
+  reef: "https://images.unsplash.com/photo-1518020382113-a7e8fc38eac9?w=1200&auto=format&fit=crop&q=80",
+  estuary: "https://images.unsplash.com/photo-1542601906897-ec823b17a0b7?w=1200&auto=format&fit=crop&q=80",
+  inshore: "https://images.unsplash.com/photo-1505118380757-91f5f5632de0?w=1200&auto=format&fit=crop&q=80",
+  freshwater: "https://images.unsplash.com/photo-1511525729718-ad15d2ab17ce?w=1200&auto=format&fit=crop&q=80",
+};
+
+const TIPS_ICONS = [
+  { key: "tide", label: "Tides", Icon: Waves },
+  { key: "timeOfDay", label: "Time of Day", Icon: Sun },
+  { key: "conditions", label: "Conditions", Icon: Cloud },
+  { key: "structure", label: "Structure", Icon: Anchor },
+  { key: "retrieve", label: "Technique", Icon: Zap },
+  { key: "hotTip", label: "Pro Tip", Icon: Lightbulb },
+] as const;
 
 export async function generateStaticParams() {
   try {
@@ -63,6 +79,7 @@ export default async function SpeciesPage({ params }: { params: Promise<{ slug: 
 
   const techniques = techniqueRows.map((t) => t.technique);
   const month = currentMonth();
+  const tips = FISHING_TIPS[sp.slug] ?? null;
 
   const calendarData = bestRegions.slice(0, 15).map((row) => ({
     label: row.regionName,
@@ -75,27 +92,26 @@ export default async function SpeciesPage({ params }: { params: Promise<{ slug: 
     .slice(0, 6);
 
   const heroGradient = CATEGORY_GRADIENTS[sp.category] ?? "from-[#040F1C] via-[#020B14] to-[#020B14]";
+  const heroImage = CATEGORY_IMAGES[sp.category] ?? CATEGORY_IMAGES.pelagic;
 
   return (
     <div>
       {/* Hero Banner */}
       <section className={`relative bg-gradient-to-b ${heroGradient} overflow-hidden`}>
-        {/* Glow orbs */}
-        <div className="absolute bottom-0 left-1/4 w-[400px] h-[400px] bg-cyan-600/20 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute top-0 right-1/3 w-80 h-80 bg-blue-600/15 rounded-full blur-3xl pointer-events-none" />
-
-        {/* Category tint bar at bottom */}
+        {/* Photo background with overlay */}
+        <div
+          className="absolute inset-0 bg-cover bg-center opacity-25"
+          style={{ backgroundImage: `url('${heroImage}')` }}
+        />
         <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-[#06B6D4] to-[#0891B2] opacity-60" />
 
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 py-12">
-          {/* Breadcrumb */}
           <nav className="text-sm text-white/50 mb-5 flex items-center gap-2">
             <Link href="/" className="hover:text-white/80 transition-colors">Home</Link>
             <span>/</span>
             <span>{sp.commonName}</span>
           </nav>
 
-          {/* Category + scientific name */}
           <div className="flex items-center gap-2 mb-3 flex-wrap">
             <span className="inline-flex items-center bg-white/10 rounded-full px-3 py-1 text-white/80 text-sm border border-white/20">
               {CATEGORY_LABELS[sp.category] ?? sp.category}
@@ -105,39 +121,26 @@ export default async function SpeciesPage({ params }: { params: Promise<{ slug: 
             )}
           </div>
 
-          {/* Heading */}
           <h1 className="text-4xl font-bold text-[#F5F0E8] mb-3">{sp.commonName} Fishing</h1>
 
-          {/* Description */}
           {sp.description && (
             <p className="text-white/60 max-w-2xl leading-relaxed mb-5">{sp.description}</p>
           )}
 
-          {/* Legal size + bag limit chips */}
-          {(sp.minLegalSizeMm || sp.bagLimit) && (
-            <div className="flex gap-3 mb-6 flex-wrap">
-              {sp.minLegalSizeMm && (
-                <span className="inline-flex items-center gap-1.5 bg-white/10 rounded-full px-3 py-1 text-white/80 text-sm border border-white/20">
-                  <Ruler className="h-3.5 w-3.5" />
-                  Min size: {sp.minLegalSizeMm}mm
-                </span>
-              )}
-              {sp.bagLimit && (
-                <span className="inline-flex items-center gap-1.5 bg-white/10 rounded-full px-3 py-1 text-white/80 text-sm border border-white/20">
-                  <Package className="h-3.5 w-3.5" />
-                  Bag limit: {sp.bagLimit}
-                </span>
-              )}
-            </div>
-          )}
-
-          {/* CTA */}
-          <Link href="/trips/new">
-            <button className="inline-flex items-center gap-2 bg-[#06B6D4] hover:bg-[#0891B2] text-white font-medium px-5 py-2.5 rounded-xl transition-colors">
-              Plan a Trip
-              <ArrowRight className="h-4 w-4" />
-            </button>
-          </Link>
+          <div className="flex gap-3 flex-wrap">
+            <Link href="/trips/new">
+              <button className="inline-flex items-center gap-2 bg-[#06B6D4] hover:bg-[#0891B2] text-white font-medium px-5 py-2.5 rounded-xl transition-colors">
+                Plan a Trip
+                <ArrowRight className="h-4 w-4" />
+              </button>
+            </Link>
+            <Link href="/resources">
+              <button className="inline-flex items-center gap-2 bg-white/10 hover:bg-white/20 text-white/80 font-medium px-5 py-2.5 rounded-xl transition-colors border border-white/20">
+                Bag &amp; Size Limits
+                <ExternalLink className="h-4 w-4" />
+              </button>
+            </Link>
+          </div>
         </div>
       </section>
 
@@ -145,6 +148,46 @@ export default async function SpeciesPage({ params }: { params: Promise<{ slug: 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-10">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2 space-y-8">
+
+            {/* How to Catch section */}
+            {tips && (
+              <section>
+                <h2 className="text-xl font-bold text-[#040F1C] mb-4">How to Catch {sp.commonName}</h2>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  {TIPS_ICONS.map(({ key, label, Icon }) => {
+                    const text = tips[key as keyof typeof tips];
+                    const isHotTip = key === "hotTip";
+                    return (
+                      <div
+                        key={key}
+                        className={`rounded-xl p-4 border ${
+                          isHotTip
+                            ? "bg-amber-50 border-amber-200 sm:col-span-2"
+                            : "bg-white border-slate-100 shadow-sm"
+                        }`}
+                      >
+                        <div className="flex items-center gap-2 mb-2">
+                          <div className={`w-7 h-7 rounded-lg flex items-center justify-center ${
+                            isHotTip ? "bg-amber-100" : "bg-slate-100"
+                          }`}>
+                            <Icon className={`h-4 w-4 ${isHotTip ? "text-amber-600" : "text-slate-500"}`} />
+                          </div>
+                          <span className={`text-xs font-semibold uppercase tracking-wider ${
+                            isHotTip ? "text-amber-700" : "text-slate-500"
+                          }`}>
+                            {label}
+                          </span>
+                        </div>
+                        <p className={`text-sm leading-relaxed ${isHotTip ? "text-amber-900" : "text-slate-700"}`}>
+                          {text}
+                        </p>
+                      </div>
+                    );
+                  })}
+                </div>
+              </section>
+            )}
+
             {/* Best regions now */}
             {topRegionsThisMonth.length > 0 && (
               <Card>
@@ -240,12 +283,27 @@ export default async function SpeciesPage({ params }: { params: Promise<{ slug: 
               </CardContent>
             </Card>
 
+            {/* Regulations link */}
+            <Card className="bg-slate-50 border-slate-200">
+              <CardContent className="p-4">
+                <h3 className="font-semibold text-sm mb-1 text-slate-800">Bag &amp; Size Limits</h3>
+                <p className="text-xs text-slate-500 mb-3 leading-relaxed">
+                  Regulations vary by state and change seasonally. Check the official fisheries website for current rules.
+                </p>
+                <Link href="/resources">
+                  <button className="w-full inline-flex items-center justify-center gap-1.5 bg-white hover:bg-slate-100 text-slate-700 font-medium text-sm px-4 py-2 rounded-lg transition-colors border border-slate-200">
+                    Fishing Regulations <ExternalLink className="h-3 w-3" />
+                  </button>
+                </Link>
+              </CardContent>
+            </Card>
+
             {/* Gear Guide */}
             <Card className="bg-cyan-950 border-cyan-800">
               <CardContent className="p-4">
                 <h3 className="font-semibold text-sm mb-1 text-white">Gear Guide</h3>
                 <p className="text-xs text-white/60 mb-3 leading-relaxed">
-                  See the recommended tackle, lures, and equipment for this type of fishing.
+                  See the recommended tackle, lures, and equipment for this species.
                 </p>
                 <Link href="/gear">
                   <button className="w-full inline-flex items-center justify-center gap-1.5 bg-[#06B6D4] hover:bg-[#0891B2] text-white font-medium text-sm px-4 py-2 rounded-lg transition-colors">
