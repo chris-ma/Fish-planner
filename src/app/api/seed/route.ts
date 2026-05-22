@@ -106,7 +106,7 @@ async function runSeed(request: Request) {
     // 1. Regions
     const now = new Date().toISOString();
     const regionStmts: Stmt[] = REGIONS.map((r) => ({
-      sql: "INSERT OR IGNORE INTO regions (id,slug,name,state,zone,description,latitude,longitude,tags,createdAt) VALUES (?,?,?,?,?,?,?,?,NULL,?)",
+      sql: "INSERT OR IGNORE INTO regions (id,slug,name,state,zone,description,latitude,longitude,tags,created_at) VALUES (?,?,?,?,?,?,?,?,NULL,?)",
       args: [nanoid(), r.slug, r.name, r.state, r.zone, r.description, r.latitude ?? null, r.longitude ?? null, now],
     }));
     await batchExec(client, regionStmts);
@@ -114,7 +114,7 @@ async function runSeed(request: Request) {
 
     // 2. Species
     const speciesStmts: Stmt[] = SPECIES.map((s) => ({
-      sql: "INSERT OR IGNORE INTO species (id,slug,commonName,scientificName,category,description,minLegalSizeMm,bagLimit,createdAt) VALUES (?,?,?,?,?,?,?,?,?)",
+      sql: "INSERT OR IGNORE INTO species (id,slug,common_name,scientific_name,category,description,min_legal_size_mm,bag_limit,created_at) VALUES (?,?,?,?,?,?,?,?,?)",
       args: [nanoid(), s.slug, s.commonName, s.scientificName, s.category, s.description, s.minLegalSizeMm ?? null, s.bagLimit ?? null, now],
     }));
     await batchExec(client, speciesStmts);
@@ -146,7 +146,7 @@ async function runSeed(request: Request) {
         const techId = techMap[techSlug];
         if (!techId) continue;
         stStmts.push({
-          sql: "INSERT OR IGNORE INTO speciesTechniques (speciesId,techniqueId,effectiveness,notes) VALUES (?,?,NULL,NULL)",
+          sql: "INSERT OR IGNORE INTO species_techniques (species_id,technique_id,effectiveness,notes) VALUES (?,?,NULL,NULL)",
           args: [speciesId, techId],
         });
       }
@@ -169,7 +169,7 @@ async function runSeed(request: Request) {
           const rating = zoneData[month];
           if (!rating) continue;
           swStmts.push({
-            sql: "INSERT OR IGNORE INTO seasonWindows (id,regionId,speciesId,month,rating,notes) VALUES (?,?,?,?,?,NULL)",
+            sql: "INSERT OR IGNORE INTO season_windows (id,region_id,species_id,month,rating,notes) VALUES (?,?,?,?,?,NULL)",
             args: [nanoid(), region.id, speciesId, month, rating],
           });
         }
@@ -180,7 +180,7 @@ async function runSeed(request: Request) {
 
     // 6. Gear templates
     const gearStmts: Stmt[] = GEAR_TEMPLATES.map((item) => ({
-      sql: "INSERT OR IGNORE INTO gearTemplates (id,name,category,tripType,itemName,quantity,notes,isEssential) VALUES (?,?,?,?,?,?,?,?)",
+      sql: "INSERT OR IGNORE INTO gear_templates (id,name,category,trip_type,item_name,quantity,notes,is_essential) VALUES (?,?,?,?,?,?,?,?)",
       args: [nanoid(), item.name, item.category, item.tripType, item.itemName, item.quantity ?? 1, (item as { notes?: string }).notes ?? null, item.isEssential ? 1 : 0],
     }));
     await batchExec(client, gearStmts);
