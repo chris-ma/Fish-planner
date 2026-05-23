@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Inter, Bebas_Neue } from "next/font/google";
 import "./globals.css";
-import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { BottomNav } from "@/components/layout/BottomNav";
 
@@ -28,8 +27,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" className={`${inter.variable} ${bebasNeue.variable}`}>
       <body>
-        <Navbar />
-        <main className="min-h-[calc(100vh-56px)] pb-16 md:pb-0">{children}</main>
+        <main className="min-h-screen pb-16 md:pb-0">{children}</main>
         <Footer />
         <BottomNav />
       </body>

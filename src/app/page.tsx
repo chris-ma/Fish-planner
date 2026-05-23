@@ -4,8 +4,8 @@ import { VideoParallaxHero } from "@/components/layout/VideoParallaxHero";
 import { IntentSearch } from "@/components/discovery/IntentSearch";
 import { RegionCard } from "@/components/discovery/RegionCard";
 import { SpeciesCard } from "@/components/discovery/SpeciesCard";
-import { listRegions, getTopRegionsForMonth } from "@/lib/queries/regions";
-import { listSpecies, getInSeasonSpecies } from "@/lib/queries/species";
+import { getTopRegionsForMonth } from "@/lib/queries/regions";
+import { getInSeasonSpecies } from "@/lib/queries/species";
 import { currentMonth, MONTH_NAMES_FULL } from "@/lib/utils/season";
 import { getZoneImage } from "@/lib/images";
 
@@ -50,15 +50,10 @@ export default async function HomePage({
   const params = await searchParams;
   const month = params.month ? parseInt(params.month) : currentMonth();
 
-  const [allSpecies, allRegions, topRegions, inSeasonSpecies] = await Promise.all([
-    listSpecies(),
-    listRegions(),
+  const [topRegions, inSeasonSpecies] = await Promise.all([
     getTopRegionsForMonth(month, 6),
     getInSeasonSpecies(month, 8),
   ]);
-
-  const speciesList = allSpecies.map((s) => ({ slug: s.slug, commonName: s.commonName }));
-  const regionList = allRegions.map((r) => ({ slug: r.slug, name: r.name, state: r.state, zone: r.zone }));
 
   return (
     <div>
@@ -71,7 +66,7 @@ export default async function HomePage({
           Explore Australian fishing destinations, understand target species, organise gear and logistics — then share the plan with your crew.
         </p>
         <div className="flex justify-center w-full">
-          <IntentSearch speciesList={speciesList} regionList={regionList} />
+          <IntentSearch />
         </div>
       </VideoParallaxHero>
 
