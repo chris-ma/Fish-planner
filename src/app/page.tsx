@@ -72,23 +72,8 @@ export default async function HomePage({
       <div className="max-w-7xl mx-auto px-4 sm:px-6 -mt-8 pb-16 space-y-16">
         {/* Where to Plan This Month */}
         <section>
-          <div className="flex items-center justify-between mb-2">
+          <div className="mb-2">
             <h2 className="text-2xl font-bold text-[#040F1C]">Where to Plan in {MONTH_NAMES_FULL[month]}</h2>
-            <div className="flex gap-2 flex-wrap justify-end">
-              {[10, 11, 12, 1, 2, 3].map((m) => (
-                <Link
-                  key={m}
-                  href={`/?month=${m}`}
-                  className={`text-xs px-3 py-1 rounded-full border transition-colors ${
-                    m === month
-                      ? "bg-[#0D9488] text-white border-[#0D9488]"
-                      : "text-slate-600 border-slate-200 hover:bg-slate-100"
-                  }`}
-                >
-                  {["", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"][m]}
-                </Link>
-              ))}
-            </div>
           </div>
           <p className="text-sm text-slate-500 mb-5 max-w-2xl">
             Species at peak season this month — find the best destinations to target them.
