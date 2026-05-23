@@ -1,5 +1,5 @@
 import { db } from "@/db";
-import { trips, bookings, checklistItems, tripNotes, tripParticipants, regions, species } from "@/db/schema";
+import { trips, bookings, checklistItems, tripNotes, tripParticipants, tripTasks, regions, species } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { nanoid } from "nanoid";
 
@@ -130,4 +130,8 @@ export async function getTripParticipants(tripId: string) {
 
 export async function getTripNotes(tripId: string) {
   return db.select().from(tripNotes).where(eq(tripNotes.tripId, tripId)).orderBy(tripNotes.isPinned, tripNotes.createdAt);
+}
+
+export async function getTripTasks(tripId: string) {
+  return db.select().from(tripTasks).where(eq(tripTasks.tripId, tripId)).orderBy(tripTasks.createdAt);
 }

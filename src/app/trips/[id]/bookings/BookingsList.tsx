@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Plus, Anchor, Hotel, Plane, Car, MoreHorizontal, DollarSign, ExternalLink } from "lucide-react";
+import { Plus, Anchor, Hotel, Plane, Car, MoreHorizontal, DollarSign, ExternalLink, Droplet, FileText, MapPin, ShoppingCart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -13,19 +13,27 @@ import type { Booking } from "@/db/schema";
 import { bookingComUrl, airbnbUrl, skyscannerUrl, webjetUrl, viatorUrl } from "@/lib/affiliate";
 
 const TYPE_ICONS: Record<string, React.ReactNode> = {
-  charter: <Anchor className="h-4 w-4" />,
-  accommodation: <Hotel className="h-4 w-4" />,
-  flight: <Plane className="h-4 w-4" />,
-  transport: <Car className="h-4 w-4" />,
-  other: <MoreHorizontal className="h-4 w-4" />,
+  charter:        <Anchor className="h-4 w-4" />,
+  accommodation:  <Hotel className="h-4 w-4" />,
+  flight:         <Plane className="h-4 w-4" />,
+  transport:      <Car className="h-4 w-4" />,
+  fuel:           <Droplet className="h-4 w-4" />,
+  permit:         <FileText className="h-4 w-4" />,
+  launch_ramp:    <MapPin className="h-4 w-4" />,
+  food_supplies:  <ShoppingCart className="h-4 w-4" />,
+  other:          <MoreHorizontal className="h-4 w-4" />,
 };
 
 const TYPE_LABELS: Record<string, string> = {
-  charter: "Charter / Boat",
-  accommodation: "Accommodation",
-  flight: "Flight",
-  transport: "Transport",
-  other: "Other",
+  charter:        "Charter / Boat",
+  accommodation:  "Accommodation",
+  flight:         "Flight",
+  transport:      "Transport",
+  fuel:           "Fuel",
+  permit:         "Permit / Licence",
+  launch_ramp:    "Launch Ramp",
+  food_supplies:  "Food & Supplies",
+  other:          "Other",
 };
 
 function AffiliateSuggestions({ type, regionName }: { type: string; regionName: string | null }) {
@@ -128,14 +136,30 @@ export function BookingsList({ tripId, initialBookings, regionName }: BookingsLi
 
   const totalCost = bookings.reduce((s, b) => s + (b.costAud ?? 0), 0);
 
+  const costByType = bookings.reduce<Record<string, number>>((acc, b) => {
+    if (b.costAud) acc[b.type] = (acc[b.type] ?? 0) + b.costAud;
+    return acc;
+  }, {});
+
   return (
     <div className="space-y-4">
-      {/* Summary */}
+      {/* Budget summary */}
       {bookings.length > 0 && totalCost > 0 && (
-        <div className="flex items-center gap-2 bg-slate-50 rounded-xl p-4 mb-2">
-          <DollarSign className="h-5 w-5 text-slate-500" />
-          <span className="text-sm text-slate-600">Total estimated cost:</span>
-          <span className="font-bold text-slate-900">${totalCost.toFixed(0)} AUD</span>
+        <div className="bg-slate-50 rounded-xl p-4 mb-2 space-y-2">
+          <div className="flex items-center gap-2">
+            <DollarSign className="h-5 w-5 text-slate-500" />
+            <span className="text-sm text-slate-600">Total estimated cost:</span>
+            <span className="font-bold text-slate-900">${totalCost.toFixed(0)} AUD</span>
+          </div>
+          {Object.entries(costByType).map(([type, cost]) => (
+            <div key={type} className="flex items-center justify-between text-xs text-slate-500 pl-7">
+              <span className="flex items-center gap-1.5">
+                <span className="opacity-60">{TYPE_ICONS[type] ?? TYPE_ICONS.other}</span>
+                {TYPE_LABELS[type] ?? type}
+              </span>
+              <span>${cost.toFixed(0)}</span>
+            </div>
+          ))}
         </div>
       )}
 
@@ -166,6 +190,14 @@ export function BookingsList({ tripId, initialBookings, regionName }: BookingsLi
               <div className="min-w-0">
                 <div className="text-xs font-semibold text-teal-800">Charters</div>
                 <div className="text-xs text-teal-600 truncate">Viator</div>
+              </div>
+            </a>
+            <a href="https://www.findalaunchramp.com.au" target="_blank" rel="noopener noreferrer"
+              className="flex items-center gap-2 p-3 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 transition-colors">
+              <MapPin className="h-4 w-4 text-slate-600 shrink-0" />
+              <div className="min-w-0">
+                <div className="text-xs font-semibold text-slate-800">Launch Ramps</div>
+                <div className="text-xs text-slate-500 truncate">findalaunchramp.com.au</div>
               </div>
             </a>
           </div>

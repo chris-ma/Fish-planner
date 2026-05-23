@@ -145,10 +145,24 @@ export const tripParticipants = sqliteTable(
       .references(() => trips.id, { onDelete: "cascade" }),
     name: text("name").notNull(),
     role: text("role").notNull().default("crew"), // owner | organizer | crew
+    availability: text("availability").notNull().default("going"), // going | tentative | out
     joinedAt: text("joined_at").notNull().$defaultFn(() => new Date().toISOString()),
   },
   (t) => ({ uniq: unique().on(t.tripId, t.name) })
 );
+
+export const tripTasks = sqliteTable("trip_tasks", {
+  id: text("id").primaryKey(),
+  tripId: text("trip_id")
+    .notNull()
+    .references(() => trips.id, { onDelete: "cascade" }),
+  title: text("title").notNull(),
+  assignedTo: text("assigned_to"),
+  isComplete: integer("is_complete", { mode: "boolean" }).notNull().default(false),
+  needsApproval: integer("needs_approval", { mode: "boolean" }).notNull().default(false),
+  isApproved: integer("is_approved", { mode: "boolean" }).notNull().default(false),
+  createdAt: text("created_at").notNull().$defaultFn(() => new Date().toISOString()),
+});
 
 // ─── Type exports ───────────────────────────────────────────────────────────
 
@@ -163,3 +177,4 @@ export type Booking = typeof bookings.$inferSelect;
 export type ChecklistItem = typeof checklistItems.$inferSelect;
 export type TripNote = typeof tripNotes.$inferSelect;
 export type TripParticipant = typeof tripParticipants.$inferSelect;
+export type TripTask = typeof tripTasks.$inferSelect;

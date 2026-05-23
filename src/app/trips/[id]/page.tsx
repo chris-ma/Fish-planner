@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { MapPin, Calendar, Fish, Copy, Package, Users } from "lucide-react";
+import { MapPin, Calendar, Fish, Copy, Package, Users, Smartphone } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -195,6 +195,20 @@ export default async function TripOverviewPage({ params }: { params: Promise<{ i
               <p className="text-sm text-muted-foreground">
                 {participants.length > 0 ? `${participants.length} crew member${participants.length !== 1 ? "s" : ""}` : "Invite your crew"}
               </p>
+            </CardContent>
+          </Card>
+        </Link>
+
+        <Link href={`/trips/${id}/field`}>
+          <Card className="hover:shadow-lg transition-all duration-200 cursor-pointer border-0 shadow-sm rounded-2xl bg-[#020B14]">
+            <CardContent className="p-5">
+              <div className="flex items-center gap-3 mb-2">
+                <div className="w-10 h-10 bg-teal-500/20 rounded-xl flex items-center justify-center">
+                  <Smartphone className="h-5 w-5 text-teal-400" />
+                </div>
+                <h3 className="font-semibold text-[#F5F0E8]">Field Mode</h3>
+              </div>
+              <p className="text-sm text-white/50">Tides, maps &amp; crew on your phone</p>
             </CardContent>
           </Card>
         </Link>

@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
-import { getTripById, getTripParticipants, getTripChecklist } from "@/lib/queries/trips";
+import { getTripById, getTripParticipants, getTripChecklist, getTripNotes, getTripTasks } from "@/lib/queries/trips";
 import { GroupClient } from "./GroupClient";
 
 export default async function TripGroupPage({ params }: { params: Promise<{ id: string }> }) {
@@ -9,9 +9,11 @@ export default async function TripGroupPage({ params }: { params: Promise<{ id: 
   const trip = await getTripById(id);
   if (!trip) notFound();
 
-  const [participants, checklist] = await Promise.all([
+  const [participants, checklist, notes, tasks] = await Promise.all([
     getTripParticipants(id),
     getTripChecklist(id),
+    getTripNotes(id),
+    getTripTasks(id),
   ]);
 
   return (
@@ -26,7 +28,7 @@ export default async function TripGroupPage({ params }: { params: Promise<{ id: 
         <p className="text-sm text-muted-foreground mt-1">Manage your crew and share the trip link.</p>
       </div>
 
-      <GroupClient tripId={id} initialParticipants={participants} checklist={checklist} />
+      <GroupClient tripId={id} initialParticipants={participants} checklist={checklist} initialNotes={notes} initialTasks={tasks} />
     </div>
   );
 }
