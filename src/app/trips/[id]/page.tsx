@@ -48,7 +48,7 @@ export default async function TripOverviewPage({ params }: { params: Promise<{ i
     <div>
       {/* Ocean hero header */}
       <div className="relative bg-[#020B14] py-10 px-4 overflow-hidden">
-        <div className="absolute bottom-0 right-1/4 w-96 h-64 bg-cyan-600/20 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute bottom-0 right-1/4 w-96 h-64 bg-teal-600/20 rounded-full blur-3xl pointer-events-none" />
         <div className="max-w-4xl mx-auto relative z-10">
           <div className="flex items-start justify-between gap-4 flex-wrap">
             <div>
@@ -84,12 +84,12 @@ export default async function TripOverviewPage({ params }: { params: Promise<{ i
       {targetSpecies.length > 0 && (
         <div className="mb-6">
           <div className="flex items-center gap-2 mb-3 text-sm font-medium text-[#040F1C]">
-            <Fish className="h-4 w-4 text-[#06B6D4]" />
+            <Fish className="h-4 w-4 text-[#0D9488]" />
             Target species
           </div>
           <div className="flex flex-wrap gap-2">
             {targetSpecies.map((name) => (
-              <span key={name} className="px-3 py-1 rounded-full text-sm bg-cyan-50 text-[#0891B2] border border-cyan-200">{name}</span>
+              <span key={name} className="px-3 py-1 rounded-full text-sm bg-teal-50 text-[#0F766E] border border-teal-200">{name}</span>
             ))}
           </div>
         </div>
@@ -101,8 +101,8 @@ export default async function TripOverviewPage({ params }: { params: Promise<{ i
           <Card className="hover:shadow-lg transition-all duration-200 cursor-pointer border-0 shadow-sm rounded-2xl">
             <CardContent className="p-5">
               <div className="flex items-center gap-3 mb-2">
-                <div className="w-10 h-10 bg-cyan-500/10 rounded-xl flex items-center justify-center">
-                  <Package className="h-5 w-5 text-[#06B6D4]" />
+                <div className="w-10 h-10 bg-teal-500/10 rounded-xl flex items-center justify-center">
+                  <Package className="h-5 w-5 text-[#0D9488]" />
                 </div>
                 <h3 className="font-semibold text-[#040F1C]">Gear List</h3>
               </div>
@@ -175,7 +175,7 @@ export default async function TripOverviewPage({ params }: { params: Promise<{ i
               ))}
             </div>
             {bookings.length > 3 && (
-              <Link href={`/trips/${id}/bookings`} className="text-sm text-[#0891B2] hover:underline block mt-2">
+              <Link href={`/trips/${id}/bookings`} className="text-sm text-[#0F766E] hover:underline block mt-2">
                 View all {bookings.length} bookings
               </Link>
             )}

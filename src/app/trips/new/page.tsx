@@ -323,7 +323,7 @@ function NewTripForm() {
     <div>
       {/* Hero */}
       <div className="relative bg-[#020B14] py-12 px-4 overflow-hidden">
-        <div className="absolute bottom-0 left-1/4 w-96 h-64 bg-cyan-600/20 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute bottom-0 left-1/4 w-96 h-64 bg-teal-600/20 rounded-full blur-3xl pointer-events-none" />
         <div className="absolute top-0 right-1/4 w-64 h-64 bg-blue-600/10 rounded-full blur-3xl pointer-events-none" />
         <div className="max-w-2xl mx-auto relative z-10">
           <p className="text-white/50 text-sm mb-2">No account needed</p>
@@ -382,7 +382,7 @@ function NewTripForm() {
               </SelectContent>
             </Select>
             {activeZonesFromSpecies.size > 0 && filteredRegions.length < REGION_OPTIONS.length && (
-              <p className="text-xs text-[#0891B2]">
+              <p className="text-xs text-[#0F766E]">
                 Showing {filteredRegions.length} regions where your target species are active
               </p>
             )}
@@ -426,7 +426,7 @@ function NewTripForm() {
               )}
             </div>
             {form.regionSlug && filteredSpecies.length < SPECIES_OPTIONS.length && (
-              <p className="text-xs text-[#0891B2]">
+              <p className="text-xs text-[#0F766E]">
                 Showing {filteredSpecies.length} species active in the selected region
               </p>
             )}
@@ -438,8 +438,8 @@ function NewTripForm() {
                   onClick={() => toggleSpecies(name)}
                   className={`px-3 py-1.5 rounded-full text-sm border transition-all ${
                     selectedSpecies.includes(name)
-                      ? "bg-[#06B6D4] text-white border-[#06B6D4]"
-                      : "border-slate-200 text-slate-600 hover:border-[#06B6D4] hover:text-[#0891B2]"
+                      ? "bg-[#0D9488] text-white border-[#0D9488]"
+                      : "border-slate-200 text-slate-600 hover:border-[#0D9488] hover:text-[#0F766E]"
                   }`}
                 >
                   {name}

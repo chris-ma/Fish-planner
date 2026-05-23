@@ -37,10 +37,10 @@ export function IntentSearch({ speciesList, regionList }: IntentSearchProps) {
   };
 
   const selectClass =
-    "border-0 border-b-2 border-slate-200 rounded-none shadow-none px-1 h-9 bg-transparent font-semibold text-[#040F1C] data-[placeholder]:text-slate-400 hover:border-slate-400 focus:border-[#06B6D4] transition-colors text-base";
+    "border-0 border-b-2 border-slate-200 rounded-none shadow-none px-1 h-9 bg-transparent font-semibold text-[#040F1C] data-[placeholder]:text-slate-400 hover:border-slate-400 focus:border-[#0D9488] transition-colors text-base";
 
   return (
-    <div className="bg-white rounded-2xl shadow-2xl border border-slate-100 px-6 pt-6 pb-5 w-full max-w-2xl">
+    <div className="bg-[#F5F0E8] rounded-2xl shadow-2xl border border-slate-100 px-6 pt-6 pb-5 w-full max-w-2xl">
       {/* Desktop: inline sentence style */}
       <div className="hidden sm:flex items-end gap-x-2 gap-y-3 flex-wrap leading-none">
         <span className="text-slate-500 text-sm pb-1.5 whitespace-nowrap">I want to catch</span>
@@ -141,7 +141,7 @@ export function IntentSearch({ speciesList, regionList }: IntentSearchProps) {
         <button
           onClick={handleSearch}
           disabled={!canSearch}
-          className="inline-flex items-center gap-2 bg-[#06B6D4] hover:bg-[#0891B2] disabled:opacity-40 disabled:cursor-not-allowed text-white font-semibold px-6 py-2.5 rounded-xl transition-colors"
+          className="inline-flex items-center gap-2 bg-[#0D9488] hover:bg-[#0F766E] disabled:opacity-40 disabled:cursor-not-allowed text-white font-semibold px-6 py-2.5 rounded-xl transition-colors"
         >
           Find the Bite
           <ArrowRight className="h-4 w-4" />

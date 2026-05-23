@@ -33,7 +33,7 @@ export function HeroSearch({ speciesList, regionList }: HeroSearchProps) {
   };
 
   return (
-    <div className="bg-white rounded-2xl shadow-2xl border border-slate-100 p-5 w-full max-w-2xl">
+    <div className="bg-[#F5F0E8] rounded-2xl shadow-2xl border border-slate-100 p-5 w-full max-w-2xl">
       {/* Mode tabs */}
       <div className="flex gap-1 mb-4 bg-slate-100 rounded-xl p-1">
         {(
@@ -49,7 +49,7 @@ export function HeroSearch({ speciesList, regionList }: HeroSearchProps) {
             className={cn(
               "flex-1 flex items-center justify-center gap-2 py-2 rounded-lg text-sm font-medium transition-all",
               mode === m
-                ? "bg-white text-[#040F1C] shadow-sm"
+                ? "bg-[#F5F0E8] text-[#040F1C] shadow-sm"
                 : "text-slate-500 hover:text-slate-700"
             )}
           >
@@ -116,7 +116,7 @@ export function HeroSearch({ speciesList, regionList }: HeroSearchProps) {
             (mode === "location" && !regionSlug) ||
             (mode === "month" && !month)
           }
-          className="h-12 px-6 bg-[#06B6D4] hover:bg-[#0891B2] text-white rounded-xl"
+          className="h-12 px-6 bg-[#0D9488] hover:bg-[#0F766E] text-white rounded-xl"
         >
           <Search className="h-4 w-4" />
           <span className="hidden sm:inline ml-1">Search</span>

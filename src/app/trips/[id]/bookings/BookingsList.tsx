@@ -69,11 +69,11 @@ function AffiliateSuggestions({ type, regionName }: { type: string; regionName: 
 
   if (type === "charter") {
     return (
-      <div className="rounded-xl bg-cyan-50 border border-cyan-100 p-3">
-        <p className="text-xs font-semibold text-cyan-800 mb-2">Find fishing charters in {location}</p>
+      <div className="rounded-xl bg-teal-50 border border-teal-100 p-3">
+        <p className="text-xs font-semibold text-teal-800 mb-2">Find fishing charters in {location}</p>
         <div className="flex flex-wrap gap-2">
           <a href={viatorUrl(location)} target="_blank" rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-lg bg-[#06B6D4] text-white hover:bg-[#0891B2] transition-colors">
+            className="inline-flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-lg bg-[#0D9488] text-white hover:bg-[#0F766E] transition-colors">
             Viator <ExternalLink className="h-3 w-3 opacity-70" />
           </a>
         </div>
@@ -161,11 +161,11 @@ export function BookingsList({ tripId, initialBookings, regionName }: BookingsLi
               </div>
             </a>
             <a href={viatorUrl(regionName)} target="_blank" rel="noopener noreferrer"
-              className="flex items-center gap-2 p-3 rounded-xl border border-cyan-200 bg-cyan-50 hover:bg-cyan-100 transition-colors">
-              <Anchor className="h-4 w-4 text-cyan-600 shrink-0" />
+              className="flex items-center gap-2 p-3 rounded-xl border border-teal-200 bg-teal-50 hover:bg-teal-100 transition-colors">
+              <Anchor className="h-4 w-4 text-teal-600 shrink-0" />
               <div className="min-w-0">
-                <div className="text-xs font-semibold text-cyan-800">Charters</div>
-                <div className="text-xs text-cyan-600 truncate">Viator</div>
+                <div className="text-xs font-semibold text-teal-800">Charters</div>
+                <div className="text-xs text-teal-600 truncate">Viator</div>
               </div>
             </a>
           </div>

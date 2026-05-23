@@ -37,7 +37,7 @@ const TECHNIQUES: { value: TechniqueStyle | "all"; label: string; color: string 
 
 const CATEGORY_COLORS: Record<string, string> = {
   pelagic: "bg-blue-500",
-  inshore: "bg-cyan-500",
+  inshore: "bg-teal-500",
   reef: "bg-orange-500",
   estuary: "bg-teal-500",
   freshwater: "bg-emerald-500",
@@ -117,7 +117,7 @@ export default function GearPage() {
                     "flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm border transition-all font-medium",
                     env === e.value
                       ? "bg-[#020B14] text-white border-[#020B14]"
-                      : "bg-white text-slate-600 border-slate-200 hover:border-slate-400"
+                      : "bg-[#F5F0E8] text-slate-600 border-slate-200 hover:border-slate-400"
                   )}
                 >
                   <span>{e.emoji}</span>
@@ -139,7 +139,7 @@ export default function GearPage() {
                     "px-3 py-1.5 rounded-full text-sm border transition-all font-medium",
                     technique === t.value
                       ? cn(t.color, "ring-2 ring-offset-1 ring-current")
-                      : cn(t.value === "all" ? "bg-white text-slate-600 border-slate-200" : t.color, "opacity-60 hover:opacity-100")
+                      : cn(t.value === "all" ? "bg-[#F5F0E8] text-slate-600 border-slate-200" : t.color, "opacity-60 hover:opacity-100")
                   )}
                 >
                   {t.label}
@@ -167,7 +167,7 @@ export default function GearPage() {
               return (
                 <div
                   key={sp.slug}
-                  className="border border-border rounded-2xl overflow-hidden bg-white shadow-sm hover:shadow-md transition-shadow"
+                  className="border border-border rounded-2xl overflow-hidden bg-[#F5F0E8] shadow-sm hover:shadow-md transition-shadow"
                 >
                   {/* Card header */}
                   <button
@@ -249,7 +249,7 @@ export default function GearPage() {
         {/* Gear Checklist */}
         <div className="border border-border rounded-2xl overflow-hidden">
           <button
-            className="w-full flex items-center justify-between px-5 py-4 bg-white hover:bg-slate-50 transition-colors"
+            className="w-full flex items-center justify-between px-5 py-4 bg-[#F5F0E8] hover:bg-slate-50 transition-colors"
             onClick={() => setChecklistOpen((v) => !v)}
           >
             <div className="flex items-center gap-2">
@@ -274,7 +274,7 @@ export default function GearPage() {
           </button>
 
           {checklistOpen && (
-            <div className="border-t border-slate-100 divide-y bg-white">
+            <div className="border-t border-slate-100 divide-y bg-[#F5F0E8]">
               {/* Environment-specific items */}
               {checklistItems.envItems.length > 0 && (
                 <>

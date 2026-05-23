@@ -100,7 +100,7 @@ export default async function SpeciesPage({ params }: { params: Promise<{ slug: 
           className="absolute inset-0 bg-cover bg-center opacity-40"
           style={{ backgroundImage: `url('${heroImage}')` }}
         />
-        <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-[#06B6D4] to-[#0891B2] opacity-60" />
+        <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-[#0D9488] to-[#0F766E] opacity-60" />
 
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 py-12">
           <nav className="text-sm text-white/50 mb-5 flex items-center gap-2">
@@ -129,7 +129,7 @@ export default async function SpeciesPage({ params }: { params: Promise<{ slug: 
 
           <div className="flex gap-3 flex-wrap">
             <Link href="/trips/new">
-              <button className="inline-flex items-center gap-2 bg-[#06B6D4] hover:bg-[#0891B2] text-white font-medium px-5 py-2.5 rounded-xl transition-colors">
+              <button className="inline-flex items-center gap-2 bg-[#0D9488] hover:bg-[#0F766E] text-white font-medium px-5 py-2.5 rounded-xl transition-colors">
                 Plan a Trip
                 <ArrowRight className="h-4 w-4" />
               </button>
@@ -163,7 +163,7 @@ export default async function SpeciesPage({ params }: { params: Promise<{ slug: 
                         className={`rounded-xl p-4 border ${
                           isHotTip
                             ? "bg-amber-50 border-amber-200 sm:col-span-2"
-                            : "bg-white border-slate-100 shadow-sm"
+                            : "bg-[#F5F0E8] border-slate-100 shadow-sm"
                         }`}
                       >
                         <div className="flex items-center gap-2 mb-2">
@@ -200,7 +200,7 @@ export default async function SpeciesPage({ params }: { params: Promise<{ slug: 
                   <div className="divide-y">
                     {topRegionsThisMonth.map((r) => (
                       <div key={r.regionSlug} className="flex items-center justify-between py-2.5">
-                        <Link href={`/regions/${r.regionSlug}`} className="font-medium text-sm hover:text-[#06B6D4] transition-colors">
+                        <Link href={`/regions/${r.regionSlug}`} className="font-medium text-sm hover:text-[#0D9488] transition-colors">
                           {r.regionName}
                         </Link>
                         <div className="flex items-center gap-2">
@@ -264,12 +264,12 @@ export default async function SpeciesPage({ params }: { params: Promise<{ slug: 
                     if (total === 0) return null;
                     return (
                       <div key={m} className="flex items-center gap-3">
-                        <span className={`text-xs w-8 font-medium ${m === month ? "text-[#0891B2]" : "text-muted-foreground"}`}>
+                        <span className={`text-xs w-8 font-medium ${m === month ? "text-[#0F766E]" : "text-muted-foreground"}`}>
                           {name}
                         </span>
                         <div className="flex-1 bg-slate-100 rounded-full h-2 overflow-hidden">
                           <div
-                            className="h-full bg-[#06B6D4] rounded-full"
+                            className="h-full bg-[#0D9488] rounded-full"
                             style={{ width: `${Math.min(100, (total / Math.max(bestRegions.length, 1)) * 100)}%` }}
                           />
                         </div>
@@ -350,14 +350,14 @@ export default async function SpeciesPage({ params }: { params: Promise<{ slug: 
             })()}
 
             {/* Gear Guide */}
-            <Card className="bg-cyan-950 border-cyan-800">
+            <Card className="bg-teal-950 border-teal-800">
               <CardContent className="p-4">
                 <h3 className="font-semibold text-sm mb-1 text-white">Gear Guide</h3>
                 <p className="text-xs text-white/60 mb-3 leading-relaxed">
                   See the recommended tackle, lures, and equipment for this species.
                 </p>
                 <Link href="/gear">
-                  <button className="w-full inline-flex items-center justify-center gap-1.5 bg-[#06B6D4] hover:bg-[#0891B2] text-white font-medium text-sm px-4 py-2 rounded-lg transition-colors">
+                  <button className="w-full inline-flex items-center justify-center gap-1.5 bg-[#0D9488] hover:bg-[#0F766E] text-white font-medium text-sm px-4 py-2 rounded-lg transition-colors">
                     View Gear Guide <ArrowRight className="h-3 w-3" />
                   </button>
                 </Link>

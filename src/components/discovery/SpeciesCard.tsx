@@ -26,7 +26,7 @@ const CATEGORY_BADGE_COLORS: Record<string, string> = {
   pelagic: "bg-blue-100 text-blue-700",
   reef: "bg-orange-100 text-orange-700",
   estuary: "bg-teal-100 text-teal-700",
-  inshore: "bg-cyan-100 text-cyan-700",
+  inshore: "bg-teal-100 text-teal-700",
   freshwater: "bg-emerald-100 text-emerald-700",
 };
 
@@ -67,7 +67,7 @@ export function SpeciesCard({ species, bestRating, bestMonth }: SpeciesCardProps
           </div>
         </div>
 
-        <div className="bg-white flex-1 p-3 flex flex-col gap-2">
+        <div className="bg-[#F5F0E8] flex-1 p-3 flex flex-col gap-2">
           <div className="flex items-center gap-2 flex-wrap">
             <span className={`text-xs px-2.5 py-0.5 rounded-full font-medium ${badgeColor}`}>
               {categoryLabel}

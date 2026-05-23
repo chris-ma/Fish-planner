@@ -30,7 +30,7 @@ export function SeasonalCalendar({ rows, highlightMonth, linkRowsTo }: SeasonalC
               key={m}
               className={cn(
                 "text-center text-xs font-medium py-1 rounded",
-                highlightMonth === i + 1 ? "text-[#0891B2] bg-cyan-50 font-bold" : "text-muted-foreground"
+                highlightMonth === i + 1 ? "text-[#0F766E] bg-teal-50 font-bold" : "text-muted-foreground"
               )}
             >
               {m}
@@ -44,7 +44,7 @@ export function SeasonalCalendar({ rows, highlightMonth, linkRowsTo }: SeasonalC
             <div key={row.slug} className="grid grid-cols-[160px_repeat(12,1fr)] gap-px items-center">
               <Link
                 href={`/${linkRowsTo}/${row.slug}`}
-                className="text-xs font-medium text-foreground hover:text-[#0891B2] truncate pr-2 leading-tight"
+                className="text-xs font-medium text-foreground hover:text-[#0F766E] truncate pr-2 leading-tight"
               >
                 {row.label}
               </Link>
@@ -55,7 +55,7 @@ export function SeasonalCalendar({ rows, highlightMonth, linkRowsTo }: SeasonalC
                   className={cn(
                     "h-7 rounded text-[10px] flex items-center justify-center font-medium transition-opacity",
                     rating ? ratingColor(rating as Rating) : "bg-slate-100 text-slate-300",
-                    highlightMonth === i + 1 && "ring-2 ring-[#06B6D4] ring-offset-1"
+                    highlightMonth === i + 1 && "ring-2 ring-[#0D9488] ring-offset-1"
                   )}
                 >
                   {rating === "peak" ? "P" : rating === "good" ? "G" : rating === "fair" ? "F" : ""}
@@ -71,7 +71,7 @@ export function SeasonalCalendar({ rows, highlightMonth, linkRowsTo }: SeasonalC
             <span className="w-4 h-4 rounded bg-emerald-500 inline-block" /> Peak
           </span>
           <span className="flex items-center gap-1.5">
-            <span className="w-4 h-4 rounded bg-[#06B6D4] inline-block" /> Good
+            <span className="w-4 h-4 rounded bg-[#0D9488] inline-block" /> Good
           </span>
           <span className="flex items-center gap-1.5">
             <span className="w-4 h-4 rounded bg-slate-300 inline-block" /> Fair

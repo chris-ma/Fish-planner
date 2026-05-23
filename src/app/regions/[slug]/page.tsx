@@ -93,7 +93,7 @@ export default async function RegionPage({ params }: { params: Promise<{ slug: s
         {/* Gradient overlay */}
         <div className="absolute inset-0 bg-gradient-to-b from-[#020B14]/60 via-[#020B14]/40 to-[#020B14]" />
         {/* Glow orbs */}
-        <div className="absolute bottom-0 left-1/4 w-[400px] h-[400px] bg-cyan-600/20 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute bottom-0 left-1/4 w-[400px] h-[400px] bg-teal-600/20 rounded-full blur-3xl pointer-events-none" />
         <div className="absolute top-0 right-1/3 w-80 h-80 bg-blue-600/15 rounded-full blur-3xl pointer-events-none" />
 
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 py-12">
@@ -120,7 +120,7 @@ export default async function RegionPage({ params }: { params: Promise<{ slug: s
 
           {/* CTA */}
           <Link href="/trips/new">
-            <button className="inline-flex items-center gap-2 bg-[#06B6D4] hover:bg-[#0891B2] text-white font-medium px-5 py-2.5 rounded-xl transition-colors">
+            <button className="inline-flex items-center gap-2 bg-[#0D9488] hover:bg-[#0F766E] text-white font-medium px-5 py-2.5 rounded-xl transition-colors">
               Plan a Trip Here
               <ArrowRight className="h-4 w-4" />
             </button>
@@ -132,8 +132,8 @@ export default async function RegionPage({ params }: { params: Promise<{ slug: s
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-10">
         {/* In season now */}
         {peakThisMonth.length > 0 && (
-          <div className="bg-cyan-950/50 border border-cyan-800/50 rounded-2xl p-5 mb-8">
-            <h2 className="font-semibold text-cyan-300 mb-3 flex items-center gap-2">
+          <div className="bg-teal-950/50 border border-teal-800/50 rounded-2xl p-5 mb-8">
+            <h2 className="font-semibold text-teal-300 mb-3 flex items-center gap-2">
               <Fish className="h-4 w-4" />
               Active this month — {MONTH_NAMES_FULL[month]}
             </h2>
@@ -144,8 +144,8 @@ export default async function RegionPage({ params }: { params: Promise<{ slug: s
                   href={`/species/${sp.speciesSlug}`}
                   className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-opacity hover:opacity-80 ${
                     sp.months[month] === "peak"
-                      ? "bg-[#06B6D4] text-white"
-                      : "bg-[#0891B2] text-white"
+                      ? "bg-[#0D9488] text-white"
+                      : "bg-[#0F766E] text-white"
                   }`}
                 >
                   {sp.commonName}

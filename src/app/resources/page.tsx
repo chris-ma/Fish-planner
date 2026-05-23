@@ -190,7 +190,7 @@ export default function ResourcesPage() {
               </div>
 
               {/* Links */}
-              <div className="divide-y bg-white">
+              <div className="divide-y bg-[#F5F0E8]">
                 {state.links.map((link) => (
                   <a
                     key={link.url}
@@ -199,9 +199,9 @@ export default function ResourcesPage() {
                     rel="noopener noreferrer"
                     className="flex items-start gap-3 px-5 py-4 hover:bg-slate-50 transition-colors group"
                   >
-                    <ExternalLink className="h-4 w-4 text-slate-400 shrink-0 mt-0.5 group-hover:text-[#06B6D4] transition-colors" />
+                    <ExternalLink className="h-4 w-4 text-slate-400 shrink-0 mt-0.5 group-hover:text-[#0D9488] transition-colors" />
                     <div>
-                      <p className="text-sm font-medium text-slate-900 group-hover:text-[#06B6D4] transition-colors">
+                      <p className="text-sm font-medium text-slate-900 group-hover:text-[#0D9488] transition-colors">
                         {link.label}
                       </p>
                       <p className="text-xs text-slate-500 mt-0.5 leading-relaxed">{link.desc}</p>
@@ -216,7 +216,7 @@ export default function ResourcesPage() {
         {/* National resources */}
         <div>
           <h2 className="text-xl font-bold text-slate-900 mb-4">National & Federal Resources</h2>
-          <div className="divide-y border rounded-2xl bg-white">
+          <div className="divide-y border rounded-2xl bg-[#F5F0E8]">
             {NATIONAL.map((item) => {
               const Icon = item.icon;
               return (
@@ -227,12 +227,12 @@ export default function ResourcesPage() {
                   rel="noopener noreferrer"
                   className="flex items-start gap-4 px-5 py-4 hover:bg-slate-50 transition-colors group"
                 >
-                  <div className="w-8 h-8 rounded-lg bg-slate-100 flex items-center justify-center shrink-0 group-hover:bg-[#06B6D4]/10 transition-colors">
-                    <Icon className="h-4 w-4 text-slate-500 group-hover:text-[#06B6D4] transition-colors" />
+                  <div className="w-8 h-8 rounded-lg bg-slate-100 flex items-center justify-center shrink-0 group-hover:bg-[#0D9488]/10 transition-colors">
+                    <Icon className="h-4 w-4 text-slate-500 group-hover:text-[#0D9488] transition-colors" />
                   </div>
                   <div className="flex-1">
                     <div className="flex items-center gap-1.5">
-                      <p className="text-sm font-medium text-slate-900 group-hover:text-[#06B6D4] transition-colors">
+                      <p className="text-sm font-medium text-slate-900 group-hover:text-[#0D9488] transition-colors">
                         {item.label}
                       </p>
                       <ExternalLink className="h-3 w-3 text-slate-400 shrink-0" />

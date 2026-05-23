@@ -53,7 +53,7 @@ export default async function HomePage({
                   href={`/?month=${m}`}
                   className={`text-xs px-3 py-1 rounded-full border transition-colors ${
                     m === month
-                      ? "bg-[#06B6D4] text-white border-[#06B6D4]"
+                      ? "bg-[#0D9488] text-white border-[#0D9488]"
                       : "text-slate-600 border-slate-200 hover:bg-slate-100"
                   }`}
                 >
