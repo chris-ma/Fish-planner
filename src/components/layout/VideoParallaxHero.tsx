@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useEffect } from "react";
-import { HERO_VIDEO_URL, HERO_VIDEO_FALLBACK } from "@/lib/images";
+import { HERO_VIDEO_URL, HERO_VIDEO_FALLBACK, HERO_VIDEO_FALLBACK2 } from "@/lib/images";
 
 interface Props {
   children: React.ReactNode;
@@ -36,6 +36,7 @@ export function VideoParallaxHero({ children }: Props) {
         >
           <source src={HERO_VIDEO_URL} type="video/mp4" />
           <source src={HERO_VIDEO_FALLBACK} type="video/mp4" />
+          <source src={HERO_VIDEO_FALLBACK2} type="video/mp4" />
         </video>
         {/* Gradient overlay — darker at top/bottom to frame content */}
         <div className="absolute inset-0 bg-gradient-to-b from-[#020B14]/70 via-[#020B14]/25 to-[#020B14]" />

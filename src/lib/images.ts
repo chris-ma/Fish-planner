@@ -8,11 +8,15 @@ const px = (id: number, w = 1200) =>
   `https://images.pexels.com/photos/${id}/pexels-photo-${id}.jpeg?auto=compress&cs=tinysrgb&w=${w}`;
 
 // ─── Hero video ───────────────────────────────────────────────────────────────
-// Pexels search: "fly fishing river stream"
+// Pexels: "people fishing on river" — ID 11880800 (confirmed valid)
 export const HERO_VIDEO_URL =
-  "https://videos.pexels.com/video-files/6758951/6758951-hd_1920_1080_25fps.mp4";
+  "https://videos.pexels.com/video-files/11880800/11880800-hd_1920_1080_25fps.mp4";
+// Pexels: "two men by river fishing" — ID 4830314 (confirmed valid)
 export const HERO_VIDEO_FALLBACK =
-  "https://videos.pexels.com/video-files/5762332/5762332-hd_1920_1080_25fps.mp4";
+  "https://videos.pexels.com/video-files/4830314/4830314-hd_1920_1080_25fps.mp4";
+// Pexels: original underwater ocean — ID 2098928 (known working)
+export const HERO_VIDEO_FALLBACK2 =
+  "https://videos.pexels.com/video-files/2098928/2098928-hd_1920_1080_25fps.mp4";
 
 // ─── Category fallback images ─────────────────────────────────────────────────
 // Pexels search: "australia open ocean deep sea fishing"
