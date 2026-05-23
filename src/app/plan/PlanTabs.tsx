@@ -15,38 +15,37 @@ export function PlanTabs({
   const [tab, setTab] = useState<"species" | "locations">("species");
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6">
-      {/* Tab pills */}
-      <div className="flex gap-2 mb-6">
-        <button
-          onClick={() => setTab("species")}
-          className={`px-5 py-2 rounded-full text-sm font-semibold transition-all ${
-            tab === "species"
-              ? "bg-[#0D9488] text-white"
-              : "bg-slate-100 text-slate-600 hover:bg-slate-200"
-          }`}
-        >
-          Species
-        </button>
-        <button
-          onClick={() => setTab("locations")}
-          className={`px-5 py-2 rounded-full text-sm font-semibold transition-all ${
-            tab === "locations"
-              ? "bg-[#0D9488] text-white"
-              : "bg-slate-100 text-slate-600 hover:bg-slate-200"
-          }`}
-        >
-          Locations
-        </button>
+    <div>
+      {/* Folder tab strip — sits on off-white, active tab bleeds into dark content */}
+      <div className="bg-[#F5F0E8] px-4 sm:px-6 pt-5 flex items-end gap-1">
+        {(["species", "locations"] as const).map((t) => {
+          const active = tab === t;
+          return (
+            <button
+              key={t}
+              onClick={() => setTab(t)}
+              className={`px-6 rounded-t-xl text-sm font-semibold capitalize transition-all ${
+                active
+                  ? "bg-[#020B14] text-white py-3"
+                  : "bg-[#D8D3CB] text-slate-500 hover:bg-[#CCC7BF] py-2"
+              }`}
+            >
+              {t}
+            </button>
+          );
+        })}
       </div>
 
+      {/* Full-bleed content panels */}
       {tab === "species" && <SpeciesBrowser species={species} />}
 
       {tab === "locations" && (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-          {regions.map((region) => (
-            <RegionCard key={region.id} region={region} />
-          ))}
+        <div className="bg-[#020B14] min-h-screen">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+            {regions.map((region) => (
+              <RegionCard key={region.id} region={region} />
+            ))}
+          </div>
         </div>
       )}
     </div>

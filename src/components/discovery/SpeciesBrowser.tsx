@@ -31,17 +31,9 @@ export function SpeciesBrowser({ species }: { species: Species[] }) {
       : species.filter((s) => s.category === activeCategory);
 
   return (
-    <div className="min-h-screen bg-[#020B14]">
-      {/* Header */}
-      <div className="px-5 pt-8 pb-3">
-        <h1 className="text-3xl font-bold text-[#F5F0E8] mb-1">Species</h1>
-        <p className="text-white/50 text-sm">
-          Explore fish species and plan your next adventure
-        </p>
-      </div>
-
+    <div className="bg-[#020B14]">
       {/* Category filter tabs */}
-      <div className="px-5 overflow-x-auto">
+      <div className="px-4 sm:px-6 pt-5 overflow-x-auto">
         <div className="flex gap-2 pb-4 min-w-max">
           {CATEGORIES.map((cat) => (
             <button
@@ -60,7 +52,7 @@ export function SpeciesBrowser({ species }: { species: Species[] }) {
       </div>
 
       {/* Species grid */}
-      <div className="px-3 pb-24 grid grid-cols-3 gap-2">
+      <div className="px-4 sm:px-6 pb-24 grid grid-cols-3 gap-2">
         {filtered.map((sp) => {
           const imageUrl = getSpeciesImage(sp.slug, sp.category, 600);
           const badgeColor =
