@@ -82,7 +82,13 @@ const STEP_TITLES: Record<number, string> = {
 
 const TIME_SLOTS = ["Morning", "Afternoon", "Evening", "Night"] as const;
 type TimeSlot = typeof TIME_SLOTS[number];
-type Itinerary = Record<string, Record<TimeSlot, string[]>>;
+type SlotData = { activity: string; species: string[] };
+type Itinerary = Record<string, Record<TimeSlot, SlotData>>;
+const ACTIVITIES = ["Fishing", "Travelling", "Eating", "Rest", "Change Location", "Free Time", "Other"] as const;
+
+function emptyDay(): Record<TimeSlot, SlotData> {
+  return TIME_SLOTS.reduce((acc, s) => ({ ...acc, [s]: { activity: "", species: [] } }), {} as Record<TimeSlot, SlotData>);
+}
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
@@ -351,7 +357,7 @@ function NewTripForm() {
   const itinerarySpecies = useMemo(() => {
     const names = new Set<string>();
     Object.values(itinerary).forEach((slots) => {
-      Object.values(slots).forEach((sps) => sps.forEach((s) => names.add(s)));
+      Object.values(slots).forEach((slotData) => slotData.species.forEach((s) => names.add(s)));
     });
     return Array.from(names);
   }, [itinerary]);
@@ -376,11 +382,22 @@ function NewTripForm() {
     }
   };
 
+  function setSlotActivity(dayKey: string, slot: TimeSlot, activity: string) {
+    setItinerary((prev) => {
+      const day = prev[dayKey] ?? emptyDay();
+      const current = day[slot];
+      return {
+        ...prev,
+        [dayKey]: { ...day, [slot]: { ...current, activity, species: activity !== "Fishing" ? [] : current.species } },
+      };
+    });
+  }
+
   function addToSlot(dayKey: string, slot: TimeSlot, name: string) {
     setItinerary((prev) => {
-      const day = prev[dayKey] ?? { Morning: [], Afternoon: [], Evening: [], Night: [] };
-      if (day[slot].includes(name)) return prev;
-      return { ...prev, [dayKey]: { ...day, [slot]: [...day[slot], name] } };
+      const day = prev[dayKey] ?? emptyDay();
+      if (day[slot].species.includes(name)) return prev;
+      return { ...prev, [dayKey]: { ...day, [slot]: { ...day[slot], species: [...day[slot].species, name] } } };
     });
   }
 
@@ -388,7 +405,7 @@ function NewTripForm() {
     setItinerary((prev) => {
       const day = prev[dayKey];
       if (!day) return prev;
-      return { ...prev, [dayKey]: { ...day, [slot]: day[slot].filter((s) => s !== name) } };
+      return { ...prev, [dayKey]: { ...day, [slot]: { ...day[slot], species: day[slot].species.filter((s) => s !== name) } } };
     });
   }
 
@@ -460,7 +477,9 @@ function NewTripForm() {
         <div className="bg-[#F5F0E8] rounded-2xl p-6 shadow-sm border border-slate-100">
           <StepProgress current={currentStep} total={5} />
 
-          <h2 className="text-2xl font-bold text-[#040F1C] mb-6">{STEP_TITLES[currentStep]}</h2>
+          <h2 className="text-2xl font-bold text-[#040F1C] mb-6">
+            {currentStep === 4 && useItinerary ? "Plan your days" : STEP_TITLES[currentStep]}
+          </h2>
 
           {/* Step 1: Trip name + type */}
           {currentStep === 1 && (
@@ -563,43 +582,64 @@ function NewTripForm() {
               {useItinerary ? (
                 <>
                   <p className="text-xs text-slate-500 mb-3">
-                    Add target species to each time slot. Skip slots you won&apos;t be fishing.
+                    Plan activities for each time slot. Select &quot;Fishing&quot; to choose target species.
                   </p>
-                  <div className="space-y-3 max-h-96 overflow-y-auto pr-1">
+                  <div className="space-y-3 max-h-[500px] overflow-y-auto pr-1">
                     {daysInRange.map((day) => {
                       const dayKey = toDateKey(day);
-                      const dayData = itinerary[dayKey] ?? { Morning: [], Afternoon: [], Evening: [], Night: [] };
+                      const dayData = itinerary[dayKey] ?? emptyDay();
                       return (
-                        <div key={dayKey} className="border border-slate-200 rounded-xl p-3 bg-white space-y-2">
+                        <div key={dayKey} className="border border-slate-200 rounded-xl p-3 bg-white space-y-3">
                           <p className="text-sm font-semibold text-[#040F1C]">{formatDateKey(dayKey)}</p>
-                          {TIME_SLOTS.map((slot) => (
-                            <div key={slot} className="flex items-start gap-2">
-                              <span className="text-xs text-slate-400 w-20 pt-1 shrink-0">{slot}</span>
-                              <div className="flex-1 flex flex-wrap gap-1">
-                                {(dayData[slot] ?? []).map((sp) => (
-                                  <span
-                                    key={sp}
-                                    className="flex items-center gap-1 px-2 py-0.5 bg-teal-50 text-[#0F766E] border border-teal-200 rounded-full text-xs"
-                                  >
-                                    {sp}
-                                    <button
-                                      type="button"
-                                      onClick={() => removeFromSlot(dayKey, slot, sp)}
-                                      className="ml-0.5 hover:text-red-500"
-                                    >
-                                      ×
-                                    </button>
-                                  </span>
-                                ))}
-                                <AddSpeciesButton
-                                  available={filteredSpecies.filter(
-                                    (s) => !(dayData[slot] ?? []).includes(s)
+                          {TIME_SLOTS.map((slot) => {
+                            const slotData = dayData[slot] ?? { activity: "", species: [] };
+                            return (
+                              <div key={slot} className="flex items-start gap-2">
+                                <span className="text-xs text-slate-400 w-20 pt-1 shrink-0">{slot}</span>
+                                <div className="flex-1 space-y-1.5">
+                                  <div className="flex flex-wrap gap-1">
+                                    {ACTIVITIES.map((act) => (
+                                      <button
+                                        key={act}
+                                        type="button"
+                                        onClick={() => setSlotActivity(dayKey, slot, slotData.activity === act ? "" : act)}
+                                        className={`px-2 py-0.5 rounded-full text-[11px] font-medium border transition-all ${
+                                          slotData.activity === act
+                                            ? "bg-[#0D9488] text-white border-[#0D9488]"
+                                            : "border-slate-200 text-slate-500 hover:border-slate-300 bg-white"
+                                        }`}
+                                      >
+                                        {act}
+                                      </button>
+                                    ))}
+                                  </div>
+                                  {slotData.activity === "Fishing" && (
+                                    <div className="flex flex-wrap gap-1 pt-0.5">
+                                      {slotData.species.map((sp) => (
+                                        <span
+                                          key={sp}
+                                          className="flex items-center gap-1 px-2 py-0.5 bg-teal-50 text-[#0F766E] border border-teal-200 rounded-full text-xs"
+                                        >
+                                          {sp}
+                                          <button
+                                            type="button"
+                                            onClick={() => removeFromSlot(dayKey, slot, sp)}
+                                            className="ml-0.5 hover:text-red-500"
+                                          >
+                                            ×
+                                          </button>
+                                        </span>
+                                      ))}
+                                      <AddSpeciesButton
+                                        available={filteredSpecies.filter((s) => !slotData.species.includes(s))}
+                                        onAdd={(name) => addToSlot(dayKey, slot, name)}
+                                      />
+                                    </div>
                                   )}
-                                  onAdd={(name) => addToSlot(dayKey, slot, name)}
-                                />
+                                </div>
                               </div>
-                            </div>
-                          ))}
+                            );
+                          })}
                         </div>
                       );
                     })}

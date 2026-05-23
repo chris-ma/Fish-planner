@@ -41,7 +41,8 @@ export default async function TripOverviewPage({ params }: { params: Promise<{ i
   const completedItems = checklist.filter((i) => i.isCompleted).length;
 
   let parsedDescription = "";
-  let itinerary: Record<string, Record<string, string[]>> = {};
+  type SlotEntry = string[] | { activity: string; species: string[] };
+  let itinerary: Record<string, Record<string, SlotEntry>> = {};
   if (trip.description) {
     try {
       const parsed = JSON.parse(trip.description);
@@ -121,7 +122,11 @@ export default async function TripOverviewPage({ params }: { params: Promise<{ i
           </div>
           <div className="space-y-2">
             {Object.entries(itinerary).map(([day, slots]) => {
-              const hasEntries = Object.values(slots).some((sp) => sp.length > 0);
+              const hasEntries = Object.values(slots).some((entry) => {
+                if (Array.isArray(entry)) return entry.length > 0;
+                const e = entry as { activity: string; species: string[] };
+                return !!e.activity || e.species.length > 0;
+              });
               if (!hasEntries) return null;
               return (
                 <div key={day} className="bg-[#F5F0E8] rounded-xl p-3">
@@ -133,13 +138,23 @@ export default async function TripOverviewPage({ params }: { params: Promise<{ i
                     })}
                   </p>
                   {Object.entries(slots)
-                    .filter(([, sp]) => sp.length > 0)
-                    .map(([slot, sp]) => (
-                      <div key={slot} className="flex items-center gap-2 text-sm mb-1">
-                        <span className="text-slate-400 w-20 text-xs shrink-0">{slot}</span>
-                        <span className="text-[#040F1C] text-xs">{sp.join(", ")}</span>
-                      </div>
-                    ))}
+                    .filter(([, entry]) => {
+                      if (Array.isArray(entry)) return entry.length > 0;
+                      const e = entry as { activity: string; species: string[] };
+                      return !!e.activity || e.species.length > 0;
+                    })
+                    .map(([slot, entry]) => {
+                      const isOld = Array.isArray(entry);
+                      const activity = isOld ? null : (entry as { activity: string; species: string[] }).activity;
+                      const species = isOld ? (entry as string[]) : (entry as { activity: string; species: string[] }).species;
+                      const display = [activity, species.length > 0 ? species.join(", ") : null].filter(Boolean).join(" — ");
+                      return (
+                        <div key={slot} className="flex items-center gap-2 text-sm mb-1">
+                          <span className="text-slate-400 w-20 text-xs shrink-0">{slot}</span>
+                          <span className="text-[#040F1C] text-xs">{display}</span>
+                        </div>
+                      );
+                    })}
                 </div>
               );
             })}
