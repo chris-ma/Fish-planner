@@ -59,10 +59,10 @@ export default async function HomePage({
     <div>
       {/* Hero with parallax video */}
       <VideoParallaxHero>
-        <h1 className="text-5xl md:text-7xl font-bold text-[#F5F0E8] mb-5 leading-tight tracking-tight">
+        <h1 className="text-5xl md:text-7xl font-bold text-[#F5F0E8] mb-5 leading-tight tracking-tight drop-shadow-[0_2px_12px_rgba(0,0,0,0.8)]">
           Plan the trip.<br />Not just the idea.
         </h1>
-        <p className="text-white/65 text-lg md:text-xl mb-10 max-w-sm mx-auto leading-relaxed">
+        <p className="text-white/65 text-lg md:text-xl mb-10 max-w-sm mx-auto leading-relaxed drop-shadow-[0_1px_6px_rgba(0,0,0,0.7)]">
           Find your spot, choose your species,<br className="hidden md:block" />
           and share the plan with your crew.
         </p>

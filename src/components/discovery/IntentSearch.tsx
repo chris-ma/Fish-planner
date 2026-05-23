@@ -25,10 +25,10 @@ export function IntentSearch() {
     <div className="w-full max-w-lg px-2">
       {/* Liquid Glass outer shell */}
       <div
-        className="rounded-3xl backdrop-blur-2xl bg-gradient-to-b from-white/18 to-white/8 border border-white/30 p-5 shadow-2xl shadow-black/40"
+        className="rounded-3xl backdrop-blur-2xl bg-gradient-to-b from-white/18 to-white/8 border border-white/30 p-5"
         style={{
           boxShadow:
-            "0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.25), inset 0 -1px 0 rgba(255,255,255,0.08)",
+            "0 12px 48px rgba(0,0,0,0.6), 0 4px 16px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.25), inset 0 -1px 0 rgba(255,255,255,0.08)",
         }}
       >
         {/* Mode toggle pills */}

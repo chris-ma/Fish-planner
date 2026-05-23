@@ -36,11 +36,11 @@ export function PlanTabs({
         })}
       </div>
 
-      {/* Full-bleed content panels */}
+      {/* Full-bleed content panels — light bg matches active tab */}
       {tab === "species" && <SpeciesBrowser species={species} />}
 
       {tab === "locations" && (
-        <div className="bg-[#020B14] min-h-screen">
+        <div className="bg-[#F5F0E8] min-h-screen">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
             {regions.map((region) => (
               <RegionCard key={region.id} region={region} />
