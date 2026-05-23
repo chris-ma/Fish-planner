@@ -16,8 +16,8 @@ export function PlanTabs({
 
   return (
     <div>
-      {/* Folder tab strip — sits on off-white, active tab bleeds into dark content */}
-      <div className="bg-[#F5F0E8] px-4 sm:px-6 pt-5 flex items-end gap-1">
+      {/* Folder tab strip — dark bg, active tab is light and pops up */}
+      <div className="bg-[#020B14] px-4 sm:px-6 pt-5 flex items-end gap-1">
         {(["species", "locations"] as const).map((t) => {
           const active = tab === t;
           return (
@@ -26,8 +26,8 @@ export function PlanTabs({
               onClick={() => setTab(t)}
               className={`px-6 rounded-t-xl text-sm font-semibold capitalize transition-all ${
                 active
-                  ? "bg-[#020B14] text-white py-3"
-                  : "bg-[#D8D3CB] text-slate-500 hover:bg-[#CCC7BF] py-2"
+                  ? "bg-[#F5F0E8] text-[#040F1C] py-3"
+                  : "bg-white/10 text-white/50 hover:bg-white/15 hover:text-white/70 py-2"
               }`}
             >
               {t}
