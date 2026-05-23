@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ArrowRight, Waves, Sun, Cloud, Anchor, Zap, Lightbulb, ExternalLink, Youtube, Clock, Wind } from "lucide-react";
+import { ArrowRight, Waves, Sun, Cloud, Anchor, Zap, Lightbulb, ExternalLink, Youtube, Clock, Wind, Calendar, MapPin } from "lucide-react";
 import { SeasonalCalendar } from "@/components/discovery/SeasonalCalendar";
 import { SeasonBadge } from "@/components/discovery/SeasonBadge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -91,6 +91,35 @@ export default async function SpeciesPage({ params }: { params: Promise<{ slug: 
   const heroGradient = CATEGORY_GRADIENTS[sp.category] ?? "from-[#040F1C] via-[#020B14] to-[#020B14]";
   const heroImage = getSpeciesImage(sp.slug, sp.category, 1200);
 
+  // Compute best months from seasonal data
+  const monthScores = new Array(13).fill(0);
+  for (const r of bestRegions.slice(0, 20)) {
+    r.months.forEach((rating, m) => {
+      if (!m) return;
+      if (rating === "peak") monthScores[m] += 3;
+      else if (rating === "good") monthScores[m] += 1;
+    });
+  }
+  const maxScore = Math.max(...monthScores.slice(1));
+  const SHORT_MONTHS = ["","Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+  let bestMonthsLabel = "Year-round";
+  if (maxScore > 0) {
+    const threshold = maxScore * 0.55;
+    const hotMonths = monthScores
+      .map((s, i) => ({ s, i }))
+      .filter(({ s, i }) => i > 0 && s >= threshold)
+      .map(({ i }) => i)
+      .sort((a, b) => a - b);
+    if (hotMonths.length > 0 && hotMonths.length < 10) {
+      bestMonthsLabel = hotMonths.length === 1
+        ? SHORT_MONTHS[hotMonths[0]]
+        : `${SHORT_MONTHS[hotMonths[0]]} – ${SHORT_MONTHS[hotMonths[hotMonths.length - 1]]}`;
+    }
+  }
+  const topLocationCount = bestRegions.filter((r) =>
+    r.months.some((m) => m === "peak" || m === "good")
+  ).length;
+
   return (
     <div>
       {/* Hero Banner */}
@@ -143,6 +172,56 @@ export default async function SpeciesPage({ params }: { params: Promise<{ slug: 
           </div>
         </div>
       </section>
+
+      {/* Quick stats bar */}
+      <div className="bg-[#040F1C] border-b border-white/5">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 overflow-x-auto">
+          <div className="flex gap-6 min-w-max">
+            <div className="flex items-center gap-2.5">
+              <div className="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center shrink-0">
+                <Calendar className="h-4 w-4 text-[#0D9488]" />
+              </div>
+              <div>
+                <p className="text-white/40 text-[10px] uppercase tracking-wider font-semibold">Best Months</p>
+                <p className="text-white font-semibold text-sm">{bestMonthsLabel}</p>
+              </div>
+            </div>
+            {tips?.timeOfDay && (
+              <div className="flex items-center gap-2.5">
+                <div className="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center shrink-0">
+                  <Clock className="h-4 w-4 text-amber-400" />
+                </div>
+                <div>
+                  <p className="text-white/40 text-[10px] uppercase tracking-wider font-semibold">Best Time</p>
+                  <p className="text-white font-semibold text-sm">{tips.timeOfDay.split(/[.,]/)[0].trim()}</p>
+                </div>
+              </div>
+            )}
+            {tips?.tide && (
+              <div className="flex items-center gap-2.5">
+                <div className="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center shrink-0">
+                  <Waves className="h-4 w-4 text-blue-400" />
+                </div>
+                <div>
+                  <p className="text-white/40 text-[10px] uppercase tracking-wider font-semibold">Tide</p>
+                  <p className="text-white font-semibold text-sm">{tips.tide.split(/[.,]/)[0].trim()}</p>
+                </div>
+              </div>
+            )}
+            {topLocationCount > 0 && (
+              <div className="flex items-center gap-2.5">
+                <div className="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center shrink-0">
+                  <MapPin className="h-4 w-4 text-emerald-400" />
+                </div>
+                <div>
+                  <p className="text-white/40 text-[10px] uppercase tracking-wider font-semibold">Top Locations</p>
+                  <p className="text-white font-semibold text-sm">{topLocationCount} regions</p>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
 
       {/* Page content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-10">
