@@ -243,8 +243,19 @@ export const ZONE_IMAGES: Record<string, string> = {
 };
 
 // ─── Wikipedia zone photos (CC-licensed) ─────────────────────────────────────
-// Paste output of /api/admin/zone-photos here after deploying and visiting that route.
+// Good photos confirmed from pass 1; bad zones (maps/flags) replaced in pass 2.
 export const WIKI_ZONE_PHOTOS: Record<string, string> = {
+  "southeast_qld": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/aa/Gold_Coast_skyline_%28Unsplash%29.jpg/3840px-Gold_Coast_skyline_%28Unsplash%29.jpg",
+  "nsw":           "https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Sydney_Opera_House_and_Harbour_Bridge_Dusk_%282%29_2019-06-21.jpg/3840px-Sydney_Opera_House_and_Harbour_Bridge_Dusk_%282%29_2019-06-21.jpg",
+  "lord_howe":     "https://upload.wikimedia.org/wikipedia/commons/3/3f/Lord_Howe_ISS006-E-5731.png",
+  "alpine":        "https://upload.wikimedia.org/wikipedia/commons/1/1c/Mount_Feathertop_and_Razorback.jpg",
+  "nt_top_end":    "https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/DarwinOct172024_02.jpg/3840px-DarwinOct172024_02.jpg",
+  "wa_pilbara":    "https://upload.wikimedia.org/wikipedia/commons/a/a0/Ningaloo.jpg",
+  "wa_mid_west":   "https://upload.wikimedia.org/wikipedia/commons/thumb/3/32/00_1761_Geraldton%2C_Western_Australia.jpg/3840px-00_1761_Geraldton%2C_Western_Australia.jpg",
+  "sa_south":      "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9b/Flinders_Chase_National_Park_01.jpg/3840px-Flinders_Chase_National_Park_01.jpg",
+  // Pass 2 replacements go below (far_north_qld, central_qld, vic_coast, tas,
+  // murray_darling, nt_gulf, wa_kimberley, wa_southwest, sa_spencer_gulf,
+  // christmas_island, cocos_islands)
 };
 
 /** Returns the zone image for a region card. */
