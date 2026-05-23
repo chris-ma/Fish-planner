@@ -2,7 +2,7 @@
 
 import { useState, useMemo, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { ArrowRight, ArrowLeft, Loader2, X, Footprints, Anchor, Ship, Waves, ChevronLeft, ChevronRight, Plus } from "lucide-react";
+import { ArrowRight, ArrowLeft, Loader2, X, ChevronLeft, ChevronRight, Plus, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -65,15 +65,8 @@ const SPECIES_ACTIVE_ZONES: Record<string, string[]> = {
   "Milkfish": ["christmas_island", "cocos_islands"],
 };
 
-const TRIP_TYPES = [
-  { value: "land",    label: "Land-based", Icon: Footprints },
-  { value: "boat",    label: "Boat",       Icon: Anchor },
-  { value: "charter", label: "Charter",    Icon: Ship },
-  { value: "kayak",   label: "Kayak",      Icon: Waves },
-] as const;
-
 const STEP_TITLES: Record<number, string> = {
-  1: "What kind of trip?",
+  1: "Name your trip",
   2: "When are you going?",
   3: "Where are you headed?",
   4: "What do you want to catch?",
@@ -84,7 +77,10 @@ const TIME_SLOTS = ["Morning", "Afternoon", "Evening", "Night"] as const;
 type TimeSlot = typeof TIME_SLOTS[number];
 type SlotData = { activity: string; species: string[] };
 type Itinerary = Record<string, Record<TimeSlot, SlotData>>;
-const ACTIVITIES = ["Fishing", "Travelling", "Eating", "Rest", "Change Location", "Free Time", "Other"] as const;
+
+// Fishing activities — these show the species picker
+const FISHING_ACTIVITIES = new Set(["Boat", "Land-based", "Charter", "Kayak"]);
+const ACTIVITIES = ["Boat", "Land-based", "Charter", "Kayak", "Travelling", "Eating", "Rest", "Change Location", "Free Time", "Other"] as const;
 
 function emptyDay(): Record<TimeSlot, SlotData> {
   return TIME_SLOTS.reduce((acc, s) => ({ ...acc, [s]: { activity: "", species: [] } }), {} as Record<TimeSlot, SlotData>);
@@ -150,7 +146,6 @@ function CalendarPicker({
   }
 
   const firstDay = new Date(displayYear, displayMonth, 1);
-  // Mon=0, ... Sun=6
   const startOffset = (firstDay.getDay() + 6) % 7;
   const daysInMonth = new Date(displayYear, displayMonth + 1, 0).getDate();
 
@@ -186,7 +181,6 @@ function CalendarPicker({
 
   return (
     <div>
-      {/* Month nav */}
       <div className="flex items-center justify-between mb-4">
         <button type="button" onClick={prevMonth} className="p-1 hover:bg-slate-100 rounded-lg">
           <ChevronLeft className="h-4 w-4 text-slate-500" />
@@ -199,14 +193,12 @@ function CalendarPicker({
         </button>
       </div>
 
-      {/* Weekday headers */}
       <div className="grid grid-cols-7 mb-1">
         {WEEKDAYS.map((d) => (
           <div key={d} className="text-center text-[10px] font-medium text-slate-400 py-1">{d}</div>
         ))}
       </div>
 
-      {/* Days grid */}
       <div className="grid grid-cols-7">
         {Array.from({ length: startOffset }).map((_, i) => <div key={`e-${i}`} />)}
         {Array.from({ length: daysInMonth }, (_, i) => i + 1).map((day) => (
@@ -221,7 +213,6 @@ function CalendarPicker({
         ))}
       </div>
 
-      {/* Summary */}
       {startDate && (
         <div className="mt-4 text-sm text-[#040F1C]">
           {endDate ? (
@@ -278,7 +269,7 @@ function AddSpeciesButton({
         onClick={() => setOpen(!open)}
         className="flex items-center gap-1 px-2 py-0.5 rounded-full border border-dashed border-slate-300 text-slate-400 text-xs hover:border-[#0D9488] hover:text-[#0D9488] transition-colors"
       >
-        <Plus className="h-3 w-3" /> Add
+        <Plus className="h-3 w-3" /> Add species
       </button>
       {open && (
         <div className="absolute left-0 top-7 z-20 w-52 bg-white border border-slate-200 rounded-xl shadow-lg max-h-48 overflow-y-auto">
@@ -306,22 +297,26 @@ function NewTripForm() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [currentStep, setCurrentStep] = useState(1);
-  const [tripType, setTripType] = useState<"land" | "boat" | "charter" | "kayak" | "">("");
 
   const [selectedSpecies, setSelectedSpecies] = useState<string[]>(() => {
     const s = searchParams.get("species");
     return s && SPECIES_OPTIONS.includes(s) ? [s] : [];
   });
 
+  const [selectedRegions, setSelectedRegions] = useState<string[]>(() => {
+    const r = searchParams.get("region");
+    return r ? [r] : [];
+  });
+  const [regionSearch, setRegionSearch] = useState("");
+  const [dayLocations, setDayLocations] = useState<Record<string, string>>({});
   const [itinerary, setItinerary] = useState<Itinerary>({});
 
-  const [form, setForm] = useState(() => ({
+  const [form, setForm] = useState({
     title: "",
-    regionSlug: searchParams.get("region") ?? "",
     startDate: "",
     endDate: "",
     description: "",
-  }));
+  });
 
   const activeZonesFromSpecies = useMemo(() => {
     if (selectedSpecies.length === 0) return new Set<string>();
@@ -332,28 +327,39 @@ function NewTripForm() {
     return zones;
   }, [selectedSpecies]);
 
-  const selectedRegionZone = useMemo(() => {
-    if (!form.regionSlug) return null;
-    return REGION_OPTIONS.find((r) => r.slug === form.regionSlug)?.zone ?? null;
-  }, [form.regionSlug]);
+  // Zones from all selected regions
+  const selectedZones = useMemo(() => {
+    return new Set(
+      selectedRegions.flatMap((slug) => {
+        const zone = REGION_OPTIONS.find((r) => r.slug === slug)?.zone;
+        return zone ? [zone] : [];
+      })
+    );
+  }, [selectedRegions]);
 
   const filteredSpecies = useMemo(() => {
-    if (!selectedRegionZone) return SPECIES_OPTIONS;
+    if (selectedZones.size === 0) return SPECIES_OPTIONS;
     return SPECIES_OPTIONS.filter((sp) =>
-      (SPECIES_ACTIVE_ZONES[sp] ?? []).includes(selectedRegionZone)
+      (SPECIES_ACTIVE_ZONES[sp] ?? []).some((z) => selectedZones.has(z))
     );
-  }, [selectedRegionZone]);
+  }, [selectedZones]);
 
   const filteredRegions = useMemo(() => {
-    if (activeZonesFromSpecies.size === 0) return REGION_OPTIONS;
-    return REGION_OPTIONS.filter((r) => activeZonesFromSpecies.has(r.zone));
-  }, [activeZonesFromSpecies]);
+    let regions = REGION_OPTIONS;
+    if (activeZonesFromSpecies.size > 0) {
+      regions = regions.filter((r) => activeZonesFromSpecies.has(r.zone));
+    }
+    if (regionSearch.trim()) {
+      const q = regionSearch.toLowerCase();
+      regions = regions.filter((r) => r.name.toLowerCase().includes(q));
+    }
+    return regions;
+  }, [activeZonesFromSpecies, regionSearch]);
 
   const hasDateRange = form.startDate && form.endDate;
   const daysInRange = hasDateRange ? getDaysInRange(form.startDate, form.endDate) : [];
   const useItinerary = daysInRange.length > 0 && daysInRange.length <= 10;
 
-  // Collect all species from itinerary for step 5 preview
   const itinerarySpecies = useMemo(() => {
     const names = new Set<string>();
     Object.values(itinerary).forEach((slots) => {
@@ -371,15 +377,25 @@ function NewTripForm() {
     setSelectedSpecies((prev) =>
       prev.includes(name) ? prev.filter((s) => s !== name) : [...prev, name]
     );
-    if (form.regionSlug && selectedRegionZone) {
-      const newSelection = selectedSpecies.includes(name)
-        ? selectedSpecies.filter((s) => s !== name)
-        : [...selectedSpecies, name];
-      const allZones = new Set(newSelection.flatMap((sp) => SPECIES_ACTIVE_ZONES[sp] ?? []));
-      if (allZones.size > 0 && !allZones.has(selectedRegionZone)) {
-        setForm((f) => ({ ...f, regionSlug: "" }));
-      }
+    // Drop any selected regions that no longer match the new species selection
+    const newSelection = selectedSpecies.includes(name)
+      ? selectedSpecies.filter((s) => s !== name)
+      : [...selectedSpecies, name];
+    const allZones = new Set(newSelection.flatMap((sp) => SPECIES_ACTIVE_ZONES[sp] ?? []));
+    if (allZones.size > 0) {
+      setSelectedRegions((prev) =>
+        prev.filter((slug) => {
+          const zone = REGION_OPTIONS.find((r) => r.slug === slug)?.zone;
+          return zone && allZones.has(zone);
+        })
+      );
     }
+  };
+
+  const toggleRegion = (slug: string) => {
+    setSelectedRegions((prev) =>
+      prev.includes(slug) ? prev.filter((s) => s !== slug) : [...prev, slug]
+    );
   };
 
   function setSlotActivity(dayKey: string, slot: TimeSlot, activity: string) {
@@ -388,7 +404,10 @@ function NewTripForm() {
       const current = day[slot];
       return {
         ...prev,
-        [dayKey]: { ...day, [slot]: { ...current, activity, species: activity !== "Fishing" ? [] : current.species } },
+        [dayKey]: {
+          ...day,
+          [slot]: { ...current, activity, species: !FISHING_ACTIVITIES.has(activity) ? [] : current.species },
+        },
       };
     });
   }
@@ -408,9 +427,6 @@ function NewTripForm() {
       return { ...prev, [dayKey]: { ...day, [slot]: { ...day[slot], species: day[slot].species.filter((s) => s !== name) } } };
     });
   }
-
-  const clearRegion = () => setForm((f) => ({ ...f, regionSlug: "" }));
-  const clearSpeciesFilter = () => setSelectedSpecies([]);
 
   const canAdvance: Record<number, boolean> = {
     1: form.title.trim().length > 0,
@@ -434,7 +450,8 @@ function NewTripForm() {
       const descriptionPayload = JSON.stringify({
         notes: form.description,
         itinerary,
-        tripType,
+        regionSlugs: selectedRegions,
+        dayLocations,
       });
 
       const res = await fetch("/api/trips", {
@@ -442,7 +459,7 @@ function NewTripForm() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           title: form.title.trim(),
-          regionSlug: form.regionSlug || undefined,
+          regionSlug: selectedRegions[0] || undefined,
           startDate: form.startDate || undefined,
           endDate: form.endDate || undefined,
           targetSpecies: allSelectedSpecies,
@@ -481,45 +498,22 @@ function NewTripForm() {
             {currentStep === 4 && useItinerary ? "Plan your days" : STEP_TITLES[currentStep]}
           </h2>
 
-          {/* Step 1: Trip name + type */}
+          {/* Step 1: Trip name */}
           {currentStep === 1 && (
-            <div className="space-y-5">
-              <div className="space-y-2">
-                <Label htmlFor="title">Trip name *</Label>
-                <Input
-                  id="title"
-                  placeholder="e.g. Cairns Marlin Trip 2025"
-                  value={form.title}
-                  onChange={(e) => setForm((f) => ({ ...f, title: e.target.value }))}
-                  className="h-11"
-                />
-              </div>
-              <div>
-                <p className="text-sm font-medium text-slate-700 mb-3">Trip style</p>
-                <div className="grid grid-cols-2 gap-3">
-                  {TRIP_TYPES.map(({ value, label, Icon }) => (
-                    <button
-                      key={value}
-                      type="button"
-                      onClick={() => setTripType(value)}
-                      className={`rounded-xl border-2 p-4 text-left transition-all ${
-                        tripType === value
-                          ? "border-[#0D9488] bg-teal-50"
-                          : "border-slate-200 hover:border-slate-300 bg-white"
-                      }`}
-                    >
-                      <Icon className={`h-6 w-6 mb-2 ${tripType === value ? "text-[#0D9488]" : "text-slate-400"}`} />
-                      <span className={`text-sm font-semibold block ${tripType === value ? "text-[#0D9488]" : "text-[#040F1C]"}`}>
-                        {label}
-                      </span>
-                    </button>
-                  ))}
-                </div>
-              </div>
+            <div className="space-y-2">
+              <Label htmlFor="title">Trip name *</Label>
+              <Input
+                id="title"
+                placeholder="e.g. Cairns Marlin Trip 2025"
+                value={form.title}
+                onChange={(e) => setForm((f) => ({ ...f, title: e.target.value }))}
+                onKeyDown={(e) => e.key === "Enter" && canAdvance[1] && goNext()}
+                className="h-11"
+              />
             </div>
           )}
 
-          {/* Step 2: Dates — visual calendar */}
+          {/* Step 2: Dates */}
           {currentStep === 2 && (
             <div className="space-y-4">
               <CalendarPicker
@@ -533,66 +527,129 @@ function NewTripForm() {
             </div>
           )}
 
-          {/* Step 3: Destination */}
+          {/* Step 3: Locations (multi-select) */}
           {currentStep === 3 && (
             <div className="space-y-3">
-              <div className="flex items-center justify-between">
-                <Label htmlFor="region">Destination</Label>
-                {form.regionSlug && (
+              <p className="text-sm text-slate-500">Select one or more destinations. You can assign each day to a location in step 4.</p>
+
+              {/* Selected region chips */}
+              {selectedRegions.length > 0 && (
+                <div className="flex flex-wrap gap-2 pb-1">
+                  {selectedRegions.map((slug) => {
+                    const region = REGION_OPTIONS.find((r) => r.slug === slug);
+                    if (!region) return null;
+                    return (
+                      <span key={slug} className="flex items-center gap-1 px-3 py-1 bg-[#0D9488] text-white rounded-full text-sm font-medium">
+                        {region.name}
+                        <button type="button" onClick={() => toggleRegion(slug)} className="ml-0.5 hover:text-white/70">
+                          <X className="h-3 w-3" />
+                        </button>
+                      </span>
+                    );
+                  })}
                   <button
                     type="button"
-                    onClick={clearRegion}
-                    className="text-xs text-slate-500 hover:text-slate-700 flex items-center gap-1"
+                    onClick={() => setSelectedRegions([])}
+                    className="text-xs text-slate-400 hover:text-slate-600 flex items-center gap-1 self-center"
                   >
-                    <X className="h-3 w-3" /> Clear
+                    <X className="h-3 w-3" /> Clear all
                   </button>
-                )}
-              </div>
-              <select
-                id="region"
-                value={form.regionSlug}
-                onChange={(e) => {
-                  const v = e.target.value;
-                  setForm((f) => ({ ...f, regionSlug: v }));
-                  const newZone = REGION_OPTIONS.find((r) => r.slug === v)?.zone;
-                  if (newZone) {
-                    setSelectedSpecies((prev) =>
-                      prev.filter((sp) => (SPECIES_ACTIVE_ZONES[sp] ?? []).includes(newZone))
-                    );
-                  }
-                }}
-                className="w-full h-11 px-3 border border-slate-200 rounded-lg bg-white text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#0D9488]"
-              >
-                <option value="">Select a region or town…</option>
-                {filteredRegions.map((r) => (
-                  <option key={r.slug} value={r.slug}>{r.name}</option>
-                ))}
-              </select>
+                </div>
+              )}
+
+              {/* Search input */}
+              <Input
+                placeholder="Search regions…"
+                value={regionSearch}
+                onChange={(e) => setRegionSearch(e.target.value)}
+                className="h-9"
+              />
+
               {activeZonesFromSpecies.size > 0 && filteredRegions.length < REGION_OPTIONS.length && (
                 <p className="text-xs text-[#0F766E]">
-                  Showing {filteredRegions.length} regions where your target species are active
+                  Showing {filteredRegions.length} region{filteredRegions.length !== 1 ? "s" : ""} where your target species are active
                 </p>
               )}
+
+              {/* Scrollable region list */}
+              <div className="space-y-1 max-h-64 overflow-y-auto pr-1">
+                {filteredRegions.map((r) => {
+                  const selected = selectedRegions.includes(r.slug);
+                  return (
+                    <button
+                      key={r.slug}
+                      type="button"
+                      onClick={() => toggleRegion(r.slug)}
+                      className={`w-full text-left px-3 py-2.5 rounded-xl text-sm border transition-all flex items-center justify-between ${
+                        selected
+                          ? "border-[#0D9488] bg-teal-50 text-[#0F766E] font-medium"
+                          : "border-slate-200 bg-white text-slate-700 hover:border-slate-300"
+                      }`}
+                    >
+                      {r.name}
+                      {selected && (
+                        <span className="w-4 h-4 rounded-full bg-[#0D9488] flex items-center justify-center shrink-0">
+                          <Check className="h-2.5 w-2.5 text-white" />
+                        </span>
+                      )}
+                    </button>
+                  );
+                })}
+              </div>
             </div>
           )}
 
-          {/* Step 4: Species / Itinerary */}
+          {/* Step 4: Itinerary / Species */}
           {currentStep === 4 && (
             <div className="space-y-3">
               {useItinerary ? (
                 <>
                   <p className="text-xs text-slate-500 mb-3">
-                    Plan activities for each time slot. Select &quot;Fishing&quot; to choose target species.
+                    Plan each day. Boat / Land-based / Charter / Kayak slots reveal a species picker.
                   </p>
-                  <div className="space-y-3 max-h-[500px] overflow-y-auto pr-1">
+                  <div className="space-y-3 max-h-[520px] overflow-y-auto pr-1">
                     {daysInRange.map((day) => {
                       const dayKey = toDateKey(day);
                       const dayData = itinerary[dayKey] ?? emptyDay();
                       return (
                         <div key={dayKey} className="border border-slate-200 rounded-xl p-3 bg-white space-y-3">
-                          <p className="text-sm font-semibold text-[#040F1C]">{formatDateKey(dayKey)}</p>
+                          {/* Day header + location selector */}
+                          <div className="flex items-center justify-between flex-wrap gap-2">
+                            <p className="text-sm font-semibold text-[#040F1C]">{formatDateKey(dayKey)}</p>
+                            {selectedRegions.length > 0 && (
+                              <div className="flex flex-wrap gap-1">
+                                {selectedRegions.map((slug) => {
+                                  const region = REGION_OPTIONS.find((r) => r.slug === slug);
+                                  if (!region) return null;
+                                  const active = dayLocations[dayKey] === slug;
+                                  return (
+                                    <button
+                                      key={slug}
+                                      type="button"
+                                      onClick={() =>
+                                        setDayLocations((prev) => ({
+                                          ...prev,
+                                          [dayKey]: active ? "" : slug,
+                                        }))
+                                      }
+                                      className={`px-2 py-0.5 rounded-full text-[11px] font-medium border transition-all ${
+                                        active
+                                          ? "bg-blue-500 text-white border-blue-500"
+                                          : "border-slate-200 text-slate-500 hover:border-slate-300 bg-white"
+                                      }`}
+                                    >
+                                      {region.name}
+                                    </button>
+                                  );
+                                })}
+                              </div>
+                            )}
+                          </div>
+
+                          {/* Time slots */}
                           {TIME_SLOTS.map((slot) => {
                             const slotData = dayData[slot] ?? { activity: "", species: [] };
+                            const isFishing = FISHING_ACTIVITIES.has(slotData.activity);
                             return (
                               <div key={slot} className="flex items-start gap-2">
                                 <span className="text-xs text-slate-400 w-20 pt-1 shrink-0">{slot}</span>
@@ -602,7 +659,9 @@ function NewTripForm() {
                                       <button
                                         key={act}
                                         type="button"
-                                        onClick={() => setSlotActivity(dayKey, slot, slotData.activity === act ? "" : act)}
+                                        onClick={() =>
+                                          setSlotActivity(dayKey, slot, slotData.activity === act ? "" : act)
+                                        }
                                         className={`px-2 py-0.5 rounded-full text-[11px] font-medium border transition-all ${
                                           slotData.activity === act
                                             ? "bg-[#0D9488] text-white border-[#0D9488]"
@@ -613,7 +672,7 @@ function NewTripForm() {
                                       </button>
                                     ))}
                                   </div>
-                                  {slotData.activity === "Fishing" && (
+                                  {isFishing && (
                                     <div className="flex flex-wrap gap-1 pt-0.5">
                                       {slotData.species.map((sp) => (
                                         <span
@@ -652,16 +711,16 @@ function NewTripForm() {
                     {selectedSpecies.length > 0 && (
                       <button
                         type="button"
-                        onClick={clearSpeciesFilter}
+                        onClick={() => setSelectedSpecies([])}
                         className="text-xs text-slate-500 hover:text-slate-700 flex items-center gap-1"
                       >
                         <X className="h-3 w-3" /> Clear all
                       </button>
                     )}
                   </div>
-                  {form.regionSlug && filteredSpecies.length < SPECIES_OPTIONS.length && (
+                  {selectedRegions.length > 0 && filteredSpecies.length < SPECIES_OPTIONS.length && (
                     <p className="text-xs text-[#0F766E]">
-                      Showing {filteredSpecies.length} species active in the selected region
+                      Showing {filteredSpecies.length} species active in the selected region{selectedRegions.length !== 1 ? "s" : ""}
                     </p>
                   )}
                   <div className="flex flex-wrap gap-2">
@@ -688,7 +747,6 @@ function NewTripForm() {
           {/* Step 5: Gear preview + notes + submit */}
           {currentStep === 5 && (
             <div className="space-y-4">
-              {/* Gear preview */}
               {allSelectedSpecies.length > 0 && (
                 <div className="bg-white rounded-xl border border-slate-200 p-4 space-y-2">
                   <p className="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-3">Gear Preview</p>
@@ -702,26 +760,22 @@ function NewTripForm() {
                       </div>
                     );
                   })}
-                  {tripType === "boat" && (
-                    <p className="text-xs text-slate-500 mt-2 pt-2 border-t border-slate-100">
-                      Boat safety gear (EPIRB, PFDs, flares, VHF radio) will be in your trip gear list.
-                    </p>
-                  )}
-                  {tripType === "land" && (
-                    <p className="text-xs text-slate-500 mt-2 pt-2 border-t border-slate-100">
-                      Land-based safety gear (PLB, rock fishing vest) will be in your trip gear list.
-                    </p>
-                  )}
-                  {tripType === "charter" && (
-                    <p className="text-xs text-slate-500 mt-2 pt-2 border-t border-slate-100">
-                      Charter — safety gear is provided by the operator.
-                    </p>
-                  )}
-                  {tripType === "kayak" && (
-                    <p className="text-xs text-slate-500 mt-2 pt-2 border-t border-slate-100">
-                      Kayak safety gear (PLB, PFD, flares) will be in your trip gear list.
-                    </p>
-                  )}
+                </div>
+              )}
+
+              {selectedRegions.length > 0 && (
+                <div className="bg-white rounded-xl border border-slate-200 p-4">
+                  <p className="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-2">Destinations</p>
+                  <div className="flex flex-wrap gap-2">
+                    {selectedRegions.map((slug) => {
+                      const region = REGION_OPTIONS.find((r) => r.slug === slug);
+                      return region ? (
+                        <span key={slug} className="px-3 py-1 rounded-full text-sm bg-teal-50 text-[#0F766E] border border-teal-200">
+                          {region.name}
+                        </span>
+                      ) : null;
+                    })}
+                  </div>
                 </div>
               )}
 

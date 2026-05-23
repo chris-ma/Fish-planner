@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { getTripWithRegion, getTripBookings, getTripChecklist, getTripParticipants } from "@/lib/queries/trips";
 import { formatDateRange } from "@/lib/utils/dates";
+import { REGION_OPTIONS } from "@/lib/data/options";
 import { CopyShareLink } from "./CopyShareLink";
 
 const STATUS_COLORS: Record<string, string> = {
@@ -43,11 +44,13 @@ export default async function TripOverviewPage({ params }: { params: Promise<{ i
   let parsedDescription = "";
   type SlotEntry = string[] | { activity: string; species: string[] };
   let itinerary: Record<string, Record<string, SlotEntry>> = {};
+  let dayLocations: Record<string, string> = {};
   if (trip.description) {
     try {
       const parsed = JSON.parse(trip.description);
       parsedDescription = parsed.notes ?? "";
       itinerary = parsed.itinerary ?? {};
+      dayLocations = parsed.dayLocations ?? {};
     } catch {
       parsedDescription = trip.description;
     }
@@ -130,13 +133,20 @@ export default async function TripOverviewPage({ params }: { params: Promise<{ i
               if (!hasEntries) return null;
               return (
                 <div key={day} className="bg-[#F5F0E8] rounded-xl p-3">
-                  <p className="text-xs font-semibold text-slate-500 mb-2">
-                    {new Date(day + "T12:00:00").toLocaleDateString("en-AU", {
-                      weekday: "short",
-                      day: "numeric",
-                      month: "short",
-                    })}
-                  </p>
+                  <div className="flex items-center justify-between mb-2">
+                    <p className="text-xs font-semibold text-slate-500">
+                      {new Date(day + "T12:00:00").toLocaleDateString("en-AU", {
+                        weekday: "short",
+                        day: "numeric",
+                        month: "short",
+                      })}
+                    </p>
+                    {dayLocations[day] && (
+                      <span className="text-[10px] font-medium px-2 py-0.5 rounded-full bg-blue-100 text-blue-700">
+                        {REGION_OPTIONS.find((r) => r.slug === dayLocations[day])?.name ?? dayLocations[day]}
+                      </span>
+                    )}
+                  </div>
                   {Object.entries(slots)
                     .filter(([, entry]) => {
                       if (Array.isArray(entry)) return entry.length > 0;
