@@ -6,15 +6,14 @@ const pv = (id: number, res: string, fps: number) =>
   `https://videos.pexels.com/video-files/${id}/${id}-hd_${res}_${fps}fps.mp4`;
 
 // Source chain: browser tries each in order, stops at first that loads.
-// IDs confirmed valid via Pexels search results; fps variants cover 25/30fps cameras.
-// 2098928 is the original working video, kept as guaranteed fallback.
+// Primary: Pexels 6051211 — aerial shot of a boat at shore (Taryn Elliott)
+// Fallbacks: river fishing videos; 2098928 is the original confirmed-working video.
 const VIDEO_SOURCES = [
-  pv(11880800, "1920_1080", 30), // people fishing on river, 30fps
-  pv(11880800, "1920_1080", 25), // people fishing on river, 25fps
-  pv(11880800, "1280_720", 30),  // 720p fallback
-  pv(4830314,  "1920_1080", 30), // men by river fishing, 30fps
-  pv(4830314,  "1920_1080", 25), // men by river fishing, 25fps
-  pv(4830314,  "1280_720", 30),  // 720p fallback
+  pv(6051211, "1920_1080", 25), // aerial boat/shore — 25fps
+  pv(6051211, "1920_1080", 30), // aerial boat/shore — 30fps
+  pv(6051211, "1280_720",  25), // 720p fallback
+  pv(11880800, "1920_1080", 30), // people fishing on river
+  pv(11880800, "1920_1080", 25),
   pv(2098928,  "1920_1080", 25), // original working video (guaranteed)
 ];
 
