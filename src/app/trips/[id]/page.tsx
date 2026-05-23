@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { MapPin, Calendar, Fish, Copy, Package, Users, Smartphone } from "lucide-react";
+import { MapPin, Calendar, Fish, Copy, Package, Users, Smartphone, DollarSign } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -43,7 +43,8 @@ export default async function TripOverviewPage({ params }: { params: Promise<{ i
 
   let parsedDescription = "";
   type SlotEntry = string[] | { activity: string; species: string[] };
-  let itinerary: Record<string, Record<string, SlotEntry>> = {};
+  type ScheduleEvent = { id: string; startTime: string; endTime: string; activity: string; species: string[] };
+  let itinerary: Record<string, Record<string, SlotEntry> | ScheduleEvent[]> = {};
   let dayLocations: Record<string, string> = {};
   if (trip.description) {
     try {
@@ -124,7 +125,37 @@ export default async function TripOverviewPage({ params }: { params: Promise<{ i
             </Link>
           </div>
           <div className="space-y-2">
-            {Object.entries(itinerary).map(([day, slots]) => {
+            {Object.entries(itinerary).map(([day, dayValue]) => {
+              // New format: ScheduleEvent[]
+              if (Array.isArray(dayValue) && dayValue.length > 0 && "startTime" in (dayValue[0] ?? {})) {
+                const events = [...(dayValue as ScheduleEvent[])].sort((a, b) => a.startTime.localeCompare(b.startTime));
+                return (
+                  <div key={day} className="bg-[#F5F0E8] rounded-xl p-3">
+                    <div className="flex items-center justify-between mb-2">
+                      <p className="text-xs font-semibold text-slate-500">
+                        {new Date(day + "T12:00:00").toLocaleDateString("en-AU", { weekday: "short", day: "numeric", month: "short" })}
+                      </p>
+                      {dayLocations[day] && (
+                        <span className="text-[10px] font-medium px-2 py-0.5 rounded-full bg-blue-100 text-blue-700">
+                          {REGION_OPTIONS.find((r) => r.slug === dayLocations[day])?.name ?? dayLocations[day]}
+                        </span>
+                      )}
+                    </div>
+                    {events.map((evt) => (
+                      <div key={evt.id} className="flex items-center gap-2 text-sm mb-1">
+                        <span className="text-slate-400 text-xs shrink-0 font-mono">{evt.startTime}–{evt.endTime}</span>
+                        <span className="text-[#040F1C] text-xs">
+                          {evt.activity}
+                          {evt.species.length > 0 && <span className="text-teal-700"> — {evt.species.join(", ")}</span>}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                );
+              }
+
+              // Old format: Record<slot, SlotEntry>
+              const slots = dayValue as Record<string, SlotEntry>;
               const hasEntries = Object.values(slots).some((entry) => {
                 if (Array.isArray(entry)) return entry.length > 0;
                 const e = entry as { activity: string; species: string[] };
@@ -135,11 +166,7 @@ export default async function TripOverviewPage({ params }: { params: Promise<{ i
                 <div key={day} className="bg-[#F5F0E8] rounded-xl p-3">
                   <div className="flex items-center justify-between mb-2">
                     <p className="text-xs font-semibold text-slate-500">
-                      {new Date(day + "T12:00:00").toLocaleDateString("en-AU", {
-                        weekday: "short",
-                        day: "numeric",
-                        month: "short",
-                      })}
+                      {new Date(day + "T12:00:00").toLocaleDateString("en-AU", { weekday: "short", day: "numeric", month: "short" })}
                     </p>
                     {dayLocations[day] && (
                       <span className="text-[10px] font-medium px-2 py-0.5 rounded-full bg-blue-100 text-blue-700">
@@ -220,6 +247,20 @@ export default async function TripOverviewPage({ params }: { params: Promise<{ i
               <p className="text-sm text-muted-foreground">
                 {participants.length > 0 ? `${participants.length} crew member${participants.length !== 1 ? "s" : ""}` : "Invite your crew"}
               </p>
+            </CardContent>
+          </Card>
+        </Link>
+
+        <Link href={`/trips/${id}/budget`}>
+          <Card className="hover:shadow-lg transition-all duration-200 cursor-pointer border-0 shadow-sm rounded-2xl">
+            <CardContent className="p-5">
+              <div className="flex items-center gap-3 mb-2">
+                <div className="w-10 h-10 bg-amber-500/10 rounded-xl flex items-center justify-center">
+                  <DollarSign className="h-5 w-5 text-amber-600" />
+                </div>
+                <h3 className="font-semibold text-[#040F1C]">Budget</h3>
+              </div>
+              <p className="text-sm text-muted-foreground">Track costs &amp; split between crew</p>
             </CardContent>
           </Card>
         </Link>

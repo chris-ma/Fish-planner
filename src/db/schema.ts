@@ -164,6 +164,16 @@ export const tripTasks = sqliteTable("trip_tasks", {
   createdAt: text("created_at").notNull().$defaultFn(() => new Date().toISOString()),
 });
 
+export const tripBudgetItems = sqliteTable("trip_budget_items", {
+  id:          text("id").primaryKey(),
+  tripId:      text("trip_id").notNull().references(() => trips.id, { onDelete: "cascade" }),
+  category:    text("category").notNull(),
+  description: text("description").notNull(),
+  amount:      real("amount").notNull().default(0),
+  paidAmount:  real("paid_amount").notNull().default(0),
+  createdAt:   text("created_at").notNull().$defaultFn(() => new Date().toISOString()),
+});
+
 // ─── Type exports ───────────────────────────────────────────────────────────
 
 export type Region = typeof regions.$inferSelect;
@@ -178,3 +188,4 @@ export type ChecklistItem = typeof checklistItems.$inferSelect;
 export type TripNote = typeof tripNotes.$inferSelect;
 export type TripParticipant = typeof tripParticipants.$inferSelect;
 export type TripTask = typeof tripTasks.$inferSelect;
+export type TripBudgetItem = typeof tripBudgetItems.$inferSelect;

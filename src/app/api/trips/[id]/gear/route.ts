@@ -1,9 +1,9 @@
 import { NextResponse } from "next/server";
 import { getTripById, getTripChecklist } from "@/lib/queries/trips";
 import { db } from "@/db";
-import { checklistItems, gearTemplates, species, regions } from "@/db/schema";
-import { eq, or, inArray } from "drizzle-orm";
+import { checklistItems } from "@/db/schema";
 import { nanoid } from "nanoid";
+import { GEAR_TEMPLATES } from "@/db/seed/gear-templates";
 
 const SPECIES_TRIP_TYPE: Record<string, string> = {
   "Black Marlin": "offshore_pelagic",
@@ -56,10 +56,9 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
     if (tripTypes.size === 0) tripTypes.add("offshore_pelagic");
 
     const types = Array.from(tripTypes);
-    const templates = await db
-      .select()
-      .from(gearTemplates)
-      .where(or(eq(gearTemplates.tripType, "all"), inArray(gearTemplates.tripType, types)));
+    const templates = GEAR_TEMPLATES.filter(
+      (t) => t.tripType === "all" || types.includes(t.tripType)
+    );
 
     const newItems = templates.map((t) => ({
       id: nanoid(),

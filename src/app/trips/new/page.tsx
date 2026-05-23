@@ -7,6 +7,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { currentMonth, MONTH_NAMES_FULL } from "@/lib/utils/season";
 import { SPECIES_OPTIONS, REGION_OPTIONS } from "@/lib/data/options";
 import { SPECIES_GEAR } from "@/lib/gear-specs";
@@ -73,18 +75,12 @@ const STEP_TITLES: Record<number, string> = {
   5: "Review & create",
 };
 
-const TIME_SLOTS = ["Morning", "Afternoon", "Evening", "Night"] as const;
-type TimeSlot = typeof TIME_SLOTS[number];
-type SlotData = { activity: string; species: string[] };
-type Itinerary = Record<string, Record<TimeSlot, SlotData>>;
+type ScheduleEvent = { id: string; startTime: string; endTime: string; activity: string; species: string[] };
+type Itinerary = Record<string, ScheduleEvent[]>;
 
 // Fishing activities — these show the species picker
 const FISHING_ACTIVITIES = new Set(["Boat", "Land-based", "Charter", "Kayak"]);
 const ACTIVITIES = ["Boat", "Land-based", "Charter", "Kayak", "Travelling", "Eating", "Rest", "Change Location", "Free Time", "Other"] as const;
-
-function emptyDay(): Record<TimeSlot, SlotData> {
-  return TIME_SLOTS.reduce((acc, s) => ({ ...acc, [s]: { activity: "", species: [] } }), {} as Record<TimeSlot, SlotData>);
-}
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
@@ -175,9 +171,7 @@ function CalendarPicker({
     return "hover:bg-slate-100 rounded-full";
   }
 
-  const dayCount = startDate && endDate
-    ? getDaysInRange(startDate, endDate).length
-    : null;
+  const dayCount = startDate && endDate ? getDaysInRange(startDate, endDate).length : null;
 
   return (
     <div>
@@ -251,44 +245,6 @@ function StepProgress({ current, total }: { current: number; total: number }) {
   );
 }
 
-// ── AddSpeciesButton ──────────────────────────────────────────────────────────
-
-function AddSpeciesButton({
-  available,
-  onAdd,
-}: {
-  available: string[];
-  onAdd: (name: string) => void;
-}) {
-  const [open, setOpen] = useState(false);
-
-  return (
-    <div className="relative">
-      <button
-        type="button"
-        onClick={() => setOpen(!open)}
-        className="flex items-center gap-1 px-2 py-0.5 rounded-full border border-dashed border-slate-300 text-slate-400 text-xs hover:border-[#0D9488] hover:text-[#0D9488] transition-colors"
-      >
-        <Plus className="h-3 w-3" /> Add species
-      </button>
-      {open && (
-        <div className="absolute left-0 top-7 z-20 w-52 bg-white border border-slate-200 rounded-xl shadow-lg max-h-48 overflow-y-auto">
-          {available.map((sp) => (
-            <button
-              key={sp}
-              type="button"
-              onClick={() => { onAdd(sp); setOpen(false); }}
-              className="block w-full text-left px-3 py-1.5 text-xs text-slate-700 hover:bg-teal-50 hover:text-[#0D9488]"
-            >
-              {sp}
-            </button>
-          ))}
-        </div>
-      )}
-    </div>
-  );
-}
-
 // ── NewTripForm ───────────────────────────────────────────────────────────────
 
 function NewTripForm() {
@@ -311,6 +267,16 @@ function NewTripForm() {
   const [dayLocations, setDayLocations] = useState<Record<string, string>>({});
   const [itinerary, setItinerary] = useState<Itinerary>({});
 
+  // Schedule event dialog state
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [dialogDayKey, setDialogDayKey] = useState("");
+  const [eventForm, setEventForm] = useState({
+    activity: "",
+    species: [] as string[],
+    startTime: "06:00",
+    endTime: "12:00",
+  });
+
   const [form, setForm] = useState({
     title: "",
     startDate: "",
@@ -327,7 +293,6 @@ function NewTripForm() {
     return zones;
   }, [selectedSpecies]);
 
-  // Zones from all selected regions
   const selectedZones = useMemo(() => {
     return new Set(
       selectedRegions.flatMap((slug) => {
@@ -362,8 +327,8 @@ function NewTripForm() {
 
   const itinerarySpecies = useMemo(() => {
     const names = new Set<string>();
-    Object.values(itinerary).forEach((slots) => {
-      Object.values(slots).forEach((slotData) => slotData.species.forEach((s) => names.add(s)));
+    Object.values(itinerary).forEach((events) => {
+      events.forEach((evt) => evt.species.forEach((s) => names.add(s)));
     });
     return Array.from(names);
   }, [itinerary]);
@@ -377,7 +342,6 @@ function NewTripForm() {
     setSelectedSpecies((prev) =>
       prev.includes(name) ? prev.filter((s) => s !== name) : [...prev, name]
     );
-    // Drop any selected regions that no longer match the new species selection
     const newSelection = selectedSpecies.includes(name)
       ? selectedSpecies.filter((s) => s !== name)
       : [...selectedSpecies, name];
@@ -398,34 +362,41 @@ function NewTripForm() {
     );
   };
 
-  function setSlotActivity(dayKey: string, slot: TimeSlot, activity: string) {
-    setItinerary((prev) => {
-      const day = prev[dayKey] ?? emptyDay();
-      const current = day[slot];
-      return {
-        ...prev,
-        [dayKey]: {
-          ...day,
-          [slot]: { ...current, activity, species: !FISHING_ACTIVITIES.has(activity) ? [] : current.species },
-        },
-      };
-    });
+  // Schedule event functions
+  function openDialog(dayKey: string) {
+    setDialogDayKey(dayKey);
+    setEventForm({ activity: "", species: [], startTime: "06:00", endTime: "12:00" });
+    setDialogOpen(true);
   }
 
-  function addToSlot(dayKey: string, slot: TimeSlot, name: string) {
-    setItinerary((prev) => {
-      const day = prev[dayKey] ?? emptyDay();
-      if (day[slot].species.includes(name)) return prev;
-      return { ...prev, [dayKey]: { ...day, [slot]: { ...day[slot], species: [...day[slot].species, name] } } };
-    });
+  function removeEvent(dayKey: string, eventId: string) {
+    setItinerary((prev) => ({
+      ...prev,
+      [dayKey]: (prev[dayKey] ?? []).filter((e) => e.id !== eventId),
+    }));
   }
 
-  function removeFromSlot(dayKey: string, slot: TimeSlot, name: string) {
-    setItinerary((prev) => {
-      const day = prev[dayKey];
-      if (!day) return prev;
-      return { ...prev, [dayKey]: { ...day, [slot]: { ...day[slot], species: day[slot].species.filter((s) => s !== name) } } };
-    });
+  function toggleEventSpecies(name: string) {
+    setEventForm((f) => ({
+      ...f,
+      species: f.species.includes(name) ? f.species.filter((s) => s !== name) : [...f.species, name],
+    }));
+  }
+
+  function saveEvent() {
+    if (!eventForm.activity) return;
+    const evt: ScheduleEvent = {
+      id: crypto.randomUUID(),
+      startTime: eventForm.startTime,
+      endTime: eventForm.endTime,
+      activity: eventForm.activity,
+      species: FISHING_ACTIVITIES.has(eventForm.activity) ? eventForm.species : [],
+    };
+    setItinerary((prev) => ({
+      ...prev,
+      [dialogDayKey]: [...(prev[dialogDayKey] ?? []), evt],
+    }));
+    setDialogOpen(false);
   }
 
   const canAdvance: Record<number, boolean> = {
@@ -532,7 +503,6 @@ function NewTripForm() {
             <div className="space-y-3">
               <p className="text-sm text-slate-500">Select one or more destinations. You can assign each day to a location in step 4.</p>
 
-              {/* Selected region chips */}
               {selectedRegions.length > 0 && (
                 <div className="flex flex-wrap gap-2 pb-1">
                   {selectedRegions.map((slug) => {
@@ -557,7 +527,6 @@ function NewTripForm() {
                 </div>
               )}
 
-              {/* Search input */}
               <Input
                 placeholder="Search regions…"
                 value={regionSearch}
@@ -571,7 +540,6 @@ function NewTripForm() {
                 </p>
               )}
 
-              {/* Scrollable region list */}
               <div className="space-y-1 max-h-64 overflow-y-auto pr-1">
                 {filteredRegions.map((r) => {
                   const selected = selectedRegions.includes(r.slug);
@@ -605,14 +573,16 @@ function NewTripForm() {
               {useItinerary ? (
                 <>
                   <p className="text-xs text-slate-500 mb-3">
-                    Plan each day. Boat / Land-based / Charter / Kayak slots reveal a species picker.
+                    Add events to each day. Boat / Land-based / Charter / Kayak activities reveal a species picker.
                   </p>
                   <div className="space-y-3 max-h-[520px] overflow-y-auto pr-1">
                     {daysInRange.map((day) => {
                       const dayKey = toDateKey(day);
-                      const dayData = itinerary[dayKey] ?? emptyDay();
+                      const events = [...(itinerary[dayKey] ?? [])].sort((a, b) =>
+                        a.startTime.localeCompare(b.startTime)
+                      );
                       return (
-                        <div key={dayKey} className="border border-slate-200 rounded-xl p-3 bg-white space-y-3">
+                        <div key={dayKey} className="border border-slate-200 rounded-xl p-3 bg-white space-y-2">
                           {/* Day header + location selector */}
                           <div className="flex items-center justify-between flex-wrap gap-2">
                             <p className="text-sm font-semibold text-[#040F1C]">{formatDateKey(dayKey)}</p>
@@ -646,63 +616,125 @@ function NewTripForm() {
                             )}
                           </div>
 
-                          {/* Time slots */}
-                          {TIME_SLOTS.map((slot) => {
-                            const slotData = dayData[slot] ?? { activity: "", species: [] };
-                            const isFishing = FISHING_ACTIVITIES.has(slotData.activity);
-                            return (
-                              <div key={slot} className="flex items-start gap-2">
-                                <span className="text-xs text-slate-400 w-20 pt-1 shrink-0">{slot}</span>
-                                <div className="flex-1 space-y-1.5">
-                                  <div className="flex flex-wrap gap-1">
-                                    {ACTIVITIES.map((act) => (
-                                      <button
-                                        key={act}
-                                        type="button"
-                                        onClick={() =>
-                                          setSlotActivity(dayKey, slot, slotData.activity === act ? "" : act)
-                                        }
-                                        className={`px-2 py-0.5 rounded-full text-[11px] font-medium border transition-all ${
-                                          slotData.activity === act
-                                            ? "bg-[#0D9488] text-white border-[#0D9488]"
-                                            : "border-slate-200 text-slate-500 hover:border-slate-300 bg-white"
-                                        }`}
-                                      >
-                                        {act}
-                                      </button>
-                                    ))}
-                                  </div>
-                                  {isFishing && (
-                                    <div className="flex flex-wrap gap-1 pt-0.5">
-                                      {slotData.species.map((sp) => (
-                                        <span
-                                          key={sp}
-                                          className="flex items-center gap-1 px-2 py-0.5 bg-teal-50 text-[#0F766E] border border-teal-200 rounded-full text-xs"
-                                        >
-                                          {sp}
-                                          <button
-                                            type="button"
-                                            onClick={() => removeFromSlot(dayKey, slot, sp)}
-                                            className="ml-0.5 hover:text-red-500"
-                                          >
-                                            ×
-                                          </button>
-                                        </span>
-                                      ))}
-                                      <AddSpeciesButton
-                                        available={filteredSpecies.filter((s) => !slotData.species.includes(s))}
-                                        onAdd={(name) => addToSlot(dayKey, slot, name)}
-                                      />
-                                    </div>
-                                  )}
-                                </div>
-                              </div>
-                            );
-                          })}
+                          {/* Event cards */}
+                          {events.map((evt) => (
+                            <div key={evt.id} className="flex items-center gap-2 bg-slate-50 rounded-lg px-3 py-2 text-sm">
+                              <span className="text-slate-400 text-xs shrink-0 font-mono">
+                                {evt.startTime}–{evt.endTime}
+                              </span>
+                              <span className="text-[#040F1C] flex-1 text-xs font-medium">
+                                {evt.activity}
+                                {evt.species.length > 0 && (
+                                  <span className="text-teal-700 font-normal"> — {evt.species.join(", ")}</span>
+                                )}
+                              </span>
+                              <button
+                                type="button"
+                                onClick={() => removeEvent(dayKey, evt.id)}
+                                className="text-slate-400 hover:text-red-500 shrink-0 transition-colors"
+                              >
+                                <X className="h-3.5 w-3.5" />
+                              </button>
+                            </div>
+                          ))}
+
+                          {/* Add event button */}
+                          <button
+                            type="button"
+                            onClick={() => openDialog(dayKey)}
+                            className="flex items-center gap-1.5 text-xs text-[#0D9488] hover:text-[#0F766E] font-medium py-0.5 transition-colors"
+                          >
+                            <Plus className="h-3.5 w-3.5" />
+                            Add event
+                          </button>
                         </div>
                       );
                     })}
                   </div>
+
+                  {/* Add Event Dialog */}
+                  <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+                    <DialogContent>
+                      <DialogHeader>
+                        <DialogTitle>Add Event</DialogTitle>
+                      </DialogHeader>
+                      <div className="space-y-4 pt-2">
+                        <div className="space-y-2">
+                          <Label>Activity</Label>
+                          <Select
+                            value={eventForm.activity}
+                            onValueChange={(v) =>
+                              setEventForm((f) => ({
+                                ...f,
+                                activity: v,
+                                species: FISHING_ACTIVITIES.has(v) ? f.species : [],
+                              }))
+                            }
+                          >
+                            <SelectTrigger>
+                              <SelectValue placeholder="Choose an activity…" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {ACTIVITIES.map((act) => (
+                                <SelectItem key={act} value={act}>{act}</SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </div>
+
+                        {FISHING_ACTIVITIES.has(eventForm.activity) && filteredSpecies.length > 0 && (
+                          <div className="space-y-2">
+                            <Label>Target species <span className="text-slate-400 font-normal">(optional)</span></Label>
+                            <div className="flex flex-wrap gap-1.5 max-h-36 overflow-y-auto">
+                              {filteredSpecies.map((sp) => (
+                                <button
+                                  key={sp}
+                                  type="button"
+                                  onClick={() => toggleEventSpecies(sp)}
+                                  className={`px-2.5 py-0.5 rounded-full text-xs border transition-all ${
+                                    eventForm.species.includes(sp)
+                                      ? "bg-[#0D9488] text-white border-[#0D9488]"
+                                      : "border-slate-200 text-slate-600 hover:border-[#0D9488]"
+                                  }`}
+                                >
+                                  {sp}
+                                </button>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+
+                        <div className="grid grid-cols-2 gap-3">
+                          <div className="space-y-2">
+                            <Label>Start time</Label>
+                            <input
+                              type="time"
+                              value={eventForm.startTime}
+                              onChange={(e) => setEventForm((f) => ({ ...f, startTime: e.target.value }))}
+                              className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors"
+                            />
+                          </div>
+                          <div className="space-y-2">
+                            <Label>End time</Label>
+                            <input
+                              type="time"
+                              value={eventForm.endTime}
+                              onChange={(e) => setEventForm((f) => ({ ...f, endTime: e.target.value }))}
+                              className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors"
+                            />
+                          </div>
+                        </div>
+
+                        <Button
+                          onClick={saveEvent}
+                          disabled={!eventForm.activity}
+                          className="w-full"
+                        >
+                          Add Event
+                        </Button>
+                      </div>
+                    </DialogContent>
+                  </Dialog>
                 </>
               ) : (
                 <>

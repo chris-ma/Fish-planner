@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
-import { getTripById, getTripChecklist } from "@/lib/queries/trips";
+import { getTripById, getTripChecklist, getTripParticipants } from "@/lib/queries/trips";
 import { GearChecklistClient } from "./GearChecklistClient";
 
 export default async function TripGearPage({ params }: { params: Promise<{ id: string }> }) {
@@ -9,7 +9,10 @@ export default async function TripGearPage({ params }: { params: Promise<{ id: s
   const trip = await getTripById(id);
   if (!trip) notFound();
 
-  const checklist = await getTripChecklist(id);
+  const [checklist, participants] = await Promise.all([
+    getTripChecklist(id),
+    getTripParticipants(id),
+  ]);
   const targetSpecies: string[] = trip.targetSpecies ? JSON.parse(trip.targetSpecies) : [];
 
   return (
@@ -30,6 +33,7 @@ export default async function TripGearPage({ params }: { params: Promise<{ id: s
         tripId={id}
         initialItems={checklist}
         targetSpecies={targetSpecies}
+        participants={participants}
       />
     </div>
   );

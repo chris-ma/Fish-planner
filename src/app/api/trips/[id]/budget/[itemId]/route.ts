@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { db } from "@/db";
-import { checklistItems } from "@/db/schema";
+import { tripBudgetItems } from "@/db/schema";
 import { eq } from "drizzle-orm";
 
 export async function PATCH(
@@ -10,14 +10,14 @@ export async function PATCH(
   try {
     const { itemId } = await params;
     const body = await request.json();
-    const updates: Record<string, unknown> = {};
-    if (body.isCompleted !== undefined) updates.isCompleted = body.isCompleted === true;
-    if (body.assignedTo !== undefined) updates.assignedTo = JSON.stringify(body.assignedTo);
-
-    await db.update(checklistItems).set(updates).where(eq(checklistItems.id, itemId));
+    const updates: Partial<typeof tripBudgetItems.$inferInsert> = {};
+    if (body.description !== undefined) updates.description = body.description;
+    if (body.amount !== undefined) updates.amount = Number(body.amount);
+    if (body.paidAmount !== undefined) updates.paidAmount = Number(body.paidAmount);
+    await db.update(tripBudgetItems).set(updates).where(eq(tripBudgetItems.id, itemId));
     return NextResponse.json({ ok: true });
   } catch (err) {
-    console.error("Update item failed:", err);
+    console.error("Budget PATCH failed:", err);
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }
@@ -28,10 +28,10 @@ export async function DELETE(
 ) {
   try {
     const { itemId } = await params;
-    await db.delete(checklistItems).where(eq(checklistItems.id, itemId));
+    await db.delete(tripBudgetItems).where(eq(tripBudgetItems.id, itemId));
     return new NextResponse(null, { status: 204 });
   } catch (err) {
-    console.error("Delete item failed:", err);
+    console.error("Budget DELETE failed:", err);
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }
