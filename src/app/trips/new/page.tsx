@@ -2,163 +2,14 @@
 
 import { useState, useMemo, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { ArrowRight, ArrowLeft, Loader2, X, Footprints, Anchor, Ship, Waves } from "lucide-react";
+import { ArrowRight, ArrowLeft, Loader2, X, Footprints, Anchor, Ship, Waves, ChevronLeft, ChevronRight, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { currentMonth, MONTH_NAMES_FULL } from "@/lib/utils/season";
-
-// ── Species list ──────────────────────────────────────────────────────────────
-const SPECIES_OPTIONS = [
-  // Pelagic
-  "Black Marlin", "Blue Marlin", "Sailfish", "Yellowfin Tuna", "Longtail Tuna",
-  "Spanish Mackerel", "Wahoo", "Mahi-Mahi", "Southern Bluefin Tuna",
-  // Inshore
-  "Yellowtail Kingfish", "Giant Trevally", "Cobia", "Tailor", "Australian Salmon",
-  "Gummy Shark",
-  // Reef
-  "Coral Trout", "Red Emperor", "Nannygai", "Snapper", "Amberjack (Samson Fish)",
-  "Blue-eye Trevalla", "Striped Trumpeter",
-  // Estuary
-  "Barramundi", "Mangrove Jack", "Flathead", "Mulloway", "Bream",
-  "Whiting", "Luderick", "Black Jewfish",
-  // Freshwater
-  "Murray Cod", "Golden Perch", "Silver Perch", "Australian Bass",
-  "Brown Trout", "Rainbow Trout", "Redfin", "Saratoga", "Catfish", "Ocean Trout",
-  // NT / Tropical
-  "Queenfish", "Threadfin Salmon",
-  // WA Endemic
-  "Dhufish", "Baldchin Groper", "King George Whiting", "Black Bream",
-  "Spangled Emperor", "Rankin Cod",
-  // Flats / Islands
-  "Bonefish", "Milkfish",
-];
-
-// ── Region list with zone field ───────────────────────────────────────────────
-const REGION_OPTIONS = [
-  // Far North QLD
-  { slug: "cairns", name: "Cairns, QLD", zone: "far_north_qld" },
-  { slug: "port-douglas", name: "Port Douglas, QLD", zone: "far_north_qld" },
-  { slug: "cooktown", name: "Cooktown, QLD", zone: "far_north_qld" },
-  { slug: "weipa", name: "Weipa, QLD", zone: "far_north_qld" },
-  // Central QLD
-  { slug: "townsville", name: "Townsville, QLD", zone: "central_qld" },
-  { slug: "bowen", name: "Bowen, QLD", zone: "central_qld" },
-  { slug: "mackay", name: "Mackay, QLD", zone: "central_qld" },
-  { slug: "airlie-beach", name: "Airlie Beach / Whitsundays, QLD", zone: "central_qld" },
-  { slug: "yeppoon", name: "Yeppoon, QLD", zone: "central_qld" },
-  { slug: "gladstone", name: "Gladstone, QLD", zone: "central_qld" },
-  // Southeast QLD
-  { slug: "hervey-bay", name: "Hervey Bay, QLD", zone: "southeast_qld" },
-  { slug: "sunshine-coast", name: "Sunshine Coast, QLD", zone: "southeast_qld" },
-  { slug: "brisbane-moreton-bay", name: "Brisbane / Moreton Bay, QLD", zone: "southeast_qld" },
-  { slug: "gold-coast", name: "Gold Coast, QLD", zone: "southeast_qld" },
-  // NSW
-  { slug: "ballina-byron-bay", name: "Ballina / Byron Bay, NSW", zone: "nsw" },
-  { slug: "coffs-harbour", name: "Coffs Harbour, NSW", zone: "nsw" },
-  { slug: "south-west-rocks", name: "South West Rocks, NSW", zone: "nsw" },
-  { slug: "port-macquarie", name: "Port Macquarie, NSW", zone: "nsw" },
-  { slug: "port-stephens", name: "Port Stephens, NSW", zone: "nsw" },
-  { slug: "lake-macquarie", name: "Lake Macquarie, NSW", zone: "nsw" },
-  { slug: "newcastle", name: "Newcastle, NSW", zone: "nsw" },
-  { slug: "hawkesbury-river", name: "Hawkesbury River, NSW", zone: "nsw" },
-  { slug: "sydney", name: "Sydney, NSW", zone: "nsw" },
-  { slug: "wollongong", name: "Wollongong, NSW", zone: "nsw" },
-  { slug: "jervis-bay", name: "Jervis Bay, NSW", zone: "nsw" },
-  { slug: "ulladulla", name: "Ulladulla, NSW", zone: "nsw" },
-  { slug: "batemans-bay", name: "Batemans Bay, NSW", zone: "nsw" },
-  { slug: "narooma", name: "Narooma, NSW", zone: "nsw" },
-  { slug: "eden", name: "Eden, NSW", zone: "nsw" },
-  { slug: "tathra-merimbula", name: "Tathra / Merimbula, NSW", zone: "nsw" },
-  // Lord Howe Island
-  { slug: "lord-howe-island", name: "Lord Howe Island, NSW", zone: "lord_howe" },
-  // Victoria
-  { slug: "port-phillip-bay", name: "Port Phillip Bay, VIC", zone: "vic_coast" },
-  { slug: "mornington-peninsula", name: "Mornington Peninsula, VIC", zone: "vic_coast" },
-  { slug: "phillip-island", name: "Phillip Island, VIC", zone: "vic_coast" },
-  { slug: "westernport-bay", name: "Westernport Bay, VIC", zone: "vic_coast" },
-  { slug: "wilsons-promontory", name: "Wilsons Promontory, VIC", zone: "vic_coast" },
-  { slug: "lakes-entrance", name: "Lakes Entrance, VIC", zone: "vic_coast" },
-  { slug: "mallacoota", name: "Mallacoota, VIC", zone: "vic_coast" },
-  { slug: "apollo-bay", name: "Apollo Bay, VIC", zone: "vic_coast" },
-  { slug: "portland-vic", name: "Portland, VIC", zone: "vic_coast" },
-  { slug: "warrnambool", name: "Warrnambool, VIC", zone: "vic_coast" },
-  // Tasmania
-  { slug: "hobart", name: "Hobart, TAS", zone: "tas" },
-  { slug: "st-helens", name: "St Helens, TAS", zone: "tas" },
-  { slug: "bicheno", name: "Bicheno, TAS", zone: "tas" },
-  { slug: "bruny-island", name: "Bruny Island, TAS", zone: "tas" },
-  { slug: "strahan", name: "Strahan, TAS", zone: "tas" },
-  { slug: "devonport", name: "Devonport, TAS", zone: "tas" },
-  { slug: "launceston-tamar", name: "Launceston / Tamar, TAS", zone: "tas" },
-  { slug: "port-arthur", name: "Port Arthur, TAS", zone: "tas" },
-  // Murray–Darling
-  { slug: "murray-river-albury", name: "Murray River – Albury, NSW/VIC", zone: "murray_darling" },
-  { slug: "murray-river-echuca", name: "Murray River – Echuca, VIC", zone: "murray_darling" },
-  { slug: "murray-river-mildura", name: "Murray River – Mildura, VIC", zone: "murray_darling" },
-  { slug: "lake-hume", name: "Lake Hume, NSW/VIC", zone: "murray_darling" },
-  { slug: "lake-mulwala", name: "Lake Mulwala, VIC", zone: "murray_darling" },
-  { slug: "murrumbidgee-river", name: "Murrumbidgee River, NSW", zone: "murray_darling" },
-  { slug: "macquarie-river", name: "Macquarie River, NSW", zone: "murray_darling" },
-  { slug: "darling-river-bourke", name: "Darling River – Bourke, NSW", zone: "murray_darling" },
-  // Alpine
-  { slug: "lake-eucumbene", name: "Lake Eucumbene, NSW", zone: "alpine" },
-  { slug: "lake-jindabyne", name: "Lake Jindabyne, NSW", zone: "alpine" },
-  { slug: "snowy-mountains-rivers", name: "Snowy Mountains Rivers, NSW", zone: "alpine" },
-  { slug: "lake-eildon", name: "Lake Eildon, VIC", zone: "alpine" },
-  { slug: "ovens-king-rivers", name: "Ovens & King Rivers, VIC", zone: "alpine" },
-  { slug: "goulburn-river-vic", name: "Goulburn River, VIC", zone: "alpine" },
-  { slug: "arthurs-lake-tas", name: "Arthurs Lake, TAS", zone: "alpine" },
-  { slug: "lake-st-clair", name: "Lake St Clair, TAS", zone: "alpine" },
-  // NT — Top End
-  { slug: "darwin", name: "Darwin, NT", zone: "nt_top_end" },
-  { slug: "bynoe-harbour", name: "Bynoe Harbour, NT", zone: "nt_top_end" },
-  { slug: "daly-river", name: "Daly River, NT", zone: "nt_top_end" },
-  { slug: "tiwi-islands", name: "Tiwi Islands, NT", zone: "nt_top_end" },
-  { slug: "cobourg-peninsula", name: "Cobourg Peninsula, NT", zone: "nt_top_end" },
-  // NT — Gulf
-  { slug: "nhulunbuy-gove", name: "Nhulunbuy (Gove), NT", zone: "nt_gulf" },
-  { slug: "groote-eylandt", name: "Groote Eylandt, NT", zone: "nt_gulf" },
-  { slug: "borroloola", name: "Borroloola, NT", zone: "nt_gulf" },
-  // WA — Kimberley
-  { slug: "broome", name: "Broome, WA", zone: "wa_kimberley" },
-  { slug: "kununurra", name: "Kununurra, WA", zone: "wa_kimberley" },
-  { slug: "dampier-peninsula", name: "Dampier Peninsula, WA", zone: "wa_kimberley" },
-  { slug: "horizontal-falls", name: "Horizontal Falls, WA", zone: "wa_kimberley" },
-  // WA — Pilbara / Ningaloo
-  { slug: "exmouth-ningaloo", name: "Exmouth / Ningaloo, WA", zone: "wa_pilbara" },
-  { slug: "port-hedland", name: "Port Hedland, WA", zone: "wa_pilbara" },
-  { slug: "karratha-dampier", name: "Karratha / Dampier, WA", zone: "wa_pilbara" },
-  { slug: "shark-bay", name: "Shark Bay, WA", zone: "wa_pilbara" },
-  // WA — Mid West
-  { slug: "geraldton", name: "Geraldton, WA", zone: "wa_mid_west" },
-  { slug: "kalbarri", name: "Kalbarri, WA", zone: "wa_mid_west" },
-  { slug: "jurien-bay", name: "Jurien Bay, WA", zone: "wa_mid_west" },
-  { slug: "lancelin-cervantes", name: "Lancelin / Cervantes, WA", zone: "wa_mid_west" },
-  // WA — Southwest
-  { slug: "perth-rottnest", name: "Perth / Rottnest, WA", zone: "wa_southwest" },
-  { slug: "mandurah", name: "Mandurah, WA", zone: "wa_southwest" },
-  { slug: "busselton-margaret-river", name: "Busselton / Margaret River, WA", zone: "wa_southwest" },
-  { slug: "albany", name: "Albany, WA", zone: "wa_southwest" },
-  { slug: "esperance", name: "Esperance, WA", zone: "wa_southwest" },
-  // SA — Spencer Gulf
-  { slug: "port-augusta", name: "Port Augusta, SA", zone: "sa_spencer_gulf" },
-  { slug: "whyalla", name: "Whyalla, SA", zone: "sa_spencer_gulf" },
-  { slug: "port-lincoln", name: "Port Lincoln, SA", zone: "sa_spencer_gulf" },
-  { slug: "coffin-bay", name: "Coffin Bay, SA", zone: "sa_spencer_gulf" },
-  { slug: "streaky-bay", name: "Streaky Bay, SA", zone: "sa_spencer_gulf" },
-  // SA — South Coast
-  { slug: "adelaide", name: "Adelaide, SA", zone: "sa_south" },
-  { slug: "victor-harbor", name: "Victor Harbor, SA", zone: "sa_south" },
-  { slug: "kangaroo-island", name: "Kangaroo Island, SA", zone: "sa_south" },
-  { slug: "robe-beachport", name: "Robe / Beachport, SA", zone: "sa_south" },
-  { slug: "mount-gambier", name: "Mount Gambier, SA", zone: "sa_south" },
-  // Islands
-  { slug: "christmas-island", name: "Christmas Island", zone: "christmas_island" },
-  { slug: "cocos-islands", name: "Cocos (Keeling) Islands", zone: "cocos_islands" },
-];
+import { SPECIES_OPTIONS, REGION_OPTIONS } from "@/lib/data/options";
+import { SPECIES_GEAR } from "@/lib/gear-specs";
 
 // ── Which zones each species is active in ────────────────────────────────────
 const SPECIES_ACTIVE_ZONES: Record<string, string[]> = {
@@ -226,8 +77,164 @@ const STEP_TITLES: Record<number, string> = {
   2: "When are you going?",
   3: "Where are you headed?",
   4: "What do you want to catch?",
-  5: "Add notes & create",
+  5: "Review & create",
 };
+
+const TIME_SLOTS = ["Morning", "Afternoon", "Evening", "Night"] as const;
+type TimeSlot = typeof TIME_SLOTS[number];
+type Itinerary = Record<string, Record<TimeSlot, string[]>>;
+
+// ── Helpers ───────────────────────────────────────────────────────────────────
+
+function getDaysInRange(start: string, end: string): Date[] {
+  const days: Date[] = [];
+  const s = new Date(start + "T12:00:00");
+  const e = new Date(end + "T12:00:00");
+  const current = new Date(s);
+  while (current <= e) {
+    days.push(new Date(current));
+    current.setDate(current.getDate() + 1);
+  }
+  return days;
+}
+
+function toDateKey(d: Date): string {
+  return d.toISOString().split("T")[0];
+}
+
+function formatDateKey(key: string): string {
+  return new Date(key + "T12:00:00").toLocaleDateString("en-AU", {
+    weekday: "short",
+    day: "numeric",
+    month: "short",
+  });
+}
+
+// ── CalendarPicker ────────────────────────────────────────────────────────────
+
+const WEEKDAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+const MONTH_NAMES = ["January", "February", "March", "April", "May", "June",
+                     "July", "August", "September", "October", "November", "December"];
+
+function CalendarPicker({
+  startDate,
+  endDate,
+  onSelect,
+}: {
+  startDate: string;
+  endDate: string;
+  onSelect: (start: string, end: string) => void;
+}) {
+  const now = new Date();
+  const [displayYear, setDisplayYear] = useState(
+    startDate ? new Date(startDate + "T12:00:00").getFullYear() : now.getFullYear()
+  );
+  const [displayMonth, setDisplayMonth] = useState(
+    startDate ? new Date(startDate + "T12:00:00").getMonth() : now.getMonth()
+  );
+  const [selecting, setSelecting] = useState<"start" | "end">(startDate ? "end" : "start");
+
+  function prevMonth() {
+    if (displayMonth === 0) { setDisplayMonth(11); setDisplayYear(y => y - 1); }
+    else setDisplayMonth(m => m - 1);
+  }
+  function nextMonth() {
+    if (displayMonth === 11) { setDisplayMonth(0); setDisplayYear(y => y + 1); }
+    else setDisplayMonth(m => m + 1);
+  }
+
+  const firstDay = new Date(displayYear, displayMonth, 1);
+  // Mon=0, ... Sun=6
+  const startOffset = (firstDay.getDay() + 6) % 7;
+  const daysInMonth = new Date(displayYear, displayMonth + 1, 0).getDate();
+
+  function handleDayClick(day: number) {
+    const dateStr = `${displayYear}-${String(displayMonth + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+    if (selecting === "start" || !startDate) {
+      onSelect(dateStr, "");
+      setSelecting("end");
+    } else {
+      if (dateStr < startDate) {
+        onSelect(dateStr, "");
+        setSelecting("end");
+      } else {
+        onSelect(startDate, dateStr);
+        setSelecting("start");
+      }
+    }
+  }
+
+  function getDayStyle(day: number): string {
+    const dateStr = `${displayYear}-${String(displayMonth + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+    const isStart = dateStr === startDate;
+    const isEnd = dateStr === endDate;
+    const inRange = startDate && endDate && dateStr > startDate && dateStr < endDate;
+    if (isStart || isEnd) return "bg-[#0D9488] text-white rounded-full font-semibold";
+    if (inRange) return "bg-teal-100 text-teal-800";
+    return "hover:bg-slate-100 rounded-full";
+  }
+
+  const dayCount = startDate && endDate
+    ? getDaysInRange(startDate, endDate).length
+    : null;
+
+  return (
+    <div>
+      {/* Month nav */}
+      <div className="flex items-center justify-between mb-4">
+        <button type="button" onClick={prevMonth} className="p-1 hover:bg-slate-100 rounded-lg">
+          <ChevronLeft className="h-4 w-4 text-slate-500" />
+        </button>
+        <span className="text-sm font-semibold text-[#040F1C]">
+          {MONTH_NAMES[displayMonth]} {displayYear}
+        </span>
+        <button type="button" onClick={nextMonth} className="p-1 hover:bg-slate-100 rounded-lg">
+          <ChevronRight className="h-4 w-4 text-slate-500" />
+        </button>
+      </div>
+
+      {/* Weekday headers */}
+      <div className="grid grid-cols-7 mb-1">
+        {WEEKDAYS.map((d) => (
+          <div key={d} className="text-center text-[10px] font-medium text-slate-400 py-1">{d}</div>
+        ))}
+      </div>
+
+      {/* Days grid */}
+      <div className="grid grid-cols-7">
+        {Array.from({ length: startOffset }).map((_, i) => <div key={`e-${i}`} />)}
+        {Array.from({ length: daysInMonth }, (_, i) => i + 1).map((day) => (
+          <button
+            key={day}
+            type="button"
+            onClick={() => handleDayClick(day)}
+            className={`text-center text-sm py-1.5 transition-colors w-full ${getDayStyle(day)}`}
+          >
+            {day}
+          </button>
+        ))}
+      </div>
+
+      {/* Summary */}
+      {startDate && (
+        <div className="mt-4 text-sm text-[#040F1C]">
+          {endDate ? (
+            <span className="font-medium">
+              {new Date(startDate + "T12:00:00").toLocaleDateString("en-AU", { day: "numeric", month: "short" })}
+              {" → "}
+              {new Date(endDate + "T12:00:00").toLocaleDateString("en-AU", { day: "numeric", month: "short" })}
+              {dayCount ? ` (${dayCount} day${dayCount !== 1 ? "s" : ""})` : ""}
+            </span>
+          ) : (
+            <span className="text-slate-500">Select end date…</span>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ── StepProgress ──────────────────────────────────────────────────────────────
 
 function StepProgress({ current, total }: { current: number; total: number }) {
   return (
@@ -247,6 +254,46 @@ function StepProgress({ current, total }: { current: number; total: number }) {
   );
 }
 
+// ── AddSpeciesButton ──────────────────────────────────────────────────────────
+
+function AddSpeciesButton({
+  available,
+  onAdd,
+}: {
+  available: string[];
+  onAdd: (name: string) => void;
+}) {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <div className="relative">
+      <button
+        type="button"
+        onClick={() => setOpen(!open)}
+        className="flex items-center gap-1 px-2 py-0.5 rounded-full border border-dashed border-slate-300 text-slate-400 text-xs hover:border-[#0D9488] hover:text-[#0D9488] transition-colors"
+      >
+        <Plus className="h-3 w-3" /> Add
+      </button>
+      {open && (
+        <div className="absolute left-0 top-7 z-20 w-52 bg-white border border-slate-200 rounded-xl shadow-lg max-h-48 overflow-y-auto">
+          {available.map((sp) => (
+            <button
+              key={sp}
+              type="button"
+              onClick={() => { onAdd(sp); setOpen(false); }}
+              className="block w-full text-left px-3 py-1.5 text-xs text-slate-700 hover:bg-teal-50 hover:text-[#0D9488]"
+            >
+              {sp}
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ── NewTripForm ───────────────────────────────────────────────────────────────
+
 function NewTripForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -259,6 +306,8 @@ function NewTripForm() {
     const s = searchParams.get("species");
     return s && SPECIES_OPTIONS.includes(s) ? [s] : [];
   });
+
+  const [itinerary, setItinerary] = useState<Itinerary>({});
 
   const [form, setForm] = useState(() => ({
     title: "",
@@ -294,6 +343,24 @@ function NewTripForm() {
     return REGION_OPTIONS.filter((r) => activeZonesFromSpecies.has(r.zone));
   }, [activeZonesFromSpecies]);
 
+  const hasDateRange = form.startDate && form.endDate;
+  const daysInRange = hasDateRange ? getDaysInRange(form.startDate, form.endDate) : [];
+  const useItinerary = daysInRange.length > 0 && daysInRange.length <= 10;
+
+  // Collect all species from itinerary for step 5 preview
+  const itinerarySpecies = useMemo(() => {
+    const names = new Set<string>();
+    Object.values(itinerary).forEach((slots) => {
+      Object.values(slots).forEach((sps) => sps.forEach((s) => names.add(s)));
+    });
+    return Array.from(names);
+  }, [itinerary]);
+
+  const allSelectedSpecies = useMemo(() => {
+    const combined = new Set([...selectedSpecies, ...itinerarySpecies]);
+    return Array.from(combined);
+  }, [selectedSpecies, itinerarySpecies]);
+
   const toggleSpecies = (name: string) => {
     setSelectedSpecies((prev) =>
       prev.includes(name) ? prev.filter((s) => s !== name) : [...prev, name]
@@ -308,6 +375,22 @@ function NewTripForm() {
       }
     }
   };
+
+  function addToSlot(dayKey: string, slot: TimeSlot, name: string) {
+    setItinerary((prev) => {
+      const day = prev[dayKey] ?? { Morning: [], Afternoon: [], Evening: [], Night: [] };
+      if (day[slot].includes(name)) return prev;
+      return { ...prev, [dayKey]: { ...day, [slot]: [...day[slot], name] } };
+    });
+  }
+
+  function removeFromSlot(dayKey: string, slot: TimeSlot, name: string) {
+    setItinerary((prev) => {
+      const day = prev[dayKey];
+      if (!day) return prev;
+      return { ...prev, [dayKey]: { ...day, [slot]: day[slot].filter((s) => s !== name) } };
+    });
+  }
 
   const clearRegion = () => setForm((f) => ({ ...f, regionSlug: "" }));
   const clearSpeciesFilter = () => setSelectedSpecies([]);
@@ -331,6 +414,12 @@ function NewTripForm() {
     setLoading(true);
     setError("");
     try {
+      const descriptionPayload = JSON.stringify({
+        notes: form.description,
+        itinerary,
+        tripType,
+      });
+
       const res = await fetch("/api/trips", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -339,8 +428,8 @@ function NewTripForm() {
           regionSlug: form.regionSlug || undefined,
           startDate: form.startDate || undefined,
           endDate: form.endDate || undefined,
-          targetSpecies: selectedSpecies,
-          description: form.description || undefined,
+          targetSpecies: allSelectedSpecies,
+          description: descriptionPayload,
         }),
       });
       if (!res.ok) throw new Error("Failed to create trip");
@@ -411,31 +500,14 @@ function NewTripForm() {
             </div>
           )}
 
-          {/* Step 2: Dates */}
+          {/* Step 2: Dates — visual calendar */}
           {currentStep === 2 && (
             <div className="space-y-4">
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="startDate">Start date</Label>
-                  <Input
-                    id="startDate"
-                    type="date"
-                    value={form.startDate}
-                    onChange={(e) => setForm((f) => ({ ...f, startDate: e.target.value }))}
-                    className="h-11"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="endDate">End date</Label>
-                  <Input
-                    id="endDate"
-                    type="date"
-                    value={form.endDate}
-                    onChange={(e) => setForm((f) => ({ ...f, endDate: e.target.value }))}
-                    className="h-11"
-                  />
-                </div>
-              </div>
+              <CalendarPicker
+                startDate={form.startDate}
+                endDate={form.endDate}
+                onSelect={(s, e) => setForm((f) => ({ ...f, startDate: s, endDate: e }))}
+              />
               <p className="text-xs text-[#0F766E] bg-teal-50 rounded-xl px-4 py-2.5">
                 {MONTH_NAMES_FULL[month]} is an active month for many Australian coastal species.
               </p>
@@ -457,9 +529,11 @@ function NewTripForm() {
                   </button>
                 )}
               </div>
-              <Select
+              <select
+                id="region"
                 value={form.regionSlug}
-                onValueChange={(v) => {
+                onChange={(e) => {
+                  const v = e.target.value;
                   setForm((f) => ({ ...f, regionSlug: v }));
                   const newZone = REGION_OPTIONS.find((r) => r.slug === v)?.zone;
                   if (newZone) {
@@ -468,16 +542,13 @@ function NewTripForm() {
                     );
                   }
                 }}
+                className="w-full h-11 px-3 border border-slate-200 rounded-lg bg-white text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#0D9488]"
               >
-                <SelectTrigger className="h-11">
-                  <SelectValue placeholder="Select a region or town…" />
-                </SelectTrigger>
-                <SelectContent>
-                  {filteredRegions.map((r) => (
-                    <SelectItem key={r.slug} value={r.slug}>{r.name}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+                <option value="">Select a region or town…</option>
+                {filteredRegions.map((r) => (
+                  <option key={r.slug} value={r.slug}>{r.name}</option>
+                ))}
+              </select>
               {activeZonesFromSpecies.size > 0 && filteredRegions.length < REGION_OPTIONS.length && (
                 <p className="text-xs text-[#0F766E]">
                   Showing {filteredRegions.length} regions where your target species are active
@@ -486,48 +557,134 @@ function NewTripForm() {
             </div>
           )}
 
-          {/* Step 4: Species */}
+          {/* Step 4: Species / Itinerary */}
           {currentStep === 4 && (
             <div className="space-y-3">
-              <div className="flex items-center justify-between">
-                <Label>Target species</Label>
-                {selectedSpecies.length > 0 && (
-                  <button
-                    type="button"
-                    onClick={clearSpeciesFilter}
-                    className="text-xs text-slate-500 hover:text-slate-700 flex items-center gap-1"
-                  >
-                    <X className="h-3 w-3" /> Clear all
-                  </button>
-                )}
-              </div>
-              {form.regionSlug && filteredSpecies.length < SPECIES_OPTIONS.length && (
-                <p className="text-xs text-[#0F766E]">
-                  Showing {filteredSpecies.length} species active in the selected region
-                </p>
+              {useItinerary ? (
+                <>
+                  <p className="text-xs text-slate-500 mb-3">
+                    Add target species to each time slot. Skip slots you won&apos;t be fishing.
+                  </p>
+                  <div className="space-y-3 max-h-96 overflow-y-auto pr-1">
+                    {daysInRange.map((day) => {
+                      const dayKey = toDateKey(day);
+                      const dayData = itinerary[dayKey] ?? { Morning: [], Afternoon: [], Evening: [], Night: [] };
+                      return (
+                        <div key={dayKey} className="border border-slate-200 rounded-xl p-3 bg-white space-y-2">
+                          <p className="text-sm font-semibold text-[#040F1C]">{formatDateKey(dayKey)}</p>
+                          {TIME_SLOTS.map((slot) => (
+                            <div key={slot} className="flex items-start gap-2">
+                              <span className="text-xs text-slate-400 w-20 pt-1 shrink-0">{slot}</span>
+                              <div className="flex-1 flex flex-wrap gap-1">
+                                {(dayData[slot] ?? []).map((sp) => (
+                                  <span
+                                    key={sp}
+                                    className="flex items-center gap-1 px-2 py-0.5 bg-teal-50 text-[#0F766E] border border-teal-200 rounded-full text-xs"
+                                  >
+                                    {sp}
+                                    <button
+                                      type="button"
+                                      onClick={() => removeFromSlot(dayKey, slot, sp)}
+                                      className="ml-0.5 hover:text-red-500"
+                                    >
+                                      ×
+                                    </button>
+                                  </span>
+                                ))}
+                                <AddSpeciesButton
+                                  available={filteredSpecies.filter(
+                                    (s) => !(dayData[slot] ?? []).includes(s)
+                                  )}
+                                  onAdd={(name) => addToSlot(dayKey, slot, name)}
+                                />
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      );
+                    })}
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div className="flex items-center justify-between">
+                    <Label>Target species</Label>
+                    {selectedSpecies.length > 0 && (
+                      <button
+                        type="button"
+                        onClick={clearSpeciesFilter}
+                        className="text-xs text-slate-500 hover:text-slate-700 flex items-center gap-1"
+                      >
+                        <X className="h-3 w-3" /> Clear all
+                      </button>
+                    )}
+                  </div>
+                  {form.regionSlug && filteredSpecies.length < SPECIES_OPTIONS.length && (
+                    <p className="text-xs text-[#0F766E]">
+                      Showing {filteredSpecies.length} species active in the selected region
+                    </p>
+                  )}
+                  <div className="flex flex-wrap gap-2">
+                    {filteredSpecies.map((name) => (
+                      <button
+                        key={name}
+                        type="button"
+                        onClick={() => toggleSpecies(name)}
+                        className={`px-3 py-1.5 rounded-full text-sm border transition-all ${
+                          selectedSpecies.includes(name)
+                            ? "bg-[#0D9488] text-white border-[#0D9488]"
+                            : "border-slate-200 text-slate-600 hover:border-[#0D9488] hover:text-[#0F766E]"
+                        }`}
+                      >
+                        {name}
+                      </button>
+                    ))}
+                  </div>
+                </>
               )}
-              <div className="flex flex-wrap gap-2">
-                {filteredSpecies.map((name) => (
-                  <button
-                    key={name}
-                    type="button"
-                    onClick={() => toggleSpecies(name)}
-                    className={`px-3 py-1.5 rounded-full text-sm border transition-all ${
-                      selectedSpecies.includes(name)
-                        ? "bg-[#0D9488] text-white border-[#0D9488]"
-                        : "border-slate-200 text-slate-600 hover:border-[#0D9488] hover:text-[#0F766E]"
-                    }`}
-                  >
-                    {name}
-                  </button>
-                ))}
-              </div>
             </div>
           )}
 
-          {/* Step 5: Notes + submit */}
+          {/* Step 5: Gear preview + notes + submit */}
           {currentStep === 5 && (
             <div className="space-y-4">
+              {/* Gear preview */}
+              {allSelectedSpecies.length > 0 && (
+                <div className="bg-white rounded-xl border border-slate-200 p-4 space-y-2">
+                  <p className="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-3">Gear Preview</p>
+                  {allSelectedSpecies.map((name) => {
+                    const gear = SPECIES_GEAR.find((g) => g.name === name);
+                    if (!gear) return null;
+                    return (
+                      <div key={name} className="text-sm">
+                        <span className="font-medium text-[#040F1C]">{name}: </span>
+                        <span className="text-slate-500">{gear.rod} · {gear.mainline}</span>
+                      </div>
+                    );
+                  })}
+                  {tripType === "boat" && (
+                    <p className="text-xs text-slate-500 mt-2 pt-2 border-t border-slate-100">
+                      Boat safety gear (EPIRB, PFDs, flares, VHF radio) will be in your trip gear list.
+                    </p>
+                  )}
+                  {tripType === "land" && (
+                    <p className="text-xs text-slate-500 mt-2 pt-2 border-t border-slate-100">
+                      Land-based safety gear (PLB, rock fishing vest) will be in your trip gear list.
+                    </p>
+                  )}
+                  {tripType === "charter" && (
+                    <p className="text-xs text-slate-500 mt-2 pt-2 border-t border-slate-100">
+                      Charter — safety gear is provided by the operator.
+                    </p>
+                  )}
+                  {tripType === "kayak" && (
+                    <p className="text-xs text-slate-500 mt-2 pt-2 border-t border-slate-100">
+                      Kayak safety gear (PLB, PFD, flares) will be in your trip gear list.
+                    </p>
+                  )}
+                </div>
+              )}
+
               <div className="space-y-2">
                 <Label htmlFor="description">Notes (optional)</Label>
                 <Textarea

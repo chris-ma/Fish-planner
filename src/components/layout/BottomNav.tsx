@@ -2,12 +2,12 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Compass, Fish, Package, Plus } from "lucide-react";
+import { Compass, Map, Package, Plus } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
 
 const NAV_ITEMS = [
   { href: "/", label: "Home", Icon: Compass },
-  { href: "/species", label: "Species", Icon: Fish },
+  { href: "/plan", label: "Plan", Icon: Map },
   { href: "/gear", label: "Gear", Icon: Package },
 ];
 
@@ -54,7 +54,7 @@ export function BottomNav() {
                 : "text-white/50"
             )}
           >
-            Plan Trip
+            Trip
           </span>
         </Link>
 

@@ -1,39 +1,43 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { CheckCircle2, Circle, ChevronDown, ChevronUp, Fish, Package } from "lucide-react";
+import {
+  CheckCircle2,
+  Circle,
+  ChevronDown,
+  ChevronUp,
+  Fish,
+  Package,
+  Ship,
+  Anchor,
+  Footprints,
+  Waves,
+  Leaf,
+  Plus,
+  X,
+  Shield,
+  ShoppingBag,
+} from "lucide-react";
 import { cn } from "@/lib/utils/cn";
 import {
   SPECIES_GEAR,
   ENV_CHECKLIST,
   UNIVERSAL_CHECKLIST,
   ENVIRONMENT_LABELS,
-  ENVIRONMENT_EMOJI,
   TECHNIQUE_LABELS,
   TECHNIQUE_COLORS,
   type Environment,
   type TechniqueStyle,
 } from "@/lib/gear-specs";
 
-const ENVIRONMENTS: { value: Environment | "all"; label: string; emoji: string }[] = [
-  { value: "all", label: "All", emoji: "🎣" },
-  { value: "offshore_boat", label: "Offshore Boat", emoji: "⛵" },
-  { value: "inshore_boat", label: "Inshore Boat", emoji: "🚤" },
-  { value: "estuary_boat", label: "Estuary Boat", emoji: "🛶" },
-  { value: "land_based", label: "Land-Based", emoji: "🪨" },
-  { value: "freshwater_boat", label: "Freshwater Boat", emoji: "⛵" },
-  { value: "freshwater_shore", label: "Freshwater Shore", emoji: "🌿" },
-];
-
-const TECHNIQUES: { value: TechniqueStyle | "all"; label: string; color: string }[] = [
-  { value: "all", label: "All Styles", color: "bg-slate-100 text-slate-700 border-slate-200" },
-  { value: "trolling", label: "Trolling", color: "bg-purple-100 text-purple-700 border-purple-200" },
-  { value: "heavy", label: "Heavy", color: "bg-red-100 text-red-700 border-red-200" },
-  { value: "medium", label: "Medium", color: "bg-amber-100 text-amber-700 border-amber-200" },
-  { value: "light", label: "Light", color: "bg-sky-100 text-sky-700 border-sky-200" },
-  { value: "finesse", label: "Finesse", color: "bg-emerald-100 text-emerald-700 border-emerald-200" },
-  { value: "fly", label: "Fly", color: "bg-teal-100 text-teal-700 border-teal-200" },
-];
+const ENV_ICONS: Record<Environment, React.FC<{ className?: string }>> = {
+  offshore_boat: Ship,
+  inshore_boat: Anchor,
+  estuary_boat: Ship,
+  land_based: Footprints,
+  freshwater_boat: Waves,
+  freshwater_shore: Leaf,
+};
 
 const CATEGORY_COLORS: Record<string, string> = {
   pelagic: "bg-blue-500",
@@ -51,40 +55,102 @@ const CATEGORY_LABEL: Record<string, string> = {
   freshwater: "Freshwater",
 };
 
+type TripTypeFilter = "all" | "boat" | "land" | "charter" | "kayak";
+
+const TRIP_TYPE_LABELS: Record<TripTypeFilter, string> = {
+  all: "All types",
+  boat: "Boat",
+  land: "Land-based",
+  charter: "Charter",
+  kayak: "Kayak",
+};
+
+const ENV_FOR_TRIP_TYPE: Record<TripTypeFilter, Environment[]> = {
+  all: ["offshore_boat", "inshore_boat", "estuary_boat", "land_based", "freshwater_boat", "freshwater_shore"],
+  boat: ["offshore_boat", "inshore_boat", "estuary_boat", "freshwater_boat"],
+  land: ["land_based", "freshwater_shore"],
+  charter: ["offshore_boat", "inshore_boat"],
+  kayak: ["inshore_boat", "estuary_boat", "freshwater_shore"],
+};
+
+function GearRow({ label, value }: { label: string; value: string }) {
+  return (
+    <tr>
+      <td className="py-1.5 pr-3 text-slate-500 font-medium whitespace-nowrap w-24 align-top text-sm">
+        {label}
+      </td>
+      <td className="py-1.5 text-slate-800 leading-snug text-sm">{value}</td>
+    </tr>
+  );
+}
+
+function AccordionSection({
+  title,
+  icon,
+  children,
+  defaultOpen = false,
+}: {
+  title: string;
+  icon: React.ReactNode;
+  children: React.ReactNode;
+  defaultOpen?: boolean;
+}) {
+  const [open, setOpen] = useState(defaultOpen);
+  return (
+    <div className="border-t border-slate-100">
+      <button
+        type="button"
+        onClick={() => setOpen(!open)}
+        className="w-full flex items-center justify-between px-4 py-3 bg-slate-50 hover:bg-slate-100 transition-colors"
+      >
+        <div className="flex items-center gap-2 text-sm font-semibold text-slate-700">
+          {icon}
+          {title}
+        </div>
+        {open ? <ChevronUp className="h-4 w-4 text-slate-400" /> : <ChevronDown className="h-4 w-4 text-slate-400" />}
+      </button>
+      {open && <div className="px-4 pb-4 pt-2">{children}</div>}
+    </div>
+  );
+}
+
 export default function GearPage() {
-  const [env, setEnv] = useState<Environment | "all">("all");
-  const [technique, setTechnique] = useState<TechniqueStyle | "all">("all");
-  const [expandedSlug, setExpandedSlug] = useState<string | null>(null);
-  const [checklistOpen, setChecklistOpen] = useState(false);
-  const [checked, setChecked] = useState<Set<string>>(new Set());
+  const [openSlug, setOpenSlug] = useState<string | null>(null);
+  const [tripType, setTripType] = useState<TripTypeFilter>("all");
+  const [customGear, setCustomGear] = useState<Record<string, string[]>>({});
+  const [addingFor, setAddingFor] = useState<string | null>(null);
+  const [newGearText, setNewGearText] = useState("");
+
+  const relevantEnvs = ENV_FOR_TRIP_TYPE[tripType];
 
   const filteredSpecies = useMemo(() => {
-    return SPECIES_GEAR.filter((s) => {
-      const envMatch = env === "all" || s.environments.includes(env as Environment);
-      const techMatch = technique === "all" || s.techniques.includes(technique as TechniqueStyle);
-      return envMatch && techMatch;
-    });
-  }, [env, technique]);
+    if (tripType === "all") return SPECIES_GEAR;
+    return SPECIES_GEAR.filter((sp) =>
+      sp.environments.some((e) => relevantEnvs.includes(e))
+    );
+  }, [tripType, relevantEnvs]);
 
-  const toggleChecked = (key: string) => {
-    setChecked((prev) => {
-      const next = new Set(prev);
-      if (next.has(key)) next.delete(key);
-      else next.add(key);
-      return next;
-    });
-  };
+  function addCustomItem(slug: string) {
+    if (!newGearText.trim()) return;
+    setCustomGear((prev) => ({
+      ...prev,
+      [slug]: [...(prev[slug] ?? []), newGearText.trim()],
+    }));
+    setNewGearText("");
+    setAddingFor(null);
+  }
 
-  // Build checklist from selected environment
-  const checklistItems = useMemo(() => {
-    const envItems = env !== "all" ? ENV_CHECKLIST[env] ?? [] : [];
-    return { envItems, universal: UNIVERSAL_CHECKLIST };
-  }, [env]);
+  function removeCustomItem(slug: string, item: string) {
+    setCustomGear((prev) => ({
+      ...prev,
+      [slug]: (prev[slug] ?? []).filter((i) => i !== item),
+    }));
+  }
 
-  const totalChecklist = checklistItems.envItems.length + checklistItems.universal.length;
-  const checkedCount = [...checklistItems.envItems, ...checklistItems.universal].filter((_, i) =>
-    checked.has(`cl-${i}`)
-  ).length;
+  // Accessories from UNIVERSAL_CHECKLIST (non-safety categories)
+  const accessoryItems = UNIVERSAL_CHECKLIST.filter(
+    (i) => !["Safety"].includes(i.category)
+  );
 
   return (
     <div>
@@ -96,85 +162,71 @@ export default function GearPage() {
           <p className="text-[#FFD60A] text-sm font-semibold mb-2 tracking-wide uppercase">Gear Guide</p>
           <h1 className="text-4xl md:text-5xl font-bold text-[#F5F0E8] mb-3">What to Pack</h1>
           <p className="text-white/60 max-w-xl">
-            Filter by where you're fishing and your technique style to find exact rod, reel, line, and lure specs for every species.
+            Select a species to see exact rod, reel, line, lure and safety specs. Filter by trip type to refine the list.
           </p>
         </div>
       </div>
 
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 py-8 space-y-8">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 py-8 space-y-6">
 
-        {/* Filter Section */}
-        <div className="space-y-4">
-          {/* Environment filter */}
-          <div>
-            <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">Fishing environment</p>
-            <div className="flex flex-wrap gap-2">
-              {ENVIRONMENTS.map((e) => (
-                <button
-                  key={e.value}
-                  onClick={() => setEnv(e.value as Environment | "all")}
-                  className={cn(
-                    "flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm border transition-all font-medium",
-                    env === e.value
-                      ? "bg-[#020B14] text-white border-[#020B14]"
-                      : "bg-[#F5F0E8] text-slate-600 border-slate-200 hover:border-slate-400"
-                  )}
-                >
-                  <span>{e.emoji}</span>
-                  {e.label}
-                </button>
-              ))}
-            </div>
+        {/* Trip type filter */}
+        <div>
+          <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">Trip type</p>
+          <div className="flex flex-wrap gap-2">
+            {(Object.keys(TRIP_TYPE_LABELS) as TripTypeFilter[]).map((t) => (
+              <button
+                key={t}
+                onClick={() => setTripType(t)}
+                className={cn(
+                  "px-3 py-1.5 rounded-full text-sm border font-medium transition-all",
+                  tripType === t
+                    ? "bg-[#020B14] text-white border-[#020B14]"
+                    : "bg-[#F5F0E8] text-slate-600 border-slate-200 hover:border-slate-400"
+                )}
+              >
+                {TRIP_TYPE_LABELS[t]}
+              </button>
+            ))}
           </div>
-
-          {/* Technique filter */}
-          <div>
-            <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">Technique style</p>
-            <div className="flex flex-wrap gap-2">
-              {TECHNIQUES.map((t) => (
-                <button
-                  key={t.value}
-                  onClick={() => setTechnique(t.value as TechniqueStyle | "all")}
-                  className={cn(
-                    "px-3 py-1.5 rounded-full text-sm border transition-all font-medium",
-                    technique === t.value
-                      ? cn(t.color, "ring-2 ring-offset-1 ring-current")
-                      : cn(t.value === "all" ? "bg-[#F5F0E8] text-slate-600 border-slate-200" : t.color, "opacity-60 hover:opacity-100")
-                  )}
-                >
-                  {t.label}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          <p className="text-sm text-slate-500">
-            {filteredSpecies.length} species match
-          </p>
+          {tripType !== "all" && (
+            <p className="text-sm text-slate-500 mt-2">{filteredSpecies.length} species for {TRIP_TYPE_LABELS[tripType].toLowerCase()} fishing</p>
+          )}
         </div>
 
-        {/* Species gear cards */}
+        {/* Species list */}
         {filteredSpecies.length === 0 ? (
           <div className="text-center py-16 text-slate-400">
             <Fish className="h-10 w-10 mx-auto mb-3 opacity-30" />
-            <p className="font-medium">No species match those filters</p>
-            <p className="text-sm mt-1">Try broadening your selection</p>
+            <p className="font-medium">No species match that trip type</p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="space-y-2">
             {filteredSpecies.map((sp) => {
-              const isOpen = expandedSlug === sp.slug;
+              const isOpen = openSlug === sp.slug;
+              const EnvIcons = sp.environments.map((e) => ENV_ICONS[e]);
+              const spCustomGear = customGear[sp.slug] ?? [];
+
+              // Safety items based on species environments and trip type filter
+              const safetyEnvs = tripType === "all"
+                ? sp.environments
+                : sp.environments.filter((e) => relevantEnvs.includes(e));
+              const safetyItems = safetyEnvs.flatMap((e) =>
+                (ENV_CHECKLIST[e] ?? []).filter((i) => i.category === "Safety")
+              );
+              const uniqueSafetyItems = safetyItems.filter(
+                (item, idx, arr) => arr.findIndex((x) => x.item === item.item) === idx
+              );
+
               return (
                 <div
                   key={sp.slug}
-                  className="border border-border rounded-2xl overflow-hidden bg-[#F5F0E8] shadow-sm hover:shadow-md transition-shadow"
+                  className="border border-slate-200 rounded-2xl overflow-hidden bg-[#F5F0E8] shadow-sm hover:shadow-md transition-shadow"
                 >
                   {/* Card header */}
                   <button
                     className="w-full text-left p-4 flex items-start gap-3"
-                    onClick={() => setExpandedSlug(isOpen ? null : sp.slug)}
+                    onClick={() => setOpenSlug(isOpen ? null : sp.slug)}
                   >
-                    {/* Category dot */}
                     <div
                       className={cn(
                         "w-2.5 h-2.5 rounded-full mt-1.5 shrink-0",
@@ -185,9 +237,7 @@ export default function GearPage() {
                       <div className="flex items-start justify-between gap-2">
                         <div>
                           <p className="font-semibold text-slate-900 leading-tight">{sp.name}</p>
-                          <p className="text-xs text-slate-500 mt-0.5">
-                            {CATEGORY_LABEL[sp.category]}
-                          </p>
+                          <p className="text-xs text-slate-500 mt-0.5">{CATEGORY_LABEL[sp.category]}</p>
                         </div>
                         {isOpen ? (
                           <ChevronUp className="h-4 w-4 text-slate-400 shrink-0 mt-1" />
@@ -195,9 +245,9 @@ export default function GearPage() {
                           <ChevronDown className="h-4 w-4 text-slate-400 shrink-0 mt-1" />
                         )}
                       </div>
-                      {/* Technique + Environment badges */}
-                      <div className="flex flex-wrap gap-1 mt-2">
-                        {sp.techniques.map((t) => (
+                      {/* Technique badges + env icons */}
+                      <div className="flex flex-wrap items-center gap-1 mt-2">
+                        {sp.techniques.map((t: TechniqueStyle) => (
                           <span
                             key={t}
                             className={cn(
@@ -208,36 +258,152 @@ export default function GearPage() {
                             {TECHNIQUE_LABELS[t]}
                           </span>
                         ))}
-                        {sp.environments.map((e) => (
+                        {EnvIcons.map((Icon, i) => (
                           <span
-                            key={e}
-                            className="text-xs px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 font-medium"
+                            key={sp.environments[i]}
+                            title={ENVIRONMENT_LABELS[sp.environments[i]]}
+                            className="w-5 h-5 flex items-center justify-center text-slate-400"
                           >
-                            {ENVIRONMENT_EMOJI[e]} {ENVIRONMENT_LABELS[e]}
+                            <Icon className="h-3.5 w-3.5" />
                           </span>
                         ))}
                       </div>
                     </div>
                   </button>
 
-                  {/* Expanded gear details */}
+                  {/* Expanded sections */}
                   {isOpen && (
-                    <div className="border-t border-slate-100 bg-slate-50 px-4 pb-4 pt-3">
-                      <table className="w-full text-sm">
-                        <tbody className="divide-y divide-slate-100">
-                          <GearRow label="Rod" value={sp.rod} />
-                          <GearRow label="Reel" value={sp.reel} />
-                          <GearRow label="Line" value={sp.mainline} />
-                          <GearRow label="Leader" value={sp.leader} />
-                          {sp.lures && <GearRow label="Lures" value={sp.lures} />}
-                          {sp.hooks && <GearRow label="Hooks/Bait" value={sp.hooks} />}
-                        </tbody>
-                      </table>
-                      {sp.notes && (
-                        <p className="mt-3 text-xs text-amber-800 bg-amber-50 border border-amber-100 rounded-lg px-3 py-2">
-                          💡 {sp.notes}
-                        </p>
+                    <div>
+                      {/* Fishing Gear */}
+                      <AccordionSection
+                        title="Fishing Gear"
+                        icon={<Fish className="h-4 w-4 text-[#0D9488]" />}
+                        defaultOpen
+                      >
+                        <table className="w-full text-sm">
+                          <tbody className="divide-y divide-slate-100">
+                            <GearRow label="Rod" value={sp.rod} />
+                            <GearRow label="Reel" value={sp.reel} />
+                            <GearRow label="Line" value={sp.mainline} />
+                            <GearRow label="Leader" value={sp.leader} />
+                            {sp.lures && <GearRow label="Lures" value={sp.lures} />}
+                            {sp.hooks && <GearRow label="Hooks" value={sp.hooks} />}
+                            {sp.dragSetting && <GearRow label="Drag" value={sp.dragSetting} />}
+                          </tbody>
+                        </table>
+                        {sp.notes && (
+                          <p className="mt-3 text-xs text-amber-800 bg-amber-50 border border-amber-100 rounded-lg px-3 py-2">
+                            {sp.notes}
+                          </p>
+                        )}
+                      </AccordionSection>
+
+                      {/* Accessories */}
+                      <AccordionSection
+                        title="Accessories"
+                        icon={<ShoppingBag className="h-4 w-4 text-slate-500" />}
+                      >
+                        <ul className="space-y-1">
+                          {accessoryItems.map((item) => (
+                            <li key={item.item} className="flex items-start gap-2 text-sm text-slate-700">
+                              <span className="mt-0.5 text-slate-300">•</span>
+                              <span>{item.item}</span>
+                              {item.essential && (
+                                <span className="ml-auto text-xs text-red-500 font-medium shrink-0">Essential</span>
+                              )}
+                            </li>
+                          ))}
+                        </ul>
+                      </AccordionSection>
+
+                      {/* Safety Gear (hidden for charter) */}
+                      {tripType !== "charter" && uniqueSafetyItems.length > 0 && (
+                        <AccordionSection
+                          title="Safety Gear"
+                          icon={<Shield className="h-4 w-4 text-red-500" />}
+                        >
+                          <ul className="space-y-1">
+                            {uniqueSafetyItems.map((item) => (
+                              <li key={item.item} className="flex items-start gap-2 text-sm text-slate-700">
+                                <span className="mt-0.5 text-slate-300">•</span>
+                                <div>
+                                  <span>{item.item}</span>
+                                  {item.notes && (
+                                    <p className="text-xs text-slate-400 mt-0.5">{item.notes}</p>
+                                  )}
+                                </div>
+                                {item.essential && (
+                                  <span className="ml-auto text-xs text-red-500 font-medium shrink-0">Essential</span>
+                                )}
+                              </li>
+                            ))}
+                          </ul>
+                        </AccordionSection>
                       )}
+
+                      {/* My Gear */}
+                      <AccordionSection
+                        title="My Gear"
+                        icon={<Package className="h-4 w-4 text-slate-500" />}
+                      >
+                        {spCustomGear.length > 0 && (
+                          <ul className="space-y-1 mb-3">
+                            {spCustomGear.map((item) => (
+                              <li key={item} className="flex items-center gap-2 text-sm text-slate-700">
+                                <Circle className="h-3.5 w-3.5 text-slate-300 shrink-0" />
+                                <span className="flex-1">{item}</span>
+                                <button
+                                  type="button"
+                                  onClick={() => removeCustomItem(sp.slug, item)}
+                                  className="text-slate-300 hover:text-red-400 transition-colors"
+                                >
+                                  <X className="h-3.5 w-3.5" />
+                                </button>
+                              </li>
+                            ))}
+                          </ul>
+                        )}
+
+                        {addingFor === sp.slug ? (
+                          <div className="flex gap-2">
+                            <input
+                              autoFocus
+                              type="text"
+                              value={newGearText}
+                              onChange={(e) => setNewGearText(e.target.value)}
+                              onKeyDown={(e) => {
+                                if (e.key === "Enter") addCustomItem(sp.slug);
+                                if (e.key === "Escape") { setAddingFor(null); setNewGearText(""); }
+                              }}
+                              placeholder="e.g. Custom jig 150g"
+                              className="flex-1 text-sm px-3 py-1.5 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0D9488]"
+                            />
+                            <button
+                              type="button"
+                              onClick={() => addCustomItem(sp.slug)}
+                              className="px-3 py-1.5 bg-[#0D9488] text-white rounded-lg text-sm font-medium hover:bg-[#0F766E]"
+                            >
+                              Add
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => { setAddingFor(null); setNewGearText(""); }}
+                              className="px-2 py-1.5 text-slate-400 hover:text-slate-600"
+                            >
+                              <X className="h-4 w-4" />
+                            </button>
+                          </div>
+                        ) : (
+                          <button
+                            type="button"
+                            onClick={() => setAddingFor(sp.slug)}
+                            className="flex items-center gap-1.5 text-sm text-[#0D9488] hover:text-[#0F766E] font-medium"
+                          >
+                            <Plus className="h-4 w-4" />
+                            Add gear item
+                          </button>
+                        )}
+                      </AccordionSection>
                     </div>
                   )}
                 </div>
@@ -246,143 +412,10 @@ export default function GearPage() {
           </div>
         )}
 
-        {/* Gear Checklist */}
-        <div className="border border-border rounded-2xl overflow-hidden">
-          <button
-            className="w-full flex items-center justify-between px-5 py-4 bg-[#F5F0E8] hover:bg-slate-50 transition-colors"
-            onClick={() => setChecklistOpen((v) => !v)}
-          >
-            <div className="flex items-center gap-2">
-              <Package className="h-5 w-5 text-slate-500" />
-              <span className="font-semibold text-slate-900">Packing Checklist</span>
-              {env !== "all" && (
-                <span className="text-xs bg-slate-100 text-slate-600 px-2 py-0.5 rounded-full">
-                  {ENVIRONMENT_LABELS[env as Environment]}
-                </span>
-              )}
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="text-sm text-slate-500">
-                {checkedCount}/{totalChecklist}
-              </span>
-              {checklistOpen ? (
-                <ChevronUp className="h-4 w-4 text-slate-400" />
-              ) : (
-                <ChevronDown className="h-4 w-4 text-slate-400" />
-              )}
-            </div>
-          </button>
-
-          {checklistOpen && (
-            <div className="border-t border-slate-100 divide-y bg-[#F5F0E8]">
-              {/* Environment-specific items */}
-              {checklistItems.envItems.length > 0 && (
-                <>
-                  <div className="px-5 py-2 bg-slate-50">
-                    <p className="text-xs font-semibold text-slate-500 uppercase tracking-wide">
-                      {ENVIRONMENT_LABELS[env as Environment]} — Specific Items
-                    </p>
-                  </div>
-                  {checklistItems.envItems.map((item, i) => (
-                    <ChecklistRow
-                      key={`env-${i}`}
-                      item={item.item}
-                      notes={item.notes}
-                      essential={item.essential}
-                      category={item.category}
-                      checked={checked.has(`cl-${i}`)}
-                      onToggle={() => toggleChecked(`cl-${i}`)}
-                    />
-                  ))}
-                </>
-              )}
-
-              {/* Universal items */}
-              <div className="px-5 py-2 bg-slate-50">
-                <p className="text-xs font-semibold text-slate-500 uppercase tracking-wide">
-                  Universal — All Trips
-                </p>
-              </div>
-              {checklistItems.universal.map((item, i) => {
-                const idx = checklistItems.envItems.length + i;
-                return (
-                  <ChecklistRow
-                    key={`uni-${i}`}
-                    item={item.item}
-                    essential={item.essential}
-                    category={item.category}
-                    checked={checked.has(`cl-${idx}`)}
-                    onToggle={() => toggleChecked(`cl-${idx}`)}
-                  />
-                );
-              })}
-            </div>
-          )}
-        </div>
-
         <div className="p-4 bg-amber-50 border border-amber-200 rounded-xl text-sm text-amber-800">
           <strong>Reminder:</strong> Always check current bag limits, size restrictions, and licence requirements for your state before your trip. Regulations can change seasonally.
         </div>
       </div>
     </div>
-  );
-}
-
-function GearRow({ label, value }: { label: string; value: string }) {
-  return (
-    <tr>
-      <td className="py-1.5 pr-3 text-slate-500 font-medium whitespace-nowrap w-20 align-top">
-        {label}
-      </td>
-      <td className="py-1.5 text-slate-800 leading-snug">{value}</td>
-    </tr>
-  );
-}
-
-function ChecklistRow({
-  item,
-  notes,
-  essential,
-  category,
-  checked,
-  onToggle,
-}: {
-  item: string;
-  notes?: string;
-  essential: boolean;
-  category: string;
-  checked: boolean;
-  onToggle: () => void;
-}) {
-  return (
-    <button
-      onClick={onToggle}
-      className={cn(
-        "w-full flex items-center gap-3 px-5 py-3 text-left hover:bg-slate-50 transition-colors",
-        checked && "bg-slate-50"
-      )}
-    >
-      {checked ? (
-        <CheckCircle2 className="h-5 w-5 text-emerald-500 shrink-0" />
-      ) : (
-        <Circle className="h-5 w-5 text-slate-300 shrink-0" />
-      )}
-      <div className="flex-1 min-w-0">
-        <span className={cn("text-sm", checked && "line-through text-slate-400")}>
-          {item}
-        </span>
-        {notes && !checked && (
-          <p className="text-xs text-slate-500 mt-0.5">{notes}</p>
-        )}
-      </div>
-      <div className="flex items-center gap-2 shrink-0">
-        <span className="text-xs text-slate-400">{category}</span>
-        {essential && !checked && (
-          <span className="text-xs bg-red-50 text-red-600 px-2 py-0.5 rounded-full font-medium">
-            Essential
-          </span>
-        )}
-      </div>
-    </button>
   );
 }

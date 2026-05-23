@@ -40,6 +40,18 @@ export default async function TripOverviewPage({ params }: { params: Promise<{ i
   const targetSpecies: string[] = trip.targetSpecies ? JSON.parse(trip.targetSpecies) : [];
   const completedItems = checklist.filter((i) => i.isCompleted).length;
 
+  let parsedDescription = "";
+  let itinerary: Record<string, Record<string, string[]>> = {};
+  if (trip.description) {
+    try {
+      const parsed = JSON.parse(trip.description);
+      parsedDescription = parsed.notes ?? "";
+      itinerary = parsed.itinerary ?? {};
+    } catch {
+      parsedDescription = trip.description;
+    }
+  }
+
   const shareUrl = typeof window !== "undefined"
     ? `${window.location.origin}/trips/${id}`
     : `/trips/${id}`;
@@ -70,8 +82,8 @@ export default async function TripOverviewPage({ params }: { params: Promise<{ i
                 <Calendar className="h-3.5 w-3.5" />
                 {formatDateRange(trip.startDate, trip.endDate)}
               </p>
-              {trip.description && (
-                <p className="mt-2 text-white/60 text-sm leading-relaxed max-w-xl">{trip.description}</p>
+              {parsedDescription && (
+                <p className="mt-2 text-white/60 text-sm leading-relaxed max-w-xl">{parsedDescription}</p>
               )}
             </div>
             <CopyShareLink tripId={id} />
@@ -91,6 +103,46 @@ export default async function TripOverviewPage({ params }: { params: Promise<{ i
             {targetSpecies.map((name) => (
               <span key={name} className="px-3 py-1 rounded-full text-sm bg-teal-50 text-[#0F766E] border border-teal-200">{name}</span>
             ))}
+          </div>
+        </div>
+      )}
+
+      {/* Schedule section */}
+      {Object.keys(itinerary).length > 0 && (
+        <div className="mb-6">
+          <div className="flex items-center justify-between mb-3">
+            <div className="flex items-center gap-2 text-sm font-medium text-[#040F1C]">
+              <Calendar className="h-4 w-4 text-[#0D9488]" />
+              Trip Schedule
+            </div>
+            <Link href="/trips/new" className="text-xs text-[#0F766E] hover:underline">
+              Edit
+            </Link>
+          </div>
+          <div className="space-y-2">
+            {Object.entries(itinerary).map(([day, slots]) => {
+              const hasEntries = Object.values(slots).some((sp) => sp.length > 0);
+              if (!hasEntries) return null;
+              return (
+                <div key={day} className="bg-[#F5F0E8] rounded-xl p-3">
+                  <p className="text-xs font-semibold text-slate-500 mb-2">
+                    {new Date(day + "T12:00:00").toLocaleDateString("en-AU", {
+                      weekday: "short",
+                      day: "numeric",
+                      month: "short",
+                    })}
+                  </p>
+                  {Object.entries(slots)
+                    .filter(([, sp]) => sp.length > 0)
+                    .map(([slot, sp]) => (
+                      <div key={slot} className="flex items-center gap-2 text-sm mb-1">
+                        <span className="text-slate-400 w-20 text-xs shrink-0">{slot}</span>
+                        <span className="text-[#040F1C] text-xs">{sp.join(", ")}</span>
+                      </div>
+                    ))}
+                </div>
+              );
+            })}
           </div>
         </div>
       )}
