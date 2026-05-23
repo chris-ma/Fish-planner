@@ -242,8 +242,15 @@ export const ZONE_IMAGES: Record<string, string> = {
   cocos_islands: REEF_FISH,
 };
 
+// ─── Wikipedia zone photos (CC-licensed) ─────────────────────────────────────
+// Paste output of /api/admin/zone-photos here after deploying and visiting that route.
+export const WIKI_ZONE_PHOTOS: Record<string, string> = {
+};
+
 /** Returns the zone image for a region card. */
 export function getZoneImage(zone: string, size: 600 | 1200 = 600): string {
+  const wiki = WIKI_ZONE_PHOTOS[zone];
+  if (wiki) return wiki;
   const base = ZONE_IMAGES[zone] ?? px(994605);
   return size === 600 ? base.replace("w=1200", "w=600") : base;
 }
