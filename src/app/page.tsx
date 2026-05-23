@@ -3,11 +3,11 @@ import { Compass, Fish, Package, Map, Users, ArrowRight } from "lucide-react";
 import { VideoParallaxHero } from "@/components/layout/VideoParallaxHero";
 import { IntentSearch } from "@/components/discovery/IntentSearch";
 import { RegionCard } from "@/components/discovery/RegionCard";
-import { SpeciesCard } from "@/components/discovery/SpeciesCard";
+import { SpeciesCarousel } from "@/components/home/SpeciesCarousel";
 import { getTopRegionsForMonth } from "@/lib/queries/regions";
 import { getInSeasonSpecies } from "@/lib/queries/species";
 import { currentMonth, MONTH_NAMES_FULL } from "@/lib/utils/season";
-import { getZoneImage } from "@/lib/images";
+import { getSpeciesImage, getZoneImage } from "@/lib/images";
 
 const TRIP_FEATURES = [
   {
@@ -42,6 +42,57 @@ const TRIP_FEATURES = [
   },
 ];
 
+const BREAD_AND_BUTTER = [
+  { slug: "bream",               commonName: "Bream",            category: "estuary" },
+  { slug: "black-bream",         commonName: "Black Bream",      category: "estuary" },
+  { slug: "flathead",            commonName: "Flathead",         category: "inshore" },
+  { slug: "whiting",             commonName: "Whiting",          category: "estuary" },
+  { slug: "king-george-whiting", commonName: "KG Whiting",       category: "inshore" },
+  { slug: "australian-bass",     commonName: "Australian Bass",  category: "freshwater" },
+  { slug: "luderick",            commonName: "Luderick",         category: "estuary" },
+  { slug: "tailor",              commonName: "Tailor",           category: "inshore" },
+  { slug: "mulloway",            commonName: "Mulloway",         category: "estuary" },
+];
+
+const CHALLENGES = [
+  {
+    emoji: "🪄",
+    title: "The Dumb Lure",
+    description: "Catch a legal fish on the most ridiculous lure in your tackle box. Bonus points for a selfie.",
+    colour: "from-purple-700 to-purple-900",
+  },
+  {
+    emoji: "🎣",
+    title: "4lb Leader",
+    description: "Target your bucket list species on 4lb fluorocarbon only. Patience not included.",
+    colour: "from-amber-700 to-amber-900",
+  },
+  {
+    emoji: "🌅",
+    title: "Dawn Patrol",
+    description: "First cast before sunrise. If you're not rigged in the dark, you're too late.",
+    colour: "from-rose-700 to-rose-900",
+  },
+  {
+    emoji: "🎯",
+    title: "Grand Slam",
+    description: "Three different species in a single session. One estuary species counts double.",
+    colour: "from-teal-700 to-teal-900",
+  },
+  {
+    emoji: "🍳",
+    title: "Catch & Cook",
+    description: "Keep a legal feed and cook it right there — fire, camp stove, or BBQ on the boat.",
+    colour: "from-green-700 to-green-900",
+  },
+  {
+    emoji: "📵",
+    title: "Off the Grid",
+    description: "No sounder, no GPS, no fishing apps. Old school navigation and local knowledge only.",
+    colour: "from-slate-700 to-slate-900",
+  },
+];
+
 export default async function HomePage({
   searchParams,
 }: {
@@ -52,7 +103,7 @@ export default async function HomePage({
 
   const [topRegions, inSeasonSpecies] = await Promise.all([
     getTopRegionsForMonth(month, 6),
-    getInSeasonSpecies(month, 8),
+    getInSeasonSpecies(month, 16),
   ]);
 
   return (
@@ -70,24 +121,10 @@ export default async function HomePage({
       </VideoParallaxHero>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 -mt-8 pb-16 space-y-16">
-        {/* Where to Plan This Month */}
-        <section>
-          <div className="mb-2">
-            <h2 className="text-2xl font-bold text-[#040F1C]">Where to Plan in {MONTH_NAMES_FULL[month]}</h2>
-          </div>
-          <p className="text-sm text-slate-500 mb-5 max-w-2xl">
-            Species at peak season this month — find the best destinations to target them.
-          </p>
 
-          {inSeasonSpecies.length > 0 ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-              {inSeasonSpecies.map((sp) => (
-                <SpeciesCard key={sp.id} species={sp} />
-              ))}
-            </div>
-          ) : (
-            <p className="text-slate-500 py-8 text-center">No season data loaded yet.</p>
-          )}
+        {/* Seasonal species carousel */}
+        <section>
+          <SpeciesCarousel species={inSeasonSpecies} monthName={MONTH_NAMES_FULL[month]} />
         </section>
 
         {/* Top Destinations This Month */}
@@ -105,6 +142,75 @@ export default async function HomePage({
           ) : (
             <p className="text-slate-500 py-8 text-center">No region data loaded yet.</p>
           )}
+        </section>
+
+        {/* Bread & butter species */}
+        <section>
+          <div className="mb-2">
+            <h2 className="text-2xl font-bold text-[#040F1C]">The bread &amp; butter</h2>
+          </div>
+          <p className="text-sm text-slate-500 mb-5 max-w-2xl">
+            The species every Aussie angler should tick off.{" "}
+            <Link href="/bucket-list" className="text-[#0D9488] hover:underline">
+              Start your bucket list →
+            </Link>
+          </p>
+          <div className="flex gap-3 overflow-x-auto snap-x snap-mandatory pb-2 md:grid md:grid-cols-3 lg:grid-cols-5 md:overflow-visible">
+            {BREAD_AND_BUTTER.map(({ slug, commonName, category }) => {
+              const imgUrl = getSpeciesImage(slug, category, 600);
+              return (
+                <Link
+                  key={slug}
+                  href="/bucket-list"
+                  className="relative rounded-xl overflow-hidden aspect-[3/4] w-36 shrink-0 snap-start md:w-auto group block"
+                >
+                  <div
+                    className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-105"
+                    style={{ backgroundImage: `url(${imgUrl})` }}
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+                  <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                    <span className="bg-[#0D9488] text-white text-[10px] font-semibold px-2.5 py-1 rounded-full">
+                      Add to list →
+                    </span>
+                  </div>
+                  <div className="absolute bottom-0 left-0 right-0 p-2.5">
+                    <p className="text-white text-xs font-semibold line-clamp-2">{commonName}</p>
+                  </div>
+                </Link>
+              );
+            })}
+          </div>
+        </section>
+
+        {/* Fun challenges */}
+        <section>
+          <div className="mb-2">
+            <h2 className="text-2xl font-bold text-[#040F1C]">Challenge yourself</h2>
+          </div>
+          <p className="text-sm text-slate-500 mb-6 max-w-2xl">
+            Self-imposed rules. No leaderboard, just bragging rights.
+          </p>
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+            {CHALLENGES.map(({ emoji, title, description, colour }) => (
+              <div
+                key={title}
+                className={`relative rounded-2xl overflow-hidden bg-gradient-to-br ${colour} p-5 flex flex-col gap-3 min-h-[160px]`}
+              >
+                <span className="text-4xl leading-none">{emoji}</span>
+                <div className="flex-1">
+                  <p className="font-bold text-white text-sm mb-1">{title}</p>
+                  <p className="text-white/65 text-xs leading-relaxed">{description}</p>
+                </div>
+                <Link
+                  href="/trips/new"
+                  className="self-end text-white/50 hover:text-white text-[10px] font-medium transition-colors"
+                >
+                  Log a trip →
+                </Link>
+              </div>
+            ))}
+          </div>
         </section>
 
         {/* Section A: What's in a trip plan */}

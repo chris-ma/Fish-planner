@@ -5,7 +5,7 @@ export function Footer() {
   return (
     <footer className="bg-navy-950 mt-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-10">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-8">
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-8 mb-8">
           <div className="col-span-2 md:col-span-1">
             <div
               className="flex items-center gap-2 font-bold text-white mb-3"
@@ -84,6 +84,37 @@ export function Footer() {
               <li>
                 <Link href="/gear" className="hover:text-white/90 transition-colors">
                   Gear Guide
+                </Link>
+              </li>
+              <li>
+                <Link href="/bucket-list" className="hover:text-white/90 transition-colors">
+                  Bucket List
+                </Link>
+              </li>
+            </ul>
+          </div>
+
+          <div>
+            <h4 className="font-semibold text-sm mb-3 text-white/80">Community</h4>
+            <ul className="space-y-2 text-xs text-white/50">
+              <li>
+                <Link href="/editorial/environmental-impact" className="hover:text-white/90 transition-colors">
+                  Environmental Impact
+                </Link>
+              </li>
+              <li>
+                <Link href="/editorial/local-businesses" className="hover:text-white/90 transition-colors">
+                  Local Businesses
+                </Link>
+              </li>
+              <li>
+                <Link href="/editorial/mental-health" className="hover:text-white/90 transition-colors">
+                  Fishing &amp; Mental Health
+                </Link>
+              </li>
+              <li>
+                <Link href="/editorial/sustainability" className="hover:text-white/90 transition-colors">
+                  Catch &amp; Sustainability
                 </Link>
               </li>
             </ul>
