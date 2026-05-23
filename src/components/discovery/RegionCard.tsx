@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { Heart } from "lucide-react";
+import { getZoneImage } from "@/lib/images";
 import type { Region } from "@/db/schema";
 
 const ZONE_LABELS: Record<string, string> = {
@@ -49,28 +50,6 @@ const ZONE_GRADIENTS: Record<string, string> = {
   cocos_islands: "from-cyan-900/75 to-emerald-900/60",
 };
 
-// Zone-level photography
-const ZONE_IMAGES: Record<string, string> = {
-  far_north_qld: "https://images.unsplash.com/photo-1524275539700-cf51138f679b?w=600&auto=format&fit=crop&q=80",
-  central_qld: "https://images.unsplash.com/photo-1523395243481-163f8f6155ab?w=600&auto=format&fit=crop&q=80",
-  southeast_qld: "https://images.unsplash.com/photo-1504439468489-c8920d796a29?w=600&auto=format&fit=crop&q=80",
-  nsw: "https://images.unsplash.com/photo-1549816954-9e9a7cb3ef4c?w=600&auto=format&fit=crop&q=80",
-  vic_coast: "https://images.unsplash.com/photo-1576089872996-64d5a31b738a?w=600&auto=format&fit=crop&q=80",
-  tas: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600&auto=format&fit=crop&q=80",
-  lord_howe: "https://images.unsplash.com/photo-1516026672322-18933d4c52f3?w=600&auto=format&fit=crop&q=80",
-  murray_darling: "https://images.unsplash.com/photo-1542601906897-ec823b17a0b7?w=600&auto=format&fit=crop&q=80",
-  alpine: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=600&auto=format&fit=crop&q=80",
-  nt_top_end: "https://images.unsplash.com/photo-1529108190281-9a4f620bc2d8?w=600&auto=format&fit=crop&q=80",
-  nt_gulf: "https://images.unsplash.com/photo-1559827291-72416316ece9?w=600&auto=format&fit=crop&q=80",
-  wa_kimberley: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600&auto=format&fit=crop&q=80",
-  wa_pilbara: "https://images.unsplash.com/photo-1516026672322-18933d4c52f3?w=600&auto=format&fit=crop&q=80",
-  wa_mid_west: "https://images.unsplash.com/photo-1518020382113-a7e8fc38eac9?w=600&auto=format&fit=crop&q=80",
-  wa_southwest: "https://images.unsplash.com/photo-1549816954-9e9a7cb3ef4c?w=600&auto=format&fit=crop&q=80",
-  sa_spencer_gulf: "https://images.unsplash.com/photo-1542601906897-ec823b17a0b7?w=600&auto=format&fit=crop&q=80",
-  sa_south: "https://images.unsplash.com/photo-1505118380757-91f5f5632de0?w=600&auto=format&fit=crop&q=80",
-  christmas_island: "https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=600&auto=format&fit=crop&q=80",
-  cocos_islands: "https://images.unsplash.com/photo-1491566102020-21838872658e?w=600&auto=format&fit=crop&q=80",
-};
 
 interface RegionCardProps {
   region: Region;
@@ -80,7 +59,7 @@ interface RegionCardProps {
 export function RegionCard({ region, seasonScore }: RegionCardProps) {
   const gradient = ZONE_GRADIENTS[region.zone] ?? "from-slate-900/75 to-blue-900/60";
   const zoneLabel = ZONE_LABELS[region.zone] ?? region.zone;
-  const imageUrl = ZONE_IMAGES[region.zone] ?? ZONE_IMAGES.nsw;
+  const imageUrl = getZoneImage(region.zone, 600);
 
   return (
     <Link href={`/regions/${region.slug}`}>

@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useEffect } from "react";
+import { HERO_VIDEO_URL, HERO_VIDEO_FALLBACK } from "@/lib/images";
 
 interface Props {
   children: React.ReactNode;
@@ -21,7 +22,7 @@ export function VideoParallaxHero({ children }: Props) {
 
   return (
     <section className="relative overflow-hidden bg-[#020B14] min-h-[520px] flex flex-col items-center justify-center text-center px-4 pb-24">
-      {/* Parallax video background */}
+      {/* Parallax video background — underwater ocean with fish swimming */}
       <div
         ref={bgRef}
         className="absolute inset-0 -top-[20%] h-[140%] will-change-transform pointer-events-none"
@@ -31,15 +32,13 @@ export function VideoParallaxHero({ children }: Props) {
           muted
           loop
           playsInline
-          className="w-full h-full object-cover opacity-35"
+          className="w-full h-full object-cover opacity-50"
         >
-          <source
-            src="https://videos.pexels.com/video-files/1093662/1093662-hd_1920_1080_25fps.mp4"
-            type="video/mp4"
-          />
+          <source src={HERO_VIDEO_URL} type="video/mp4" />
+          <source src={HERO_VIDEO_FALLBACK} type="video/mp4" />
         </video>
-        {/* Gradient overlay */}
-        <div className="absolute inset-0 bg-gradient-to-b from-[#020B14]/40 via-transparent to-[#020B14]" />
+        {/* Gradient overlay — darker at top/bottom to frame content */}
+        <div className="absolute inset-0 bg-gradient-to-b from-[#020B14]/60 via-[#020B14]/20 to-[#020B14]" />
       </div>
 
       {/* Content */}

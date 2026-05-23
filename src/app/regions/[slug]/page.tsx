@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { MapPin, ArrowRight, Fish } from "lucide-react";
+import { getZoneImage } from "@/lib/images";
 import { SeasonalCalendar } from "@/components/discovery/SeasonalCalendar";
 import { getRegionBySlug, getSeasonCalendarForRegion, listRegions } from "@/lib/queries/regions";
 import { currentMonth, MONTH_NAMES_FULL } from "@/lib/utils/season";
@@ -78,10 +79,19 @@ export default async function RegionPage({ params }: { params: Promise<{ slug: s
     .filter((r) => r.months[month] === "peak" || r.months[month] === "good")
     .slice(0, 6);
 
+  const heroImage = getZoneImage(region.zone, 1200);
+
   return (
     <div>
       {/* Hero Banner */}
       <section className="relative bg-[#020B14] overflow-hidden">
+        {/* Photo background */}
+        <div
+          className="absolute inset-0 bg-cover bg-center opacity-30"
+          style={{ backgroundImage: `url('${heroImage}')` }}
+        />
+        {/* Gradient overlay */}
+        <div className="absolute inset-0 bg-gradient-to-b from-[#020B14]/60 via-[#020B14]/40 to-[#020B14]" />
         {/* Glow orbs */}
         <div className="absolute bottom-0 left-1/4 w-[400px] h-[400px] bg-cyan-600/20 rounded-full blur-3xl pointer-events-none" />
         <div className="absolute top-0 right-1/3 w-80 h-80 bg-blue-600/15 rounded-full blur-3xl pointer-events-none" />

@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { Heart } from "lucide-react";
 import { SeasonBadge } from "./SeasonBadge";
+import { getSpeciesImage } from "@/lib/images";
 import type { Species } from "@/db/schema";
 
 const CATEGORY_LABELS: Record<string, string> = {
@@ -29,21 +30,6 @@ const CATEGORY_BADGE_COLORS: Record<string, string> = {
   freshwater: "bg-emerald-100 text-emerald-700",
 };
 
-const CATEGORY_IMAGES: Record<string, string> = {
-  pelagic: "https://images.unsplash.com/photo-1559827291-72416316ece9?w=600&auto=format&fit=crop&q=80",
-  reef: "https://images.unsplash.com/photo-1518020382113-a7e8fc38eac9?w=600&auto=format&fit=crop&q=80",
-  estuary: "https://images.unsplash.com/photo-1542601906897-ec823b17a0b7?w=600&auto=format&fit=crop&q=80",
-  inshore: "https://images.unsplash.com/photo-1505118380757-91f5f5632de0?w=600&auto=format&fit=crop&q=80",
-  freshwater: "https://images.unsplash.com/photo-1511525729718-ad15d2ab17ce?w=600&auto=format&fit=crop&q=80",
-};
-
-const SPECIES_IMAGES: Record<string, string> = {
-  "barramundi": "https://images.unsplash.com/photo-1574914629354-f5108fb16e1f?w=600&auto=format&fit=crop&q=80",
-  "murray-cod": "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=600&auto=format&fit=crop&q=80",
-  "brown-trout": "https://images.unsplash.com/photo-1511525729718-ad15d2ab17ce?w=600&auto=format&fit=crop&q=80",
-  "rainbow-trout": "https://images.unsplash.com/photo-1511525729718-ad15d2ab17ce?w=600&auto=format&fit=crop&q=80",
-};
-
 interface SpeciesCardProps {
   species: Species;
   bestRating?: string | null;
@@ -54,7 +40,7 @@ export function SpeciesCard({ species, bestRating, bestMonth }: SpeciesCardProps
   const gradient = CATEGORY_GRADIENTS[species.category] ?? "from-blue-900/80 to-indigo-900/60";
   const categoryLabel = CATEGORY_LABELS[species.category] ?? species.category;
   const badgeColor = CATEGORY_BADGE_COLORS[species.category] ?? "bg-slate-100 text-slate-600";
-  const imageUrl = SPECIES_IMAGES[species.slug] ?? CATEGORY_IMAGES[species.category] ?? CATEGORY_IMAGES.pelagic;
+  const imageUrl = getSpeciesImage(species.slug, species.category, 600);
 
   return (
     <Link href={`/species/${species.slug}`}>

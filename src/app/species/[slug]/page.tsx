@@ -8,6 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { getSpeciesBySlug, getBestRegionsForSpecies, getSpeciesWithTechniques, listSpecies } from "@/lib/queries/species";
 import { currentMonth, MONTH_NAMES, MONTH_NAMES_FULL } from "@/lib/utils/season";
 import { FISHING_TIPS } from "@/lib/species-tips";
+import { getSpeciesImage } from "@/lib/images";
 import { gregVinallYoutubeUrl } from "@/lib/affiliate";
 import { SPECIES_EPISODES, PODCAST_SHOW_URL } from "@/lib/podcast-episodes";
 
@@ -29,13 +30,6 @@ const CATEGORY_GRADIENTS: Record<string, string> = {
   freshwater: "from-emerald-950 via-[#020B14] to-[#020B14]",
 };
 
-const CATEGORY_IMAGES: Record<string, string> = {
-  pelagic: "https://images.unsplash.com/photo-1559827291-72416316ece9?w=1200&auto=format&fit=crop&q=80",
-  reef: "https://images.unsplash.com/photo-1518020382113-a7e8fc38eac9?w=1200&auto=format&fit=crop&q=80",
-  estuary: "https://images.unsplash.com/photo-1542601906897-ec823b17a0b7?w=1200&auto=format&fit=crop&q=80",
-  inshore: "https://images.unsplash.com/photo-1505118380757-91f5f5632de0?w=1200&auto=format&fit=crop&q=80",
-  freshwater: "https://images.unsplash.com/photo-1511525729718-ad15d2ab17ce?w=1200&auto=format&fit=crop&q=80",
-};
 
 const TIPS_ICONS = [
   { key: "tide", label: "Tides", Icon: Waves },
@@ -94,7 +88,7 @@ export default async function SpeciesPage({ params }: { params: Promise<{ slug: 
     .slice(0, 6);
 
   const heroGradient = CATEGORY_GRADIENTS[sp.category] ?? "from-[#040F1C] via-[#020B14] to-[#020B14]";
-  const heroImage = CATEGORY_IMAGES[sp.category] ?? CATEGORY_IMAGES.pelagic;
+  const heroImage = getSpeciesImage(sp.slug, sp.category, 1200);
 
   return (
     <div>
@@ -102,7 +96,7 @@ export default async function SpeciesPage({ params }: { params: Promise<{ slug: 
       <section className={`relative bg-gradient-to-b ${heroGradient} overflow-hidden`}>
         {/* Photo background with overlay */}
         <div
-          className="absolute inset-0 bg-cover bg-center opacity-25"
+          className="absolute inset-0 bg-cover bg-center opacity-40"
           style={{ backgroundImage: `url('${heroImage}')` }}
         />
         <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-[#06B6D4] to-[#0891B2] opacity-60" />
