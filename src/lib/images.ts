@@ -27,6 +27,15 @@ const STREAM_FLY = px(5200238);
 // Pexels search: "australian river freshwater fishing impoundment"
 const RIVER_FRESHWATER = px(1461471);
 
+// ─── iNaturalist species photos (CC-licensed, fetched via /api/admin/species-photos) ──
+export const INAT_SPECIES_PHOTOS: Record<string, string> = {
+  // Paste output of /api/admin/species-photos here after deploying and visiting that route.
+};
+
+function inatPhoto(url: string, size: "medium" | "large" | "original"): string {
+  return url.replace(/\/(square|small|medium|large|original)\./, `/${size}.`);
+}
+
 // ─── Species images ───────────────────────────────────────────────────────────
 // Individual overrides keyed by species slug.
 // Falls back to category image when no override is defined.
@@ -130,13 +139,14 @@ export const SPECIES_CATEGORY_IMAGES: Record<string, string> = {
   freshwater: RIVER_FRESHWATER,
 };
 
-/** Returns the best image URL for a species (species-specific → category → ocean). */
+/** Returns the best image URL for a species (iNaturalist → Pexels species → category → ocean). */
 export function getSpeciesImage(slug: string, category: string, size: 600 | 1200 = 1200): string {
+  const inat = INAT_SPECIES_PHOTOS[slug];
+  if (inat) return inatPhoto(inat, size === 600 ? "medium" : "large");
   const base =
     SPECIES_IMAGES[slug] ??
     SPECIES_CATEGORY_IMAGES[category] ??
     OCEAN_BLUE;
-  // Swap the width in the URL for card-size requests
   return size === 600 ? base.replace("w=1200", "w=600") : base;
 }
 
