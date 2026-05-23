@@ -1,7 +1,7 @@
-import { ArrowRight, Fish, MapPin, Calendar } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { VideoParallaxHero } from "@/components/layout/VideoParallaxHero";
-import { HeroSearch } from "@/components/discovery/HeroSearch";
+import { IntentSearch } from "@/components/discovery/IntentSearch";
 import { RegionCard } from "@/components/discovery/RegionCard";
 import { SpeciesCard } from "@/components/discovery/SpeciesCard";
 import { listRegions, getTopRegionsForMonth } from "@/lib/queries/regions";
@@ -31,13 +31,13 @@ export default async function HomePage({
       {/* Hero with parallax video */}
       <VideoParallaxHero>
         <h1 className="text-5xl md:text-6xl font-bold text-[#F5F0E8] mb-4 leading-tight">
-          Find Your<br />Perfect Catch.
+          Know Where<br />the Bite Is.
         </h1>
-        <p className="text-white/60 text-lg mb-10 max-w-lg mx-auto leading-relaxed">
-          Find the best time and place to target any species across Australia — then plan the whole trip with your crew.
+        <p className="text-white/60 text-lg mb-8 max-w-lg mx-auto leading-relaxed">
+          Seasonal forecasts and expert tactics for 49 species across 100+ Australian locations.
         </p>
         <div className="flex justify-center w-full">
-          <HeroSearch speciesList={speciesList} regionList={regionList} />
+          <IntentSearch speciesList={speciesList} regionList={regionList} />
         </div>
       </VideoParallaxHero>
 
@@ -94,25 +94,6 @@ export default async function HomePage({
           )}
         </section>
 
-        {/* How it works */}
-        <section className="bg-[#040F1C] rounded-3xl p-10 text-white">
-          <h2 className="text-2xl font-bold mb-10 text-center text-[#F5F0E8]">How it works</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {[
-              { icon: Fish, title: "1. Choose your target", desc: "Pick a species or a location. See the best months and regions based on real seasonal data." },
-              { icon: Calendar, title: "2. Find the window", desc: "Our monthly calendar shows peak, good, fair, and poor ratings for every combination." },
-              { icon: MapPin, title: "3. Plan the trip", desc: "Create a shared trip workspace, add bookings, generate a gear list, and invite your crew." },
-            ].map(({ icon: Icon, title, desc }) => (
-              <div key={title} className="text-center">
-                <div className="w-12 h-12 bg-cyan-500/20 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                  <Icon className="h-6 w-6 text-[#06B6D4]" />
-                </div>
-                <h3 className="font-semibold text-white mb-2">{title}</h3>
-                <p className="text-sm text-white/60 leading-relaxed">{desc}</p>
-              </div>
-            ))}
-          </div>
-        </section>
       </div>
     </div>
   );

@@ -9,6 +9,7 @@ import { getSpeciesBySlug, getBestRegionsForSpecies, getSpeciesWithTechniques, l
 import { currentMonth, MONTH_NAMES, MONTH_NAMES_FULL } from "@/lib/utils/season";
 import { FISHING_TIPS } from "@/lib/species-tips";
 import { getSpeciesImage } from "@/lib/images";
+import { SpeciesPageIntent } from "@/components/discovery/SpeciesPageIntent";
 import { gregVinallYoutubeUrl } from "@/lib/affiliate";
 import { SPECIES_EPISODES, PODCAST_SHOW_URL } from "@/lib/podcast-episodes";
 
@@ -122,6 +123,9 @@ export default async function SpeciesPage({ params }: { params: Promise<{ slug: 
           {sp.description && (
             <p className="text-white/60 max-w-2xl leading-relaxed mb-5">{sp.description}</p>
           )}
+
+          {/* Intent banner — shown when arriving from the homepage search form */}
+          <SpeciesPageIntent commonName={sp.commonName} />
 
           <div className="flex gap-3 flex-wrap">
             <Link href="/trips/new">

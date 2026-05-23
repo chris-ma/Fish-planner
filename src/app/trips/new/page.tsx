@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useMemo } from "react";
-import { useRouter } from "next/navigation";
+import { useState, useMemo, Suspense } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { ArrowRight, Loader2, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -26,6 +26,13 @@ const SPECIES_OPTIONS = [
   // Freshwater
   "Murray Cod", "Golden Perch", "Silver Perch", "Australian Bass",
   "Brown Trout", "Rainbow Trout", "Redfin", "Saratoga", "Catfish", "Ocean Trout",
+  // NT / Tropical
+  "Queenfish", "Threadfin Salmon",
+  // WA Endemic
+  "Dhufish", "Baldchin Groper", "King George Whiting", "Black Bream",
+  "Spangled Emperor", "Rankin Cod",
+  // Flats / Islands
+  "Bonefish", "Milkfish",
 ];
 
 // ── Region list with zone field ───────────────────────────────────────────────
@@ -104,6 +111,52 @@ const REGION_OPTIONS = [
   { slug: "goulburn-river-vic", name: "Goulburn River, VIC", zone: "alpine" },
   { slug: "arthurs-lake-tas", name: "Arthurs Lake, TAS", zone: "alpine" },
   { slug: "lake-st-clair", name: "Lake St Clair, TAS", zone: "alpine" },
+  // NT — Top End
+  { slug: "darwin", name: "Darwin, NT", zone: "nt_top_end" },
+  { slug: "bynoe-harbour", name: "Bynoe Harbour, NT", zone: "nt_top_end" },
+  { slug: "daly-river", name: "Daly River, NT", zone: "nt_top_end" },
+  { slug: "tiwi-islands", name: "Tiwi Islands, NT", zone: "nt_top_end" },
+  { slug: "cobourg-peninsula", name: "Cobourg Peninsula, NT", zone: "nt_top_end" },
+  // NT — Gulf
+  { slug: "nhulunbuy-gove", name: "Nhulunbuy (Gove), NT", zone: "nt_gulf" },
+  { slug: "groote-eylandt", name: "Groote Eylandt, NT", zone: "nt_gulf" },
+  { slug: "borroloola", name: "Borroloola, NT", zone: "nt_gulf" },
+  // WA — Kimberley
+  { slug: "broome", name: "Broome, WA", zone: "wa_kimberley" },
+  { slug: "kununurra", name: "Kununurra, WA", zone: "wa_kimberley" },
+  { slug: "dampier-peninsula", name: "Dampier Peninsula, WA", zone: "wa_kimberley" },
+  { slug: "horizontal-falls", name: "Horizontal Falls, WA", zone: "wa_kimberley" },
+  // WA — Pilbara / Ningaloo
+  { slug: "exmouth-ningaloo", name: "Exmouth / Ningaloo, WA", zone: "wa_pilbara" },
+  { slug: "port-hedland", name: "Port Hedland, WA", zone: "wa_pilbara" },
+  { slug: "karratha-dampier", name: "Karratha / Dampier, WA", zone: "wa_pilbara" },
+  { slug: "shark-bay", name: "Shark Bay, WA", zone: "wa_pilbara" },
+  // WA — Mid West
+  { slug: "geraldton", name: "Geraldton, WA", zone: "wa_mid_west" },
+  { slug: "kalbarri", name: "Kalbarri, WA", zone: "wa_mid_west" },
+  { slug: "jurien-bay", name: "Jurien Bay, WA", zone: "wa_mid_west" },
+  { slug: "lancelin-cervantes", name: "Lancelin / Cervantes, WA", zone: "wa_mid_west" },
+  // WA — Southwest
+  { slug: "perth-rottnest", name: "Perth / Rottnest, WA", zone: "wa_southwest" },
+  { slug: "mandurah", name: "Mandurah, WA", zone: "wa_southwest" },
+  { slug: "busselton-margaret-river", name: "Busselton / Margaret River, WA", zone: "wa_southwest" },
+  { slug: "albany", name: "Albany, WA", zone: "wa_southwest" },
+  { slug: "esperance", name: "Esperance, WA", zone: "wa_southwest" },
+  // SA — Spencer Gulf
+  { slug: "port-augusta", name: "Port Augusta, SA", zone: "sa_spencer_gulf" },
+  { slug: "whyalla", name: "Whyalla, SA", zone: "sa_spencer_gulf" },
+  { slug: "port-lincoln", name: "Port Lincoln, SA", zone: "sa_spencer_gulf" },
+  { slug: "coffin-bay", name: "Coffin Bay, SA", zone: "sa_spencer_gulf" },
+  { slug: "streaky-bay", name: "Streaky Bay, SA", zone: "sa_spencer_gulf" },
+  // SA — South Coast
+  { slug: "adelaide", name: "Adelaide, SA", zone: "sa_south" },
+  { slug: "victor-harbor", name: "Victor Harbor, SA", zone: "sa_south" },
+  { slug: "kangaroo-island", name: "Kangaroo Island, SA", zone: "sa_south" },
+  { slug: "robe-beachport", name: "Robe / Beachport, SA", zone: "sa_south" },
+  { slug: "mount-gambier", name: "Mount Gambier, SA", zone: "sa_south" },
+  // Islands
+  { slug: "christmas-island", name: "Christmas Island", zone: "christmas_island" },
+  { slug: "cocos-islands", name: "Cocos (Keeling) Islands", zone: "cocos_islands" },
 ];
 
 // ── Which zones each species is active in ────────────────────────────────────
@@ -111,33 +164,33 @@ const SPECIES_ACTIVE_ZONES: Record<string, string[]> = {
   "Black Marlin": ["far_north_qld", "central_qld"],
   "Blue Marlin": ["far_north_qld", "central_qld", "southeast_qld", "nsw", "lord_howe"],
   "Sailfish": ["far_north_qld", "central_qld", "southeast_qld"],
-  "Yellowfin Tuna": ["far_north_qld", "central_qld", "southeast_qld", "nsw", "lord_howe"],
+  "Yellowfin Tuna": ["far_north_qld", "central_qld", "southeast_qld", "nsw", "lord_howe", "christmas_island", "cocos_islands"],
   "Longtail Tuna": ["far_north_qld", "central_qld", "southeast_qld", "nsw"],
-  "Spanish Mackerel": ["far_north_qld", "central_qld", "southeast_qld", "nsw"],
-  "Wahoo": ["far_north_qld", "central_qld", "southeast_qld", "lord_howe"],
-  "Mahi-Mahi": ["far_north_qld", "central_qld", "southeast_qld", "nsw", "lord_howe"],
-  "Southern Bluefin Tuna": ["vic_coast", "tas", "nsw"],
-  "Yellowtail Kingfish": ["nsw", "southeast_qld", "vic_coast"],
-  "Giant Trevally": ["far_north_qld", "central_qld", "southeast_qld", "lord_howe"],
-  "Cobia": ["far_north_qld", "central_qld", "southeast_qld"],
-  "Tailor": ["nsw", "southeast_qld", "vic_coast"],
-  "Australian Salmon": ["nsw", "vic_coast", "tas"],
-  "Gummy Shark": ["vic_coast", "tas", "nsw"],
-  "Coral Trout": ["far_north_qld", "central_qld", "southeast_qld"],
-  "Red Emperor": ["far_north_qld", "central_qld"],
+  "Spanish Mackerel": ["far_north_qld", "central_qld", "southeast_qld", "nsw", "nt_top_end", "nt_gulf", "wa_kimberley", "wa_pilbara", "wa_mid_west"],
+  "Wahoo": ["far_north_qld", "central_qld", "southeast_qld", "lord_howe", "christmas_island", "cocos_islands"],
+  "Mahi-Mahi": ["far_north_qld", "central_qld", "southeast_qld", "nsw", "lord_howe", "christmas_island", "cocos_islands"],
+  "Southern Bluefin Tuna": ["vic_coast", "tas", "nsw", "sa_south"],
+  "Yellowtail Kingfish": ["nsw", "southeast_qld", "vic_coast", "wa_southwest"],
+  "Giant Trevally": ["far_north_qld", "central_qld", "southeast_qld", "lord_howe", "nt_top_end", "nt_gulf", "wa_kimberley", "wa_pilbara", "christmas_island", "cocos_islands"],
+  "Cobia": ["far_north_qld", "central_qld", "southeast_qld", "nt_top_end", "wa_kimberley"],
+  "Tailor": ["nsw", "southeast_qld", "vic_coast", "wa_mid_west", "wa_southwest"],
+  "Australian Salmon": ["nsw", "vic_coast", "tas", "sa_south", "wa_southwest"],
+  "Gummy Shark": ["vic_coast", "tas", "nsw", "sa_spencer_gulf", "sa_south", "wa_southwest"],
+  "Coral Trout": ["far_north_qld", "central_qld", "southeast_qld", "nt_top_end", "wa_kimberley", "wa_pilbara"],
+  "Red Emperor": ["far_north_qld", "central_qld", "nt_top_end", "wa_kimberley", "wa_pilbara"],
   "Nannygai": ["far_north_qld", "central_qld", "southeast_qld", "nsw"],
-  "Snapper": ["nsw", "southeast_qld", "vic_coast", "tas", "central_qld"],
+  "Snapper": ["nsw", "southeast_qld", "vic_coast", "tas", "central_qld", "wa_mid_west", "wa_southwest", "sa_spencer_gulf", "sa_south"],
   "Amberjack (Samson Fish)": ["nsw", "southeast_qld"],
   "Blue-eye Trevalla": ["nsw", "vic_coast", "tas"],
   "Striped Trumpeter": ["tas", "vic_coast"],
-  "Barramundi": ["far_north_qld", "central_qld"],
-  "Mangrove Jack": ["far_north_qld", "central_qld", "southeast_qld"],
-  "Flathead": ["nsw", "southeast_qld", "vic_coast"],
-  "Mulloway": ["nsw", "southeast_qld", "vic_coast"],
-  "Bream": ["nsw", "southeast_qld", "vic_coast"],
-  "Whiting": ["nsw", "southeast_qld", "vic_coast"],
+  "Barramundi": ["far_north_qld", "central_qld", "nt_top_end", "nt_gulf", "wa_kimberley"],
+  "Mangrove Jack": ["far_north_qld", "central_qld", "southeast_qld", "nt_top_end", "nt_gulf", "wa_kimberley"],
+  "Flathead": ["nsw", "southeast_qld", "vic_coast", "sa_south", "wa_southwest"],
+  "Mulloway": ["nsw", "southeast_qld", "vic_coast", "sa_south", "wa_southwest"],
+  "Bream": ["nsw", "southeast_qld", "vic_coast", "sa_south"],
+  "Whiting": ["nsw", "southeast_qld", "vic_coast", "sa_south", "wa_southwest"],
   "Luderick": ["nsw", "southeast_qld", "vic_coast"],
-  "Black Jewfish": ["far_north_qld", "central_qld"],
+  "Black Jewfish": ["far_north_qld", "central_qld", "nt_top_end"],
   "Murray Cod": ["murray_darling"],
   "Golden Perch": ["murray_darling"],
   "Silver Perch": ["murray_darling"],
@@ -145,24 +198,43 @@ const SPECIES_ACTIVE_ZONES: Record<string, string[]> = {
   "Brown Trout": ["alpine", "tas"],
   "Rainbow Trout": ["alpine", "tas"],
   "Redfin": ["murray_darling", "alpine", "vic_coast"],
-  "Saratoga": ["far_north_qld"],
+  "Saratoga": ["far_north_qld", "nt_top_end"],
   "Catfish": ["murray_darling"],
   "Ocean Trout": ["tas", "alpine"],
+  // NT / Tropical
+  "Queenfish": ["nt_top_end", "nt_gulf", "wa_kimberley", "far_north_qld", "central_qld"],
+  "Threadfin Salmon": ["nt_top_end", "nt_gulf", "wa_kimberley", "far_north_qld"],
+  // WA Endemic
+  "Dhufish": ["wa_southwest", "wa_mid_west", "wa_pilbara"],
+  "Baldchin Groper": ["wa_southwest", "wa_mid_west"],
+  "King George Whiting": ["sa_spencer_gulf", "sa_south", "wa_southwest", "vic_coast"],
+  "Black Bream": ["nsw", "vic_coast", "sa_south", "wa_southwest"],
+  "Spangled Emperor": ["far_north_qld", "central_qld", "nt_top_end", "wa_kimberley", "wa_pilbara"],
+  "Rankin Cod": ["wa_kimberley", "wa_pilbara", "wa_mid_west"],
+  // Flats / Islands
+  "Bonefish": ["christmas_island", "cocos_islands", "nt_top_end"],
+  "Milkfish": ["christmas_island", "cocos_islands"],
 };
 
-export default function NewTripPage() {
+function NewTripForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [selectedSpecies, setSelectedSpecies] = useState<string[]>([]);
 
-  const [form, setForm] = useState({
+  // Pre-fill from intent search URL params (?region=sydney&species=Barramundi)
+  const [selectedSpecies, setSelectedSpecies] = useState<string[]>(() => {
+    const s = searchParams.get("species");
+    return s && SPECIES_OPTIONS.includes(s) ? [s] : [];
+  });
+
+  const [form, setForm] = useState(() => ({
     title: "",
-    regionSlug: "",
+    regionSlug: searchParams.get("region") ?? "",
     startDate: "",
     endDate: "",
     description: "",
-  });
+  }));
 
   // Cross-filter: zones that match the selected species
   const activeZonesFromSpecies = useMemo(() => {
@@ -399,5 +471,13 @@ export default function NewTripPage() {
         </form>
       </div>
     </div>
+  );
+}
+
+export default function NewTripPage() {
+  return (
+    <Suspense fallback={null}>
+      <NewTripForm />
+    </Suspense>
   );
 }
