@@ -8,11 +8,11 @@ const px = (id: number, w = 1200) =>
   `https://images.pexels.com/photos/${id}/pexels-photo-${id}.jpeg?auto=compress&cs=tinysrgb&w=${w}`;
 
 // ─── Hero video ───────────────────────────────────────────────────────────────
-// Pexels search: "underwater ocean fish swimming tropical"
+// Pexels search: "fly fishing river stream"
 export const HERO_VIDEO_URL =
-  "https://videos.pexels.com/video-files/2098928/2098928-hd_1920_1080_25fps.mp4";
+  "https://videos.pexels.com/video-files/6758951/6758951-hd_1920_1080_25fps.mp4";
 export const HERO_VIDEO_FALLBACK =
-  "https://videos.pexels.com/video-files/1093662/1093662-hd_1920_1080_25fps.mp4";
+  "https://videos.pexels.com/video-files/5762332/5762332-hd_1920_1080_25fps.mp4";
 
 // ─── Category fallback images ─────────────────────────────────────────────────
 // Pexels search: "australia open ocean deep sea fishing"

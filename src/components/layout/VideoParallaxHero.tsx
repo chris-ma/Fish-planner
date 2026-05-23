@@ -21,7 +21,7 @@ export function VideoParallaxHero({ children }: Props) {
   }, []);
 
   return (
-    <section className="relative overflow-hidden bg-[#020B14] min-h-[600px] md:min-h-[680px] flex flex-col items-center justify-center text-center px-4 pb-24">
+    <section className="relative overflow-hidden bg-[#020B14] min-h-screen flex flex-col items-center justify-center text-center px-4">
       {/* Parallax video background — underwater ocean with fish swimming */}
       <div
         ref={bgRef}
@@ -38,7 +38,7 @@ export function VideoParallaxHero({ children }: Props) {
           <source src={HERO_VIDEO_FALLBACK} type="video/mp4" />
         </video>
         {/* Gradient overlay — darker at top/bottom to frame content */}
-        <div className="absolute inset-0 bg-gradient-to-b from-[#020B14]/60 via-[#020B14]/10 to-[#020B14]" />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#020B14]/70 via-[#020B14]/25 to-[#020B14]" />
       </div>
 
       {/* Content */}

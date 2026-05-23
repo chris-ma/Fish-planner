@@ -32,7 +32,7 @@ export function IntentSearch() {
         }}
       >
         {/* Mode toggle pills */}
-        <div className="flex gap-2 mb-4">
+        <div className="flex gap-2 mb-4 justify-center">
           <button
             onClick={() => setMode("species")}
             className={`px-4 py-1.5 rounded-full text-sm font-semibold transition-all ${

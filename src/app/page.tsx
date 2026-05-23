@@ -59,15 +59,14 @@ export default async function HomePage({
     <div>
       {/* Hero with parallax video */}
       <VideoParallaxHero>
-        <h1 className="text-5xl md:text-6xl font-bold text-[#F5F0E8] mb-4 leading-tight">
-          Plan fishing adventures<br />with your mates.
+        <h1 className="text-5xl md:text-7xl font-bold text-[#F5F0E8] mb-5 leading-tight tracking-tight">
+          Plan the trip.<br />Not just the idea.
         </h1>
-        <p className="text-white/60 text-lg mb-8 max-w-lg mx-auto leading-relaxed">
-          Explore Australian fishing destinations, understand target species, organise gear and logistics — then share the plan with your crew.
+        <p className="text-white/65 text-lg md:text-xl mb-10 max-w-sm mx-auto leading-relaxed">
+          Find your spot, choose your species,<br className="hidden md:block" />
+          and share the plan with your crew.
         </p>
-        <div className="flex justify-center w-full">
-          <IntentSearch />
-        </div>
+        <IntentSearch />
       </VideoParallaxHero>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 -mt-8 pb-16 space-y-16">
