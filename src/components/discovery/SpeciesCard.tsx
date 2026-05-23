@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Heart } from "lucide-react";
+import { Heart, Flame } from "lucide-react";
 import { SeasonBadge } from "./SeasonBadge";
 import { getSpeciesImage } from "@/lib/images";
 import type { Species } from "@/db/schema";
@@ -53,6 +53,12 @@ export function SpeciesCard({ species, bestRating, bestMonth }: SpeciesCardProps
           />
           <div className={`absolute inset-0 bg-gradient-to-br ${gradient}`} />
 
+          {bestRating === "peak" && (
+            <div className="absolute top-3 left-3 z-10 flex items-center gap-1 bg-emerald-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">
+              <Flame className="h-3 w-3" />
+              Prime
+            </div>
+          )}
           <button className="absolute top-3 right-3 z-10" onClick={(e) => e.preventDefault()}>
             <Heart className="h-5 w-5 text-white/60 hover:text-white transition-colors" />
           </button>

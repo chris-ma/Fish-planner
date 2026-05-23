@@ -1,4 +1,3 @@
-import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { VideoParallaxHero } from "@/components/layout/VideoParallaxHero";
 import { IntentSearch } from "@/components/discovery/IntentSearch";
@@ -31,10 +30,10 @@ export default async function HomePage({
       {/* Hero with parallax video */}
       <VideoParallaxHero>
         <h1 className="text-5xl md:text-6xl font-bold text-[#F5F0E8] mb-4 leading-tight">
-          Know Where<br />the Bite Is.
+          Know the best time to fish<br />before you leave home.
         </h1>
         <p className="text-white/60 text-lg mb-8 max-w-lg mx-auto leading-relaxed">
-          Seasonal forecasts and expert tactics for 49 species across 100+ Australian locations.
+          Species-specific seasonal forecasts and tactical guides for 49 Australian species across 100+ locations.
         </p>
         <div className="flex justify-center w-full">
           <IntentSearch speciesList={speciesList} regionList={regionList} />
@@ -42,10 +41,10 @@ export default async function HomePage({
       </VideoParallaxHero>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 -mt-8 pb-16 space-y-16">
-        {/* In Season Now */}
+        {/* Best Bite This Month */}
         <section>
-          <div className="flex items-center justify-between mb-5">
-            <h2 className="text-2xl font-bold text-[#040F1C]">In Season — {MONTH_NAMES_FULL[month]}</h2>
+          <div className="flex items-center justify-between mb-2">
+            <h2 className="text-2xl font-bold text-[#040F1C]">Best Bite — {MONTH_NAMES_FULL[month]}</h2>
             <div className="flex gap-2 flex-wrap justify-end">
               {[10, 11, 12, 1, 2, 3].map((m) => (
                 <Link
@@ -62,6 +61,9 @@ export default async function HomePage({
               ))}
             </div>
           </div>
+          <p className="text-sm text-slate-500 mb-5 max-w-2xl">
+            Based on seasonal patterns, these species are at or near peak activity this month.
+          </p>
 
           {inSeasonSpecies.length > 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
@@ -78,9 +80,6 @@ export default async function HomePage({
         <section>
           <div className="flex items-center justify-between mb-5">
             <h2 className="text-2xl font-bold text-[#040F1C]">Top Regions — {MONTH_NAMES_FULL[month]}</h2>
-            <Link href="/" className="text-sm text-[#0891B2] hover:underline flex items-center gap-1">
-              View all <ArrowRight className="h-3 w-3" />
-            </Link>
           </div>
 
           {topRegions.length > 0 ? (

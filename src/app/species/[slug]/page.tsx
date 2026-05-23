@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ArrowRight, Waves, Sun, Cloud, Anchor, Zap, Lightbulb, ExternalLink, Youtube } from "lucide-react";
+import { ArrowRight, Waves, Sun, Cloud, Anchor, Zap, Lightbulb, ExternalLink, Youtube, Clock, Wind } from "lucide-react";
 import { SeasonalCalendar } from "@/components/discovery/SeasonalCalendar";
 import { SeasonBadge } from "@/components/discovery/SeasonBadge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -152,7 +152,28 @@ export default async function SpeciesPage({ params }: { params: Promise<{ slug: 
             {/* How to Catch section */}
             {tips && (
               <section>
-                <h2 className="text-xl font-bold text-[#040F1C] mb-4">How to Catch {sp.commonName}</h2>
+                <h2 className="text-xl font-bold text-[#040F1C] mb-3">How to Catch {sp.commonName}</h2>
+                {/* Quick condition chips */}
+                <div className="flex flex-wrap gap-2 mb-4">
+                  {tips.timeOfDay && (
+                    <span className="inline-flex items-center gap-1.5 bg-amber-100 text-amber-800 text-xs font-semibold px-3 py-1.5 rounded-full">
+                      <Clock className="h-3.5 w-3.5 shrink-0" />
+                      {tips.timeOfDay.split(/[.,]/)[0].trim()}
+                    </span>
+                  )}
+                  {tips.tide && (
+                    <span className="inline-flex items-center gap-1.5 bg-blue-100 text-blue-800 text-xs font-semibold px-3 py-1.5 rounded-full">
+                      <Waves className="h-3.5 w-3.5 shrink-0" />
+                      {tips.tide.split(/[.,]/)[0].trim()}
+                    </span>
+                  )}
+                  {tips.conditions && (
+                    <span className="inline-flex items-center gap-1.5 bg-emerald-100 text-emerald-800 text-xs font-semibold px-3 py-1.5 rounded-full">
+                      <Wind className="h-3.5 w-3.5 shrink-0" />
+                      {tips.conditions.split(/[.,]/)[0].trim()}
+                    </span>
+                  )}
+                </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   {TIPS_ICONS.map(({ key, label, Icon }) => {
                     const text = tips[key as keyof typeof tips];

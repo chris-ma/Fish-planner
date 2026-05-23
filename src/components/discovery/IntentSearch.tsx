@@ -143,7 +143,7 @@ export function IntentSearch({ speciesList, regionList }: IntentSearchProps) {
           disabled={!canSearch}
           className="inline-flex items-center gap-2 bg-[#0D9488] hover:bg-[#0F766E] disabled:opacity-40 disabled:cursor-not-allowed text-white font-semibold px-6 py-2.5 rounded-xl transition-colors"
         >
-          Find the Bite
+          Plan My Session
           <ArrowRight className="h-4 w-4" />
         </button>
       </div>
