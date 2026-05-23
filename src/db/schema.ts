@@ -174,6 +174,22 @@ export const tripBudgetItems = sqliteTable("trip_budget_items", {
   createdAt:   text("created_at").notNull().$defaultFn(() => new Date().toISOString()),
 });
 
+export const catchLog = sqliteTable("catch_log", {
+  id:                text("id").primaryKey(),
+  speciesSlug:       text("species_slug").notNull(),
+  catcherName:       text("catcher_name").notNull().default("Anonymous"),
+  caughtAt:          text("caught_at").notNull(),
+  location:          text("location"),
+  weatherConditions: text("weather_conditions"), // JSON: { temp, wind, description }
+  tidePhase:         text("tide_phase"),          // incoming|outgoing|high|low|unknown
+  lengthCm:          real("length_cm"),
+  weightKg:          real("weight_kg"),
+  gearUsed:          text("gear_used"),
+  photoUrl:          text("photo_url"),
+  notes:             text("notes"),
+  createdAt:         text("created_at").notNull().$defaultFn(() => new Date().toISOString()),
+});
+
 // ─── Type exports ───────────────────────────────────────────────────────────
 
 export type Region = typeof regions.$inferSelect;
@@ -189,3 +205,4 @@ export type TripNote = typeof tripNotes.$inferSelect;
 export type TripParticipant = typeof tripParticipants.$inferSelect;
 export type TripTask = typeof tripTasks.$inferSelect;
 export type TripBudgetItem = typeof tripBudgetItems.$inferSelect;
+export type CatchLog = typeof catchLog.$inferSelect;
