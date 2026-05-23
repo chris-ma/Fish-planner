@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Compass, Fish, Package, Map, Users, ArrowRight } from "lucide-react";
 import { VideoParallaxHero } from "@/components/layout/VideoParallaxHero";
 import { IntentSearch } from "@/components/discovery/IntentSearch";
 import { RegionCard } from "@/components/discovery/RegionCard";
@@ -6,6 +7,40 @@ import { SpeciesCard } from "@/components/discovery/SpeciesCard";
 import { listRegions, getTopRegionsForMonth } from "@/lib/queries/regions";
 import { listSpecies, getInSeasonSpecies } from "@/lib/queries/species";
 import { currentMonth, MONTH_NAMES_FULL } from "@/lib/utils/season";
+import { getZoneImage } from "@/lib/images";
+
+const TRIP_FEATURES = [
+  {
+    Icon: Compass,
+    title: "Destination",
+    description: "Where to go, when to go, and what species are active.",
+    image: getZoneImage("far_north_qld", 600),
+  },
+  {
+    Icon: Fish,
+    title: "Target Species",
+    description: "Best months, techniques, tackle and local patterns.",
+    image: getZoneImage("wa_kimberley", 600),
+  },
+  {
+    Icon: Package,
+    title: "Gear Checklist",
+    description: "Rods, reels, line, leaders, lures and packing lists.",
+    image: getZoneImage("nsw", 600),
+  },
+  {
+    Icon: Map,
+    title: "Logistics",
+    description: "Access, accommodation, boat ramps, fuel and permits.",
+    image: getZoneImage("nt_top_end", 600),
+  },
+  {
+    Icon: Users,
+    title: "Crew",
+    description: "Invite mates, assign tasks, and keep everyone aligned.",
+    image: getZoneImage("alpine", 600),
+  },
+];
 
 export default async function HomePage({
   searchParams,
@@ -23,17 +58,17 @@ export default async function HomePage({
   ]);
 
   const speciesList = allSpecies.map((s) => ({ slug: s.slug, commonName: s.commonName }));
-  const regionList = allRegions.map((r) => ({ slug: r.slug, name: r.name, state: r.state }));
+  const regionList = allRegions.map((r) => ({ slug: r.slug, name: r.name, state: r.state, zone: r.zone }));
 
   return (
     <div>
       {/* Hero with parallax video */}
       <VideoParallaxHero>
         <h1 className="text-5xl md:text-6xl font-bold text-[#F5F0E8] mb-4 leading-tight">
-          Know the best time to fish<br />before you leave home.
+          Plan fishing adventures<br />with your mates.
         </h1>
         <p className="text-white/60 text-lg mb-8 max-w-lg mx-auto leading-relaxed">
-          Species-specific seasonal forecasts and tactical guides for 49 Australian species across 100+ locations.
+          Explore Australian fishing destinations, understand target species, organise gear and logistics — then share the plan with your crew.
         </p>
         <div className="flex justify-center w-full">
           <IntentSearch speciesList={speciesList} regionList={regionList} />
@@ -41,10 +76,10 @@ export default async function HomePage({
       </VideoParallaxHero>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 -mt-8 pb-16 space-y-16">
-        {/* Best Bite This Month */}
+        {/* Where to Plan This Month */}
         <section>
           <div className="flex items-center justify-between mb-2">
-            <h2 className="text-2xl font-bold text-[#040F1C]">Best Bite — {MONTH_NAMES_FULL[month]}</h2>
+            <h2 className="text-2xl font-bold text-[#040F1C]">Where to Plan in {MONTH_NAMES_FULL[month]}</h2>
             <div className="flex gap-2 flex-wrap justify-end">
               {[10, 11, 12, 1, 2, 3].map((m) => (
                 <Link
@@ -62,7 +97,7 @@ export default async function HomePage({
             </div>
           </div>
           <p className="text-sm text-slate-500 mb-5 max-w-2xl">
-            Based on seasonal patterns, these species are at or near peak activity this month.
+            Species at peak season this month — find the best destinations to target them.
           </p>
 
           {inSeasonSpecies.length > 0 ? (
@@ -76,10 +111,10 @@ export default async function HomePage({
           )}
         </section>
 
-        {/* Top Regions This Month */}
+        {/* Top Destinations This Month */}
         <section>
           <div className="flex items-center justify-between mb-5">
-            <h2 className="text-2xl font-bold text-[#040F1C]">Top Regions — {MONTH_NAMES_FULL[month]}</h2>
+            <h2 className="text-2xl font-bold text-[#040F1C]">Top Destinations — {MONTH_NAMES_FULL[month]}</h2>
           </div>
 
           {topRegions.length > 0 ? (
@@ -93,6 +128,87 @@ export default async function HomePage({
           )}
         </section>
 
+        {/* Section A: What's in a trip plan */}
+        <section>
+          <h2 className="text-2xl font-bold text-[#040F1C] mb-2">
+            Everything your fishing trip needs in one shared plan.
+          </h2>
+          <p className="text-sm text-slate-500 mb-6 max-w-2xl">
+            From destination research to gear packing and crew coordination.
+          </p>
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
+            {TRIP_FEATURES.map(({ Icon, title, description, image }) => (
+              <div key={title} className="relative rounded-2xl overflow-hidden aspect-[3/4] flex flex-col justify-end">
+                <div
+                  className="absolute inset-0 bg-cover bg-center"
+                  style={{ backgroundImage: `url('${image}')` }}
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-black/10" />
+                <div className="relative z-10 p-4">
+                  <div className="w-8 h-8 rounded-lg bg-white/15 backdrop-blur-sm flex items-center justify-center mb-2">
+                    <Icon className="h-4 w-4 text-white" />
+                  </div>
+                  <p className="font-bold text-sm text-white mb-1">{title}</p>
+                  <p className="text-xs text-white/60 leading-relaxed">{description}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* Section B: Plan with your crew */}
+        <section className="relative rounded-3xl overflow-hidden">
+          <div
+            className="absolute inset-0 bg-cover bg-center opacity-30"
+            style={{ backgroundImage: `url('${getZoneImage("southeast_qld", 1200)}')` }}
+          />
+          <div className="absolute inset-0 bg-[#020B14]/85" />
+
+          <div className="relative z-10 px-8 py-12 md:px-12 flex flex-col md:flex-row items-center gap-10">
+            <div className="flex-1 text-center md:text-left">
+              <h2 className="text-2xl font-bold text-[#F5F0E8] mb-3">
+                Plan with your crew, not across scattered group chats.
+              </h2>
+              <p className="text-white/60 text-sm mb-6 max-w-sm mx-auto md:mx-0 leading-relaxed">
+                Share the destination, species, dates, gear list and logistics in one place.
+                No account needed — just create a plan and send the link.
+              </p>
+              <Link href="/trips/new">
+                <button className="inline-flex items-center gap-2 bg-[#0D9488] hover:bg-[#0F766E] text-white font-semibold px-6 py-3 rounded-xl transition-colors">
+                  Create Shared Trip
+                  <ArrowRight className="h-4 w-4" />
+                </button>
+              </Link>
+            </div>
+
+            <div className="w-full md:w-72 bg-[#0D1B2A]/90 backdrop-blur-sm border border-white/10 rounded-2xl p-5 shrink-0 space-y-4">
+              <div className="flex items-start justify-between gap-2">
+                <div>
+                  <p className="text-[#F5F0E8] font-bold text-sm">Cape York GT Mission</p>
+                  <p className="text-white/40 text-xs mt-0.5">Far North QLD · Oct 2025</p>
+                </div>
+                <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-slate-700 text-slate-300 uppercase tracking-wide shrink-0">
+                  Planning
+                </span>
+              </div>
+              <div className="flex items-center gap-2">
+                {["J", "S", "T"].map((initial) => (
+                  <div
+                    key={initial}
+                    className="w-8 h-8 rounded-full bg-teal-700 flex items-center justify-center text-xs font-bold text-white"
+                  >
+                    {initial}
+                  </div>
+                ))}
+                <span className="text-xs text-white/40 ml-1">+ 2 more</span>
+              </div>
+              <div className="border-t border-white/10 pt-3">
+                <p className="text-xs text-white/40">Open decision</p>
+                <p className="text-xs text-amber-400 mt-0.5 font-medium">Charter booked? — open</p>
+              </div>
+            </div>
+          </div>
+        </section>
       </div>
     </div>
   );

@@ -6,7 +6,7 @@ import { Compass, Fish, Package, Plus } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
 
 const NAV_ITEMS = [
-  { href: "/", label: "Discover", Icon: Compass },
+  { href: "/", label: "Home", Icon: Compass },
   { href: "/species", label: "Species", Icon: Fish },
   { href: "/gear", label: "Gear", Icon: Package },
 ];

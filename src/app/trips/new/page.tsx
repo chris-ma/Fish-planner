@@ -2,12 +2,13 @@
 
 import { useState, useMemo, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { ArrowRight, Loader2, X } from "lucide-react";
+import { ArrowRight, ArrowLeft, Loader2, X, Footprints, Anchor, Ship, Waves } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { currentMonth, MONTH_NAMES_FULL } from "@/lib/utils/season";
 
 // ── Species list ──────────────────────────────────────────────────────────────
 const SPECIES_OPTIONS = [
@@ -201,28 +202,59 @@ const SPECIES_ACTIVE_ZONES: Record<string, string[]> = {
   "Saratoga": ["far_north_qld", "nt_top_end"],
   "Catfish": ["murray_darling"],
   "Ocean Trout": ["tas", "alpine"],
-  // NT / Tropical
   "Queenfish": ["nt_top_end", "nt_gulf", "wa_kimberley", "far_north_qld", "central_qld"],
   "Threadfin Salmon": ["nt_top_end", "nt_gulf", "wa_kimberley", "far_north_qld"],
-  // WA Endemic
   "Dhufish": ["wa_southwest", "wa_mid_west", "wa_pilbara"],
   "Baldchin Groper": ["wa_southwest", "wa_mid_west"],
   "King George Whiting": ["sa_spencer_gulf", "sa_south", "wa_southwest", "vic_coast"],
   "Black Bream": ["nsw", "vic_coast", "sa_south", "wa_southwest"],
   "Spangled Emperor": ["far_north_qld", "central_qld", "nt_top_end", "wa_kimberley", "wa_pilbara"],
   "Rankin Cod": ["wa_kimberley", "wa_pilbara", "wa_mid_west"],
-  // Flats / Islands
   "Bonefish": ["christmas_island", "cocos_islands", "nt_top_end"],
   "Milkfish": ["christmas_island", "cocos_islands"],
 };
+
+const TRIP_TYPES = [
+  { value: "land",    label: "Land-based", Icon: Footprints },
+  { value: "boat",    label: "Boat",       Icon: Anchor },
+  { value: "charter", label: "Charter",    Icon: Ship },
+  { value: "kayak",   label: "Kayak",      Icon: Waves },
+] as const;
+
+const STEP_TITLES: Record<number, string> = {
+  1: "What kind of trip?",
+  2: "When are you going?",
+  3: "Where are you headed?",
+  4: "What do you want to catch?",
+  5: "Add notes & create",
+};
+
+function StepProgress({ current, total }: { current: number; total: number }) {
+  return (
+    <div className="flex items-center justify-between mb-6">
+      <div className="flex gap-1.5 flex-1 mr-3">
+        {Array.from({ length: total }, (_, i) => (
+          <div
+            key={i}
+            className={`h-1.5 flex-1 rounded-full transition-all duration-300 ${
+              i + 1 <= current ? "bg-[#0D9488]" : "bg-slate-200"
+            }`}
+          />
+        ))}
+      </div>
+      <span className="text-xs text-slate-400 font-medium whitespace-nowrap">{current} of {total}</span>
+    </div>
+  );
+}
 
 function NewTripForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [currentStep, setCurrentStep] = useState(1);
+  const [tripType, setTripType] = useState<"land" | "boat" | "charter" | "kayak" | "">("");
 
-  // Pre-fill from intent search URL params (?region=sydney&species=Barramundi)
   const [selectedSpecies, setSelectedSpecies] = useState<string[]>(() => {
     const s = searchParams.get("species");
     return s && SPECIES_OPTIONS.includes(s) ? [s] : [];
@@ -236,7 +268,6 @@ function NewTripForm() {
     description: "",
   }));
 
-  // Cross-filter: zones that match the selected species
   const activeZonesFromSpecies = useMemo(() => {
     if (selectedSpecies.length === 0) return new Set<string>();
     const zones = new Set<string>();
@@ -246,13 +277,11 @@ function NewTripForm() {
     return zones;
   }, [selectedSpecies]);
 
-  // Cross-filter: zone of selected region
   const selectedRegionZone = useMemo(() => {
     if (!form.regionSlug) return null;
     return REGION_OPTIONS.find((r) => r.slug === form.regionSlug)?.zone ?? null;
   }, [form.regionSlug]);
 
-  // Filtered species: if a region is selected, only show species active in that zone
   const filteredSpecies = useMemo(() => {
     if (!selectedRegionZone) return SPECIES_OPTIONS;
     return SPECIES_OPTIONS.filter((sp) =>
@@ -260,7 +289,6 @@ function NewTripForm() {
     );
   }, [selectedRegionZone]);
 
-  // Filtered regions: if species are selected, only show regions in matching zones
   const filteredRegions = useMemo(() => {
     if (activeZonesFromSpecies.size === 0) return REGION_OPTIONS;
     return REGION_OPTIONS.filter((r) => activeZonesFromSpecies.has(r.zone));
@@ -270,7 +298,6 @@ function NewTripForm() {
     setSelectedSpecies((prev) =>
       prev.includes(name) ? prev.filter((s) => s !== name) : [...prev, name]
     );
-    // If this species isn't available in the selected region, clear the region
     if (form.regionSlug && selectedRegionZone) {
       const newSelection = selectedSpecies.includes(name)
         ? selectedSpecies.filter((s) => s !== name)
@@ -285,15 +312,24 @@ function NewTripForm() {
   const clearRegion = () => setForm((f) => ({ ...f, regionSlug: "" }));
   const clearSpeciesFilter = () => setSelectedSpecies([]);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const canAdvance: Record<number, boolean> = {
+    1: form.title.trim().length > 0,
+    2: true,
+    3: true,
+    4: true,
+    5: false,
+  };
+
+  const goNext = () => setCurrentStep((s) => Math.min(s + 1, 5));
+  const goBack = () => setCurrentStep((s) => Math.max(s - 1, 1));
+
+  const handleSubmit = async () => {
     if (!form.title.trim()) {
       setError("Give your trip a name.");
       return;
     }
     setLoading(true);
     setError("");
-
     try {
       const res = await fetch("/api/trips", {
         method: "POST",
@@ -307,7 +343,6 @@ function NewTripForm() {
           description: form.description || undefined,
         }),
       });
-
       if (!res.ok) throw new Error("Failed to create trip");
       const { id } = await res.json();
       router.push(`/trips/${id}`);
@@ -317,7 +352,7 @@ function NewTripForm() {
     }
   };
 
-  const isFiltered = form.regionSlug || selectedSpecies.length > 0;
+  const month = currentMonth();
 
   return (
     <div>
@@ -333,142 +368,217 @@ function NewTripForm() {
       </div>
 
       <div className="max-w-2xl mx-auto px-4 sm:px-6 py-10">
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <div className="space-y-2">
-            <Label htmlFor="title">Trip name *</Label>
-            <Input
-              id="title"
-              placeholder="e.g. Cairns Marlin Trip 2025"
-              value={form.title}
-              onChange={(e) => setForm((f) => ({ ...f, title: e.target.value }))}
-              className="h-11"
-            />
-          </div>
+        <div className="bg-[#F5F0E8] rounded-2xl p-6 shadow-sm border border-slate-100">
+          <StepProgress current={currentStep} total={5} />
 
-          {/* Destination — filters species */}
-          <div className="space-y-2">
-            <div className="flex items-center justify-between">
-              <Label htmlFor="region">Destination</Label>
-              {form.regionSlug && (
-                <button
-                  type="button"
-                  onClick={clearRegion}
-                  className="text-xs text-slate-500 hover:text-slate-700 flex items-center gap-1"
-                >
-                  <X className="h-3 w-3" /> Clear filter
-                </button>
+          <h2 className="text-2xl font-bold text-[#040F1C] mb-6">{STEP_TITLES[currentStep]}</h2>
+
+          {/* Step 1: Trip name + type */}
+          {currentStep === 1 && (
+            <div className="space-y-5">
+              <div className="space-y-2">
+                <Label htmlFor="title">Trip name *</Label>
+                <Input
+                  id="title"
+                  placeholder="e.g. Cairns Marlin Trip 2025"
+                  value={form.title}
+                  onChange={(e) => setForm((f) => ({ ...f, title: e.target.value }))}
+                  className="h-11"
+                />
+              </div>
+              <div>
+                <p className="text-sm font-medium text-slate-700 mb-3">Trip style</p>
+                <div className="grid grid-cols-2 gap-3">
+                  {TRIP_TYPES.map(({ value, label, Icon }) => (
+                    <button
+                      key={value}
+                      type="button"
+                      onClick={() => setTripType(value)}
+                      className={`rounded-xl border-2 p-4 text-left transition-all ${
+                        tripType === value
+                          ? "border-[#0D9488] bg-teal-50"
+                          : "border-slate-200 hover:border-slate-300 bg-white"
+                      }`}
+                    >
+                      <Icon className={`h-6 w-6 mb-2 ${tripType === value ? "text-[#0D9488]" : "text-slate-400"}`} />
+                      <span className={`text-sm font-semibold block ${tripType === value ? "text-[#0D9488]" : "text-[#040F1C]"}`}>
+                        {label}
+                      </span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Step 2: Dates */}
+          {currentStep === 2 && (
+            <div className="space-y-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="startDate">Start date</Label>
+                  <Input
+                    id="startDate"
+                    type="date"
+                    value={form.startDate}
+                    onChange={(e) => setForm((f) => ({ ...f, startDate: e.target.value }))}
+                    className="h-11"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="endDate">End date</Label>
+                  <Input
+                    id="endDate"
+                    type="date"
+                    value={form.endDate}
+                    onChange={(e) => setForm((f) => ({ ...f, endDate: e.target.value }))}
+                    className="h-11"
+                  />
+                </div>
+              </div>
+              <p className="text-xs text-[#0F766E] bg-teal-50 rounded-xl px-4 py-2.5">
+                {MONTH_NAMES_FULL[month]} is an active month for many Australian coastal species.
+              </p>
+            </div>
+          )}
+
+          {/* Step 3: Destination */}
+          {currentStep === 3 && (
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <Label htmlFor="region">Destination</Label>
+                {form.regionSlug && (
+                  <button
+                    type="button"
+                    onClick={clearRegion}
+                    className="text-xs text-slate-500 hover:text-slate-700 flex items-center gap-1"
+                  >
+                    <X className="h-3 w-3" /> Clear
+                  </button>
+                )}
+              </div>
+              <Select
+                value={form.regionSlug}
+                onValueChange={(v) => {
+                  setForm((f) => ({ ...f, regionSlug: v }));
+                  const newZone = REGION_OPTIONS.find((r) => r.slug === v)?.zone;
+                  if (newZone) {
+                    setSelectedSpecies((prev) =>
+                      prev.filter((sp) => (SPECIES_ACTIVE_ZONES[sp] ?? []).includes(newZone))
+                    );
+                  }
+                }}
+              >
+                <SelectTrigger className="h-11">
+                  <SelectValue placeholder="Select a region or town…" />
+                </SelectTrigger>
+                <SelectContent>
+                  {filteredRegions.map((r) => (
+                    <SelectItem key={r.slug} value={r.slug}>{r.name}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              {activeZonesFromSpecies.size > 0 && filteredRegions.length < REGION_OPTIONS.length && (
+                <p className="text-xs text-[#0F766E]">
+                  Showing {filteredRegions.length} regions where your target species are active
+                </p>
               )}
             </div>
-            <Select
-              value={form.regionSlug}
-              onValueChange={(v) => {
-                setForm((f) => ({ ...f, regionSlug: v }));
-                // Remove any selected species not available in the new zone
-                const newZone = REGION_OPTIONS.find((r) => r.slug === v)?.zone;
-                if (newZone) {
-                  setSelectedSpecies((prev) =>
-                    prev.filter((sp) => (SPECIES_ACTIVE_ZONES[sp] ?? []).includes(newZone))
-                  );
-                }
-              }}
-            >
-              <SelectTrigger className="h-11">
-                <SelectValue placeholder="Select a region or town…" />
-              </SelectTrigger>
-              <SelectContent>
-                {filteredRegions.map((r) => (
-                  <SelectItem key={r.slug} value={r.slug}>{r.name}</SelectItem>
+          )}
+
+          {/* Step 4: Species */}
+          {currentStep === 4 && (
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <Label>Target species</Label>
+                {selectedSpecies.length > 0 && (
+                  <button
+                    type="button"
+                    onClick={clearSpeciesFilter}
+                    className="text-xs text-slate-500 hover:text-slate-700 flex items-center gap-1"
+                  >
+                    <X className="h-3 w-3" /> Clear all
+                  </button>
+                )}
+              </div>
+              {form.regionSlug && filteredSpecies.length < SPECIES_OPTIONS.length && (
+                <p className="text-xs text-[#0F766E]">
+                  Showing {filteredSpecies.length} species active in the selected region
+                </p>
+              )}
+              <div className="flex flex-wrap gap-2">
+                {filteredSpecies.map((name) => (
+                  <button
+                    key={name}
+                    type="button"
+                    onClick={() => toggleSpecies(name)}
+                    className={`px-3 py-1.5 rounded-full text-sm border transition-all ${
+                      selectedSpecies.includes(name)
+                        ? "bg-[#0D9488] text-white border-[#0D9488]"
+                        : "border-slate-200 text-slate-600 hover:border-[#0D9488] hover:text-[#0F766E]"
+                    }`}
+                  >
+                    {name}
+                  </button>
                 ))}
-              </SelectContent>
-            </Select>
-            {activeZonesFromSpecies.size > 0 && filteredRegions.length < REGION_OPTIONS.length && (
-              <p className="text-xs text-[#0F766E]">
-                Showing {filteredRegions.length} regions where your target species are active
-              </p>
+              </div>
+            </div>
+          )}
+
+          {/* Step 5: Notes + submit */}
+          {currentStep === 5 && (
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="description">Notes (optional)</Label>
+                <Textarea
+                  id="description"
+                  placeholder="Any notes about the trip, charter, or plan…"
+                  value={form.description}
+                  onChange={(e) => setForm((f) => ({ ...f, description: e.target.value }))}
+                  rows={4}
+                />
+              </div>
+              {error && <p className="text-sm text-red-600">{error}</p>}
+              <Button
+                type="button"
+                size="lg"
+                className="w-full gap-2"
+                disabled={loading}
+                onClick={handleSubmit}
+              >
+                {loading ? (
+                  <><Loader2 className="h-4 w-4 animate-spin" /> Creating trip…</>
+                ) : (
+                  <>Create Trip Plan <ArrowRight className="h-4 w-4" /></>
+                )}
+              </Button>
+            </div>
+          )}
+
+          {/* Navigation */}
+          <div className="flex items-center justify-between mt-8">
+            <button
+              type="button"
+              onClick={goBack}
+              disabled={currentStep === 1}
+              className="inline-flex items-center gap-1.5 text-sm font-medium text-slate-500 hover:text-slate-700 disabled:opacity-0 disabled:pointer-events-none transition-colors"
+            >
+              <ArrowLeft className="h-4 w-4" />
+              Back
+            </button>
+            {currentStep < 5 && (
+              <button
+                type="button"
+                onClick={goNext}
+                disabled={!canAdvance[currentStep]}
+                className="inline-flex items-center gap-1.5 bg-[#0D9488] hover:bg-[#0F766E] disabled:opacity-40 disabled:cursor-not-allowed text-white font-semibold px-5 py-2.5 rounded-xl transition-colors text-sm"
+              >
+                Next
+                <ArrowRight className="h-4 w-4" />
+              </button>
             )}
           </div>
-
-          <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="startDate">Start date</Label>
-              <Input
-                id="startDate"
-                type="date"
-                value={form.startDate}
-                onChange={(e) => setForm((f) => ({ ...f, startDate: e.target.value }))}
-                className="h-11"
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="endDate">End date</Label>
-              <Input
-                id="endDate"
-                type="date"
-                value={form.endDate}
-                onChange={(e) => setForm((f) => ({ ...f, endDate: e.target.value }))}
-                className="h-11"
-              />
-            </div>
-          </div>
-
-          {/* Target species — filters regions */}
-          <div className="space-y-3">
-            <div className="flex items-center justify-between">
-              <Label>Target species</Label>
-              {selectedSpecies.length > 0 && (
-                <button
-                  type="button"
-                  onClick={clearSpeciesFilter}
-                  className="text-xs text-slate-500 hover:text-slate-700 flex items-center gap-1"
-                >
-                  <X className="h-3 w-3" /> Clear all
-                </button>
-              )}
-            </div>
-            {form.regionSlug && filteredSpecies.length < SPECIES_OPTIONS.length && (
-              <p className="text-xs text-[#0F766E]">
-                Showing {filteredSpecies.length} species active in the selected region
-              </p>
-            )}
-            <div className="flex flex-wrap gap-2">
-              {filteredSpecies.map((name) => (
-                <button
-                  key={name}
-                  type="button"
-                  onClick={() => toggleSpecies(name)}
-                  className={`px-3 py-1.5 rounded-full text-sm border transition-all ${
-                    selectedSpecies.includes(name)
-                      ? "bg-[#0D9488] text-white border-[#0D9488]"
-                      : "border-slate-200 text-slate-600 hover:border-[#0D9488] hover:text-[#0F766E]"
-                  }`}
-                >
-                  {name}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="description">Notes (optional)</Label>
-            <Textarea
-              id="description"
-              placeholder="Any notes about the trip, charter, or plan…"
-              value={form.description}
-              onChange={(e) => setForm((f) => ({ ...f, description: e.target.value }))}
-              rows={3}
-            />
-          </div>
-
-          {error && <p className="text-sm text-red-600">{error}</p>}
-
-          <Button type="submit" size="lg" className="w-full gap-2" disabled={loading}>
-            {loading ? (
-              <><Loader2 className="h-4 w-4 animate-spin" /> Creating trip…</>
-            ) : (
-              <>Create Trip <ArrowRight className="h-4 w-4" /></>
-            )}
-          </Button>
-        </form>
+        </div>
       </div>
     </div>
   );
