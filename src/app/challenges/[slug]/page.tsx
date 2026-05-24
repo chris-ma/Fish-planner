@@ -97,8 +97,13 @@ export default async function ChallengeDetailPage({
   const challenge = CHALLENGES.find((c) => c.slug === slug);
   if (!challenge) notFound();
 
-  const rows = await db.select().from(catchLog).where(eq(catchLog.challengeSlug, slug));
-  const entries = buildEntries(rows, challenge.metric);
+  let entries: RankedEntry[] = [];
+  try {
+    const rows = await db.select().from(catchLog).where(eq(catchLog.challengeSlug, slug));
+    entries = buildEntries(rows, challenge.metric);
+  } catch {
+    // DB unavailable or column missing — render empty leaderboard so the page still loads
+  }
 
   return <ChallengeDetailClient challenge={challenge} initialEntries={entries} />;
 }
