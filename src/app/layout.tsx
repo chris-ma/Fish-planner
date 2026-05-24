@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
 import { Inter, Bebas_Neue } from "next/font/google";
+import { ClerkProvider } from "@clerk/nextjs";
 import "./globals.css";
 import { Footer } from "@/components/layout/Footer";
 import { BottomNav } from "@/components/layout/BottomNav";
+import { Navbar } from "@/components/layout/Navbar";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -24,13 +26,19 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
-  return (
+  const body = (
     <html lang="en" className={`${inter.variable} ${bebasNeue.variable}`}>
       <body>
+        <Navbar />
         <main className="min-h-screen pb-16 md:pb-0">{children}</main>
         <Footer />
         <BottomNav />
       </body>
     </html>
   );
+
+  const key = process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY;
+  if (!key) return body;
+
+  return <ClerkProvider>{body}</ClerkProvider>;
 }

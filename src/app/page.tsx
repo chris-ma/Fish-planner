@@ -116,7 +116,7 @@ export default async function HomePage({
       <div className="max-w-7xl mx-auto px-4 sm:px-6 -mt-8 pb-16 space-y-16">
 
         {/* Seasonal species carousel */}
-        <section>
+        <section className="pt-8 md:pt-0">
           <SpeciesCarousel species={inSeasonSpecies} monthName={MONTH_NAMES_FULL[month]} />
         </section>
 

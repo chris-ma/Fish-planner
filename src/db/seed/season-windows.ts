@@ -433,4 +433,21 @@ export const SEASON_DATA: Record<string, ZoneRatings> = {
     wa_mid_west:     [null, "fair", "fair", "good", "peak", "peak", "peak", "good", "fair", "fair", "fair", "fair", "fair"],
     wa_southwest:    [null, "fair", "fair", "fair", "good", "peak", "peak", "fair", "fair", "fair", "fair", "fair", "fair"],
   },
+  // ── New species ───────────────────────────────────────────────────────────
+  "european-carp": {
+    // Warm months best (warmer water = more active). Cold winter = slow.
+    murray_darling:  [null, "peak", "peak", "good", "fair", "poor", "poor", "poor", "fair", "good", "peak", "peak", "peak"],
+    alpine:          [null, "good", "good", "fair", "fair", "poor", null,   null,   "fair", "good", "peak", "good", "good"],
+    nsw:             [null, "good", "good", "good", "fair", "poor", "poor", "poor", "fair", "good", "good", "peak", "peak"],
+    vic_coast:       [null, "good", "good", "good", "fair", "poor", null,   null,   "fair", "good", "good", "good", "good"],
+    southeast_qld:   [null, "peak", "peak", "good", "fair", "fair", "fair", "fair", "fair", "good", "peak", "peak", "peak"],
+    sa_south:        [null, "good", "good", "fair", "fair", "poor", null,   null,   "fair", "good", "good", "peak", "peak"],
+  },
+  "black-drummer": {
+    // Rock platform species. Year-round but winter-spring peak when feeding heaviest on weed.
+    nsw:             [null, "fair", "fair", "good", "good", "peak", "peak", "peak", "good", "good", "fair", "fair", "fair"],
+    vic_coast:       [null, "fair", "fair", "good", "good", "peak", "peak", "good", "good", "fair", "fair", "fair", "fair"],
+    southeast_qld:   [null, "fair", "fair", "fair", "good", "good", "peak", "good", "fair", "fair", "fair", "fair", "fair"],
+    tas:             [null, "fair", "fair", "good", "good", "peak", "peak", "good", "good", "fair", "fair", "fair", "fair"],
+  },
 };
