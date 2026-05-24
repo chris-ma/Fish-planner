@@ -71,7 +71,7 @@ export function SeasonalCalendar({ rows, highlightMonth, linkRowsTo }: SeasonalC
             <span className="w-4 h-4 rounded bg-emerald-500 inline-block" /> Peak
           </span>
           <span className="flex items-center gap-1.5">
-            <span className="w-4 h-4 rounded bg-[#0D9488] inline-block" /> Good
+            <span className="w-4 h-4 rounded bg-teal-100 border border-teal-300 inline-block" /> Good
           </span>
           <span className="flex items-center gap-1.5">
             <span className="w-4 h-4 rounded bg-slate-300 inline-block" /> Fair
