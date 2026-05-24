@@ -82,6 +82,7 @@ export const gearTemplates = sqliteTable("gear_templates", {
 
 export const trips = sqliteTable("trips", {
   id: text("id").primaryKey(),
+  ownerId: text("owner_id"), // Clerk userId — null for legacy anonymous trips
   title: text("title").notNull(),
   regionId: text("region_id").references(() => regions.id),
   startDate: text("start_date"),

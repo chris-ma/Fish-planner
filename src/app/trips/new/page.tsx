@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, Suspense } from "react";
+import { useState, useMemo, useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { ArrowRight, ArrowLeft, Loader2, X, ChevronLeft, ChevronRight, Plus, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -277,6 +277,14 @@ function NewTripForm() {
     endTime: "12:00",
   });
 
+  type TripSummary = { id: string; title: string; status: string; startDate: string | null; endDate: string | null; createdAt: string };
+  const [myTrips, setMyTrips] = useState<TripSummary[]>([]);
+  useEffect(() => {
+    fetch("/api/trips").then((r) => r.ok ? r.json() : []).then((data) => {
+      if (Array.isArray(data)) setMyTrips(data);
+    }).catch(() => {});
+  }, []);
+
   const [form, setForm] = useState({
     title: "",
     startDate: "",
@@ -455,11 +463,47 @@ function NewTripForm() {
         <div className="absolute bottom-0 left-1/4 w-96 h-64 bg-teal-600/20 rounded-full blur-3xl pointer-events-none" />
         <div className="absolute top-0 right-1/4 w-64 h-64 bg-blue-600/10 rounded-full blur-3xl pointer-events-none" />
         <div className="max-w-2xl mx-auto relative z-10">
-          <p className="text-white/50 text-sm mb-2">No account needed</p>
           <h1 className="text-4xl font-bold text-[#F5F0E8] mb-2">Plan a Trip</h1>
           <p className="text-white/60">Create a shareable workspace for your crew in seconds.</p>
         </div>
       </div>
+
+      {/* My trips */}
+      {myTrips.length > 0 && (
+        <div className="max-w-2xl mx-auto px-4 sm:px-6 pt-8">
+          <h2 className="text-sm font-semibold text-slate-500 uppercase tracking-wide mb-3">Your trips</h2>
+          <div className="flex gap-3 overflow-x-auto pb-2 -mx-1 px-1">
+            {myTrips.map((trip) => (
+              <a
+                key={trip.id}
+                href={`/trips/${trip.id}`}
+                className="shrink-0 w-48 bg-white rounded-xl border border-slate-200 p-3.5 hover:border-[#0D9488] hover:shadow-sm transition-all group"
+              >
+                <p className="font-semibold text-[#040F1C] text-sm leading-tight line-clamp-2 group-hover:text-[#0D9488] transition-colors">
+                  {trip.title}
+                </p>
+                {(trip.startDate || trip.endDate) && (
+                  <p className="text-xs text-slate-400 mt-1.5">
+                    {trip.startDate ? new Date(trip.startDate + "T12:00:00").toLocaleDateString("en-AU", { day: "numeric", month: "short", year: "numeric" }) : ""}
+                    {trip.endDate && trip.startDate ? " – " : ""}
+                    {trip.endDate ? new Date(trip.endDate + "T12:00:00").toLocaleDateString("en-AU", { day: "numeric", month: "short" }) : ""}
+                  </p>
+                )}
+                <span className={`inline-block mt-2 text-[10px] font-semibold px-2 py-0.5 rounded-full uppercase tracking-wide ${
+                  trip.status === "confirmed" ? "bg-green-50 text-green-700" :
+                  trip.status === "active" ? "bg-teal-50 text-teal-700" :
+                  trip.status === "completed" ? "bg-slate-100 text-slate-500" :
+                  "bg-amber-50 text-amber-700"
+                }`}>
+                  {trip.status}
+                </span>
+              </a>
+            ))}
+          </div>
+          <div className="border-t border-slate-200 mt-6 mb-2" />
+          <p className="text-sm font-semibold text-slate-500 uppercase tracking-wide mb-0">Create new</p>
+        </div>
+      )}
 
       <div className="max-w-2xl mx-auto px-4 sm:px-6 py-10">
         <div className="bg-[#F5F0E8] rounded-2xl p-6 shadow-sm border border-slate-100">

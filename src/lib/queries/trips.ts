@@ -25,6 +25,7 @@ export async function getTripWithRegion(id: string) {
 
 export async function createTrip(data: {
   title: string;
+  ownerId?: string;
   regionId?: string;
   startDate?: string;
   endDate?: string;
@@ -36,6 +37,7 @@ export async function createTrip(data: {
 
   await db.insert(trips).values({
     id,
+    ownerId: data.ownerId ?? null,
     title: data.title,
     regionId: data.regionId ?? null,
     startDate: data.startDate ?? null,
@@ -49,6 +51,14 @@ export async function createTrip(data: {
   });
 
   return { id, shareCode };
+}
+
+export async function getTripsByOwner(ownerId: string) {
+  return db
+    .select()
+    .from(trips)
+    .where(eq(trips.ownerId, ownerId))
+    .orderBy(trips.createdAt);
 }
 
 export async function getTripBookings(tripId: string) {
