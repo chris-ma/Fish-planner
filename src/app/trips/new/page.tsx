@@ -2,6 +2,8 @@
 
 import { useState, useMemo, useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { useAuth } from "@clerk/nextjs";
+import { AuthPrompt } from "@/components/ui/AuthPrompt";
 import { ArrowRight, ArrowLeft, Loader2, X, ChevronLeft, ChevronRight, Plus, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -912,6 +914,20 @@ function NewTripForm() {
 }
 
 export default function NewTripPage() {
+  const { isSignedIn, isLoaded } = useAuth();
+
+  if (!isLoaded) return null;
+
+  if (!isSignedIn) {
+    return (
+      <AuthPrompt
+        icon="fish"
+        heading="Plan a Fishing Trip"
+        description="Log in to build your trip plan, organise your crew, and track every detail from gear to bookings."
+      />
+    );
+  }
+
   return (
     <Suspense fallback={null}>
       <NewTripForm />
