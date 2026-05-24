@@ -1,9 +1,7 @@
 import Link from "next/link";
 import dynamic from "next/dynamic";
-import { Anchor, Plus } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Anchor } from "lucide-react";
 
-// Load auth UI client-side only — useAuth() cannot run during SSR without ClerkProvider
 const NavbarAuth = dynamic(() => import("./NavbarAuth").then((m) => m.NavbarAuth), {
   ssr: false,
   loading: () => <div className="w-8 h-8 rounded-full bg-white/10" />,
@@ -11,7 +9,7 @@ const NavbarAuth = dynamic(() => import("./NavbarAuth").then((m) => m.NavbarAuth
 
 export function Navbar() {
   return (
-    <header className="sticky top-0 z-40 w-full border-b border-white/10 bg-navy-900/95 backdrop-blur supports-[backdrop-filter]:bg-navy-900/80">
+    <header className="absolute top-0 left-0 right-0 z-40 w-full">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 flex h-14 items-center justify-between">
         <Link href="/" className="flex items-center gap-2.5">
           <span className="flex items-center justify-center w-8 h-8 rounded-lg bg-ocean-500">
@@ -37,16 +35,7 @@ export function Navbar() {
           </Link>
         </nav>
 
-        <div className="flex items-center gap-3">
-          <Link href="/trips/new">
-            <Button size="sm" className="gap-1.5 bg-ocean-500 hover:bg-ocean-600 text-white border-0">
-              <Plus className="h-4 w-4" />
-              <span className="hidden sm:inline">Plan a Trip</span>
-            </Button>
-          </Link>
-
-          <NavbarAuth />
-        </div>
+        <NavbarAuth />
       </div>
     </header>
   );
