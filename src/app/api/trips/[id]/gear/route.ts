@@ -1,8 +1,19 @@
 import { NextResponse } from "next/server";
+import { auth } from "@clerk/nextjs/server";
+import { clerkClient } from "@clerk/nextjs/server";
 import { getTripById, getTripChecklist } from "@/lib/queries/trips";
 import { db } from "@/db";
 import { checklistItems } from "@/db/schema";
 import { nanoid } from "nanoid";
+
+interface MySetup {
+  rodType?: string;
+  reel?: string;
+  lineWeight?: string;
+  leader?: string;
+  techniques?: string[];
+  notes?: string;
+}
 import { GEAR_TEMPLATES } from "@/db/seed/gear-templates";
 
 const SPECIES_TRIP_TYPE: Record<string, string> = {
@@ -76,6 +87,32 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
       for (const item of newItems) {
         await db.insert(checklistItems).values(item).onConflictDoNothing();
       }
+    }
+
+    // Inject user's personal tackle setup as the first item
+    try {
+      const { userId } = await auth();
+      if (userId) {
+        const client = await clerkClient();
+        const clerkUser = await client.users.getUser(userId);
+        const setup = clerkUser.unsafeMetadata?.mySetup as MySetup | undefined;
+        if (setup && (setup.rodType || setup.reel || setup.lineWeight)) {
+          const label = [setup.rodType, setup.reel, setup.lineWeight].filter(Boolean).join(" · ");
+          await db.insert(checklistItems).values({
+            id: nanoid(),
+            tripId,
+            category: "tackle",
+            itemName: `My setup: ${label}`,
+            quantity: 1,
+            isCompleted: false,
+            fromTemplate: false,
+            assignedTo: null,
+            createdAt: new Date().toISOString(),
+          });
+        }
+      }
+    } catch {
+      // Non-critical — proceed without user setup item
     }
 
     const items = await getTripChecklist(tripId);

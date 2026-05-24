@@ -4,6 +4,8 @@ import { VideoParallaxHero } from "@/components/layout/VideoParallaxHero";
 import { IntentSearch } from "@/components/discovery/IntentSearch";
 import { SpeciesCarousel } from "@/components/home/SpeciesCarousel";
 import { AustraliaMap } from "@/components/home/AustraliaMap";
+import { FeaturedFishClient } from "@/components/home/FeaturedFishClient";
+import { NearbyRegionsClient } from "@/components/home/NearbyRegionsClient";
 import { getTopRegionsForMonth } from "@/lib/queries/regions";
 import { getInSeasonSpecies } from "@/lib/queries/species";
 import { currentMonth, MONTH_NAMES_FULL } from "@/lib/utils/season";
@@ -120,10 +122,16 @@ export default async function HomePage({
           <SpeciesCarousel species={inSeasonSpecies} monthName={MONTH_NAMES_FULL[month]} />
         </section>
 
+        {/* Featured fish — personalized for logged-in users */}
+        <FeaturedFishClient month={month} monthName={MONTH_NAMES_FULL[month]} />
+
         {/* Top Destinations — interactive map */}
         <section>
           <AustraliaMap regions={topRegions} monthName={MONTH_NAMES_FULL[month]} />
         </section>
+
+        {/* Nearby regions — personalized for logged-in users with location */}
+        <NearbyRegionsClient month={month} />
 
         {/* Bread & butter species */}
         <section>

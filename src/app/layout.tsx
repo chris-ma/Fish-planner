@@ -68,5 +68,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   const key = process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY;
   if (!key) return body;
 
-  return <ClerkProvider appearance={clerkAppearance}>{body}</ClerkProvider>;
+  return (
+    <ClerkProvider
+      appearance={clerkAppearance}
+      afterSignInUrl="/onboarding"
+      afterSignUpUrl="/onboarding"
+    >
+      {body}
+    </ClerkProvider>
+  );
 }
