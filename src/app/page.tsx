@@ -10,6 +10,7 @@ import { getTopRegionsForMonth } from "@/lib/queries/regions";
 import { getInSeasonSpecies } from "@/lib/queries/species";
 import { currentMonth, MONTH_NAMES_FULL } from "@/lib/utils/season";
 import { getSpeciesImage, getZoneImage } from "@/lib/images";
+import { CHALLENGES } from "@/lib/challenges";
 
 const TRIP_FEATURES = [
   {
@@ -55,38 +56,6 @@ const BREAD_AND_BUTTER = [
   { slug: "black-drummer",       commonName: "Black Drummer",    category: "inshore" },
 ];
 
-const CHALLENGES = [
-  {
-    title: "3 Meter Flatty",
-    description: "The biggest flathead caught and documented. Platycephalus fuscus grows to 120cm — your PB is your target.",
-    image: "https://images.pexels.com/photos/3048522/pexels-photo-3048522.jpeg?auto=compress&cs=tinysrgb&w=600",
-  },
-  {
-    title: "4lb Club",
-    description: "The heaviest fish on 4lb fluorocarbon leader. Finesse, patience, and a lot of luck required.",
-    image: "https://images.pexels.com/photos/5200238/pexels-photo-5200238.jpeg?auto=compress&cs=tinysrgb&w=600",
-  },
-  {
-    title: "The Dumbest Catch",
-    description: "Catch a legal fish on something that has no right working — bread, a rubber duck, a spoon from the camp kitchen.",
-    image: "https://images.pexels.com/photos/994605/pexels-photo-994605.jpeg?auto=compress&cs=tinysrgb&w=600",
-  },
-  {
-    title: "Grand Slam",
-    description: "Most different species in a single session. Estuary, inshore, reef — the angler with the longest list wins.",
-    image: "https://images.pexels.com/photos/2156311/pexels-photo-2156311.jpeg?auto=compress&cs=tinysrgb&w=600",
-  },
-  {
-    title: "Catch & Cook",
-    description: "Keep a legal feed and cook it on the water — open fire, camp stove, or BBQ on the back of the boat.",
-    image: "https://images.pexels.com/photos/1680779/pexels-photo-1680779.jpeg?auto=compress&cs=tinysrgb&w=600",
-  },
-  {
-    title: "Mud Marlin",
-    description: "The biggest European carp you can find. Invasive and destructive, but a hell of a fight. Kill it, eat it, compost it.",
-    image: "https://images.pexels.com/photos/1461471/pexels-photo-1461471.jpeg?auto=compress&cs=tinysrgb&w=600",
-  },
-];
 
 export default async function HomePage({
   searchParams,
@@ -183,33 +152,32 @@ export default async function HomePage({
             Self-imposed rules. No leaderboard, just bragging rights.
           </p>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-            {CHALLENGES.map(({ title, description, image }) => (
-              <div
-                key={title}
-                className="relative rounded-2xl overflow-hidden aspect-[4/5] group"
+            {CHALLENGES.map(({ slug, title, description, image }) => (
+              <Link
+                key={slug}
+                href={`/challenges/${slug}`}
+                className="relative rounded-2xl overflow-hidden aspect-[4/5] group block"
               >
-                {/* Photo background */}
                 <div
                   className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-105"
                   style={{ backgroundImage: `url(${image})` }}
                 />
-                {/* Brand teal top accent bar */}
                 <div className="absolute top-0 left-0 right-0 h-1 bg-[#0D9488]" />
-                {/* Dark gradient at bottom */}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent" />
-                {/* Text at bottom */}
                 <div className="absolute bottom-0 left-0 right-0 p-3 md:p-4 z-10">
                   <p className="font-bold text-white text-sm mb-1 leading-tight">{title}</p>
                   <p className="text-white/65 text-[11px] leading-relaxed line-clamp-3">{description}</p>
-                  <Link
-                    href="/trips/new"
-                    className="mt-2 inline-block text-[#0D9488] text-[10px] font-semibold hover:text-teal-300 transition-colors"
-                  >
-                    Log a trip →
-                  </Link>
+                  <span className="mt-2 inline-block text-[#0D9488] text-[10px] font-semibold group-hover:text-teal-300 transition-colors">
+                    View rankings →
+                  </span>
                 </div>
-              </div>
+              </Link>
             ))}
+          </div>
+          <div className="mt-4 text-right">
+            <Link href="/challenges" className="text-[#0D9488] text-sm font-semibold hover:underline">
+              View all challenges →
+            </Link>
           </div>
         </section>
 

@@ -91,6 +91,11 @@ export function Footer() {
                   Bucket List
                 </Link>
               </li>
+              <li>
+                <Link href="/challenges" className="hover:text-white/90 transition-colors">
+                  Challenges
+                </Link>
+              </li>
             </ul>
           </div>
 

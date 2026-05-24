@@ -19,6 +19,7 @@ async function ensureTable() {
       gear_used TEXT,
       photo_url TEXT,
       notes TEXT,
+      challenge_slug TEXT,
       created_at TEXT NOT NULL
     )
   `);
@@ -43,7 +44,7 @@ export async function POST(request: Request) {
   try {
     await ensureTable();
     const body = await request.json();
-    const { speciesSlug, catcherName, caughtAt, location, weatherConditions, tidePhase, lengthCm, weightKg, gearUsed, photoUrl, notes } = body;
+    const { speciesSlug, catcherName, caughtAt, location, weatherConditions, tidePhase, lengthCm, weightKg, gearUsed, photoUrl, notes, challengeSlug } = body;
     if (!speciesSlug || !caughtAt) {
       return NextResponse.json({ error: "speciesSlug and caughtAt are required" }, { status: 400 });
     }
@@ -60,6 +61,7 @@ export async function POST(request: Request) {
       gearUsed: gearUsed || null,
       photoUrl: photoUrl || null,
       notes: notes || null,
+      challengeSlug: challengeSlug || null,
       createdAt: new Date().toISOString(),
     };
     await db.insert(catchLog).values(row);

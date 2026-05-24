@@ -188,6 +188,7 @@ export const catchLog = sqliteTable("catch_log", {
   gearUsed:          text("gear_used"),
   photoUrl:          text("photo_url"),
   notes:             text("notes"),
+  challengeSlug:     text("challenge_slug"),      // "3-meter-flatty" | "grand-slam" | ...
   createdAt:         text("created_at").notNull().$defaultFn(() => new Date().toISOString()),
 });
 
