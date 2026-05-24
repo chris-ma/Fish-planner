@@ -1,11 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useUser } from "@clerk/nextjs";
 import Link from "next/link";
 import {
   MapPin, Mail, User, Settings, ChevronLeft, Check, Fish, Package,
-  Pencil, X, Search, ChevronDown, ChevronUp
+  Pencil, X, Search, ChevronDown, ChevronUp, Loader2, Navigation
 } from "lucide-react";
 import { getSpeciesImage } from "@/lib/images";
 
@@ -26,6 +26,14 @@ interface MySetup {
   notes?: string;
 }
 
+interface GeocodeResult {
+  name: string;
+  admin1?: string;
+  country?: string;
+  latitude: number;
+  longitude: number;
+}
+
 interface ProfileClientProps {
   userId: string;
   email: string;
@@ -33,6 +41,7 @@ interface ProfileClientProps {
   lastName: string;
   imageUrl: string;
   location: string;
+  locationCoords: { lat: number; lng: number } | null;
   dreamFish: string;
   mySetup: object | null;
   allSpecies: Species[];
@@ -56,6 +65,7 @@ export function ProfileClient({
   lastName,
   imageUrl,
   location: initialLocation,
+  locationCoords: initialCoords,
   dreamFish: initialDreamFish,
   mySetup: initialMySetup,
   allSpecies,
@@ -63,9 +73,72 @@ export function ProfileClient({
   const { user } = useUser();
 
   // Location
-  const [location, setLocation] = useState(initialLocation);
+  const [locationInput, setLocationInput] = useState(initialLocation);
+  const [locationCoords, setLocationCoords] = useState<{ lat: number; lng: number } | null>(initialCoords);
   const [locationSaved, setLocationSaved] = useState(false);
   const [locationSaving, setLocationSaving] = useState(false);
+  const [suggestions, setSuggestions] = useState<GeocodeResult[]>([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const [detectingIP, setDetectingIP] = useState(false);
+  const suggestionRef = useRef<HTMLDivElement>(null);
+
+  // IP-based location detection on mount (only if no location is set yet)
+  useEffect(() => {
+    if (initialLocation) return;
+    setDetectingIP(true);
+    fetch("https://freeipapi.com/api/json")
+      .then((r) => r.json())
+      .then((data) => {
+        if (data.cityName && data.cityName !== "-") {
+          const label = [data.cityName, data.regionName].filter(Boolean).join(", ");
+          setLocationInput(label);
+          setLocationCoords({ lat: data.latitude, lng: data.longitude });
+        }
+      })
+      .catch(() => {})
+      .finally(() => setDetectingIP(false));
+  }, []);
+
+  // Debounced geocoding search
+  useEffect(() => {
+    const input = locationInput.trim();
+    if (input.length < 2) { setSuggestions([]); return; }
+    const timer = setTimeout(async () => {
+      try {
+        const res = await fetch(
+          `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(input)}&count=5`
+        );
+        const data = await res.json();
+        setSuggestions(data.results ?? []);
+      } catch {
+        setSuggestions([]);
+      }
+    }, 350);
+    return () => clearTimeout(timer);
+  }, [locationInput]);
+
+  function selectSuggestion(result: GeocodeResult) {
+    const label = [result.name, result.admin1, result.country].filter(Boolean).join(", ");
+    setLocationInput(label);
+    setLocationCoords({ lat: result.latitude, lng: result.longitude });
+    setSuggestions([]);
+    setShowSuggestions(false);
+  }
+
+  async function detectLocation() {
+    setDetectingIP(true);
+    try {
+      const res = await fetch("https://freeipapi.com/api/json");
+      const data = await res.json();
+      if (data.cityName && data.cityName !== "-") {
+        const label = [data.cityName, data.regionName].filter(Boolean).join(", ");
+        setLocationInput(label);
+        setLocationCoords({ lat: data.latitude, lng: data.longitude });
+        setSuggestions([]);
+      }
+    } catch {}
+    setDetectingIP(false);
+  }
 
   // Dream Fish
   const [dreamFish, setDreamFish] = useState(initialDreamFish);
@@ -96,7 +169,9 @@ export function ProfileClient({
   async function saveLocation() {
     if (!user) return;
     setLocationSaving(true);
-    await user.update({ unsafeMetadata: { ...user.unsafeMetadata, location } });
+    await user.update({
+      unsafeMetadata: { ...user.unsafeMetadata, location: locationInput, locationCoords },
+    });
     setLocationSaving(false);
     setLocationSaved(true);
     setTimeout(() => setLocationSaved(false), 2500);
@@ -175,21 +250,68 @@ export function ProfileClient({
                 <p className="text-[10px] font-semibold text-slate-400 uppercase tracking-wide">Home Waters</p>
                 <SavedBadge saved={locationSaved} />
               </div>
-              <div className="flex gap-2">
+
+              {/* Input + save row */}
+              <div className="relative">
                 <input
-                  value={location}
-                  onChange={(e) => setLocation(e.target.value)}
-                  placeholder="e.g. Sydney, NSW"
-                  className="flex-1 text-sm bg-slate-50 border border-slate-200 rounded-lg px-3 py-1.5 text-[#040F1C] focus:outline-none focus:border-[#0D9488] focus:ring-1 focus:ring-[#0D9488]"
+                  value={locationInput}
+                  onChange={(e) => { setLocationInput(e.target.value); setShowSuggestions(true); setLocationCoords(null); }}
+                  onFocus={() => setShowSuggestions(true)}
+                  onBlur={() => setTimeout(() => setShowSuggestions(false), 150)}
+                  placeholder={detectingIP ? "Detecting your location…" : "Search suburb, town or city"}
+                  disabled={detectingIP}
+                  className="w-full text-sm bg-slate-50 border border-slate-200 rounded-lg px-3 py-1.5 pr-8 text-[#040F1C] focus:outline-none focus:border-[#0D9488] focus:ring-1 focus:ring-[#0D9488] disabled:opacity-50"
                 />
-                <button
-                  onClick={saveLocation}
-                  disabled={locationSaving}
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#0D9488] text-white text-xs font-semibold hover:bg-[#0F766E] transition-colors disabled:opacity-60"
-                >
-                  {locationSaving ? "Saving…" : "Save"}
-                </button>
+                {detectingIP && (
+                  <Loader2 className="absolute right-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-slate-400 animate-spin" />
+                )}
+
+                {/* Autocomplete dropdown */}
+                {showSuggestions && suggestions.length > 0 && (
+                  <div
+                    ref={suggestionRef}
+                    className="absolute top-full left-0 right-0 z-20 mt-1 bg-white border border-slate-200 rounded-xl shadow-lg overflow-hidden"
+                  >
+                    {suggestions.map((s, i) => (
+                      <button
+                        key={i}
+                        onMouseDown={() => selectSuggestion(s)}
+                        className="w-full text-left px-3 py-2 text-sm text-[#040F1C] hover:bg-slate-50 flex items-center gap-2 border-b border-slate-100 last:border-0"
+                      >
+                        <MapPin className="h-3 w-3 text-[#0D9488] shrink-0" />
+                        <span className="truncate">
+                          {[s.name, s.admin1, s.country].filter(Boolean).join(", ")}
+                        </span>
+                      </button>
+                    ))}
+                  </div>
+                )}
               </div>
+
+              {/* Detect + coord confirmation row */}
+              <div className="flex items-center justify-between mt-2">
+                <button
+                  onClick={detectLocation}
+                  disabled={detectingIP}
+                  className="flex items-center gap-1 text-[10px] text-[#0D9488] font-semibold hover:underline disabled:opacity-40"
+                >
+                  <Navigation className="h-3 w-3" />
+                  Detect my location
+                </button>
+                {locationCoords && (
+                  <span className="text-[10px] text-slate-400 flex items-center gap-1">
+                    <Check className="h-3 w-3 text-[#0D9488]" /> Geocoded
+                  </span>
+                )}
+              </div>
+
+              <button
+                onClick={saveLocation}
+                disabled={locationSaving || !locationInput.trim()}
+                className="mt-2 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#0D9488] text-white text-xs font-semibold hover:bg-[#0F766E] transition-colors disabled:opacity-60"
+              >
+                {locationSaving ? "Saving…" : "Save"}
+              </button>
             </div>
           </div>
 
