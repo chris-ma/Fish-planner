@@ -2,8 +2,8 @@ import Link from "next/link";
 import { Compass, Fish, Package, Map, Users, ArrowRight } from "lucide-react";
 import { VideoParallaxHero } from "@/components/layout/VideoParallaxHero";
 import { IntentSearch } from "@/components/discovery/IntentSearch";
-import { RegionCard } from "@/components/discovery/RegionCard";
 import { SpeciesCarousel } from "@/components/home/SpeciesCarousel";
+import { AustraliaMap } from "@/components/home/AustraliaMap";
 import { getTopRegionsForMonth } from "@/lib/queries/regions";
 import { getInSeasonSpecies } from "@/lib/queries/species";
 import { currentMonth, MONTH_NAMES_FULL } from "@/lib/utils/season";
@@ -56,40 +56,34 @@ const BREAD_AND_BUTTER = [
 
 const CHALLENGES = [
   {
-    emoji: "🪄",
-    title: "The Dumb Lure",
-    description: "Catch a legal fish on the most ridiculous lure in your tackle box. Bonus points for a selfie.",
-    colour: "from-purple-700 to-purple-900",
+    title: "3 Meter Flatty",
+    description: "The biggest flathead caught and documented. Platycephalus fuscus grows to 120cm — your PB is your target.",
+    image: "https://images.pexels.com/photos/3048522/pexels-photo-3048522.jpeg?auto=compress&cs=tinysrgb&w=600",
   },
   {
-    emoji: "🎣",
-    title: "4lb Leader",
-    description: "Target your bucket list species on 4lb fluorocarbon only. Patience not included.",
-    colour: "from-amber-700 to-amber-900",
+    title: "4lb Club",
+    description: "The heaviest fish on 4lb fluorocarbon leader. Finesse, patience, and a lot of luck required.",
+    image: "https://images.pexels.com/photos/5200238/pexels-photo-5200238.jpeg?auto=compress&cs=tinysrgb&w=600",
   },
   {
-    emoji: "🌅",
-    title: "Dawn Patrol",
-    description: "First cast before sunrise. If you're not rigged in the dark, you're too late.",
-    colour: "from-rose-700 to-rose-900",
+    title: "The Dumbest Catch",
+    description: "Catch a legal fish on something that has no right working — bread, a rubber duck, a spoon from the camp kitchen.",
+    image: "https://images.pexels.com/photos/994605/pexels-photo-994605.jpeg?auto=compress&cs=tinysrgb&w=600",
   },
   {
-    emoji: "🎯",
     title: "Grand Slam",
-    description: "Three different species in a single session. One estuary species counts double.",
-    colour: "from-teal-700 to-teal-900",
+    description: "Most different species in a single session. Estuary, inshore, reef — the angler with the longest list wins.",
+    image: "https://images.pexels.com/photos/2156311/pexels-photo-2156311.jpeg?auto=compress&cs=tinysrgb&w=600",
   },
   {
-    emoji: "🍳",
     title: "Catch & Cook",
-    description: "Keep a legal feed and cook it right there — fire, camp stove, or BBQ on the boat.",
-    colour: "from-green-700 to-green-900",
+    description: "Keep a legal feed and cook it on the water — open fire, camp stove, or BBQ on the back of the boat.",
+    image: "https://images.pexels.com/photos/1680779/pexels-photo-1680779.jpeg?auto=compress&cs=tinysrgb&w=600",
   },
   {
-    emoji: "📵",
-    title: "Off the Grid",
-    description: "No sounder, no GPS, no fishing apps. Old school navigation and local knowledge only.",
-    colour: "from-slate-700 to-slate-900",
+    title: "Mud Marlin",
+    description: "The biggest European carp you can find. Invasive and destructive, but a hell of a fight. Kill it, eat it, compost it.",
+    image: "https://images.pexels.com/photos/1461471/pexels-photo-1461471.jpeg?auto=compress&cs=tinysrgb&w=600",
   },
 ];
 
@@ -127,21 +121,9 @@ export default async function HomePage({
           <SpeciesCarousel species={inSeasonSpecies} monthName={MONTH_NAMES_FULL[month]} />
         </section>
 
-        {/* Top Destinations This Month */}
+        {/* Top Destinations — interactive map */}
         <section>
-          <div className="flex items-center justify-between mb-5">
-            <h2 className="text-2xl font-bold text-[#040F1C]">Top Destinations — {MONTH_NAMES_FULL[month]}</h2>
-          </div>
-
-          {topRegions.length > 0 ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-              {topRegions.map((region) => (
-                <RegionCard key={region.id} region={region} />
-              ))}
-            </div>
-          ) : (
-            <p className="text-slate-500 py-8 text-center">No region data loaded yet.</p>
-          )}
+          <AustraliaMap regions={topRegions} monthName={MONTH_NAMES_FULL[month]} />
         </section>
 
         {/* Bread & butter species */}
@@ -185,29 +167,39 @@ export default async function HomePage({
 
         {/* Fun challenges */}
         <section>
-          <div className="mb-2">
-            <h2 className="text-2xl font-bold text-[#040F1C]">Challenge yourself</h2>
+          <div className="mb-4">
+            <div className="h-1 w-12 bg-[#0D9488] rounded mb-3" />
+            <h2 className="text-2xl font-bold text-[#0D9488]">Challenge yourself</h2>
           </div>
           <p className="text-sm text-slate-500 mb-6 max-w-2xl">
             Self-imposed rules. No leaderboard, just bragging rights.
           </p>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-            {CHALLENGES.map(({ emoji, title, description, colour }) => (
+            {CHALLENGES.map(({ title, description, image }) => (
               <div
                 key={title}
-                className={`relative rounded-2xl overflow-hidden bg-gradient-to-br ${colour} p-5 flex flex-col gap-3 min-h-[160px]`}
+                className="relative rounded-2xl overflow-hidden aspect-[4/5] group"
               >
-                <span className="text-4xl leading-none">{emoji}</span>
-                <div className="flex-1">
-                  <p className="font-bold text-white text-sm mb-1">{title}</p>
-                  <p className="text-white/65 text-xs leading-relaxed">{description}</p>
+                {/* Photo background */}
+                <div
+                  className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-105"
+                  style={{ backgroundImage: `url(${image})` }}
+                />
+                {/* Brand teal top accent bar */}
+                <div className="absolute top-0 left-0 right-0 h-1 bg-[#0D9488]" />
+                {/* Dark gradient at bottom */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent" />
+                {/* Text at bottom */}
+                <div className="absolute bottom-0 left-0 right-0 p-3 md:p-4 z-10">
+                  <p className="font-bold text-white text-sm mb-1 leading-tight">{title}</p>
+                  <p className="text-white/65 text-[11px] leading-relaxed line-clamp-3">{description}</p>
+                  <Link
+                    href="/trips/new"
+                    className="mt-2 inline-block text-[#0D9488] text-[10px] font-semibold hover:text-teal-300 transition-colors"
+                  >
+                    Log a trip →
+                  </Link>
                 </div>
-                <Link
-                  href="/trips/new"
-                  className="self-end text-white/50 hover:text-white text-[10px] font-medium transition-colors"
-                >
-                  Log a trip →
-                </Link>
               </div>
             ))}
           </div>

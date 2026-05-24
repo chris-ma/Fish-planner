@@ -26,12 +26,13 @@ export function SpeciesCarousel({ species, monthName }: SpeciesCarouselProps) {
 
   return (
     <div>
-      <div className="mb-2">
-        <h2 className="text-2xl font-bold text-[#040F1C]">On the bite in {monthName}</h2>
+      <div className="mb-4">
+        <div className="h-1 w-12 bg-[#0D9488] rounded mb-3" />
+        <h2 className="text-3xl font-bold text-[#040F1C]">On the bite in {monthName}</h2>
+        <p className="text-sm text-slate-500 mt-1 max-w-2xl">
+          Species at peak or good season this month — click to explore.
+        </p>
       </div>
-      <p className="text-sm text-slate-500 mb-5 max-w-2xl">
-        Species at peak or good season this month — click to explore.
-      </p>
 
       <div className="relative overflow-hidden group">
         {/* Left fade */}
