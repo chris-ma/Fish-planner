@@ -44,14 +44,13 @@ const TRIP_FEATURES = [
 
 const BREAD_AND_BUTTER = [
   { slug: "bream",               commonName: "Bream",            category: "estuary" },
-  { slug: "black-bream",         commonName: "Black Bream",      category: "estuary" },
-  { slug: "flathead",            commonName: "Flathead",         category: "inshore" },
+  { slug: "flathead",            commonName: "Flathead",         category: "estuary" },
   { slug: "whiting",             commonName: "Whiting",          category: "estuary" },
   { slug: "king-george-whiting", commonName: "KG Whiting",       category: "inshore" },
   { slug: "australian-bass",     commonName: "Australian Bass",  category: "freshwater" },
-  { slug: "luderick",            commonName: "Luderick",         category: "estuary" },
   { slug: "tailor",              commonName: "Tailor",           category: "inshore" },
   { slug: "mulloway",            commonName: "Mulloway",         category: "estuary" },
+  { slug: "black-drummer",       commonName: "Black Drummer",    category: "inshore" },
 ];
 
 const CHALLENGES = [
