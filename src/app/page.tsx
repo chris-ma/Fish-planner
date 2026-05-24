@@ -136,7 +136,8 @@ export default async function HomePage({
         {/* Bread & butter species */}
         <section>
           <div className="mb-2">
-            <h2 className="text-2xl font-bold text-[#040F1C]">The bread &amp; butter</h2>
+            <div className="h-1 w-12 bg-[#0D9488] rounded mb-3" />
+            <h2 className="text-2xl font-bold text-[#0D9488]">The bread &amp; butter</h2>
           </div>
           <p className="text-sm text-slate-500 mb-5 max-w-2xl">
             The species every Aussie angler should tick off.{" "}
@@ -214,7 +215,8 @@ export default async function HomePage({
 
         {/* Section A: What's in a trip plan */}
         <section>
-          <h2 className="text-2xl font-bold text-[#040F1C] mb-2">
+          <div className="h-1 w-12 bg-[#0D9488] rounded mb-3" />
+          <h2 className="text-2xl font-bold text-[#0D9488] mb-2">
             Everything your fishing trip needs in one shared plan.
           </h2>
           <p className="text-sm text-slate-500 mb-6 max-w-2xl">

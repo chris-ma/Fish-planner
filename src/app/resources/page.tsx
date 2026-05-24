@@ -215,7 +215,8 @@ export default function ResourcesPage() {
 
         {/* National resources */}
         <div>
-          <h2 className="text-xl font-bold text-slate-900 mb-4">National & Federal Resources</h2>
+          <div className="h-1 w-12 bg-[#0D9488] rounded mb-3" />
+          <h2 className="text-xl font-bold text-[#0D9488] mb-4">National & Federal Resources</h2>
           <div className="divide-y border rounded-2xl bg-[#F5F0E8]">
             {NATIONAL.map((item) => {
               const Icon = item.icon;
