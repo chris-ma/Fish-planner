@@ -243,9 +243,24 @@ export default function ChallengeDetailClient({
         <section>
           <div className="mb-5">
             <div className="h-1 w-12 bg-[#0D9488] rounded mb-3" />
-            <h2 className="text-xl font-bold text-[#0D9488]">Log Your Entry</h2>
+            <h2 className="text-xl font-bold text-[#0D9488]">
+              {challenge.dataSource === "bucket_list" ? "How to Enter" : "Log Your Entry"}
+            </h2>
           </div>
 
+          {challenge.dataSource === "bucket_list" ? (
+            <div className="bg-slate-50 border border-slate-200 rounded-2xl p-6 space-y-3 text-center">
+              <p className="text-slate-600 text-sm">
+                This leaderboard updates automatically from your bucket list catches — no separate submission needed.
+              </p>
+              <Link
+                href="/bucket-list"
+                className="inline-block bg-[#0D9488] hover:bg-[#0F766E] text-white font-semibold py-2.5 px-6 rounded-xl text-sm transition-colors"
+              >
+                Go to my Bucket List →
+              </Link>
+            </div>
+          ) : (
           <form
             onSubmit={handleSubmit}
             className="bg-white border border-slate-200 rounded-2xl p-6 space-y-4"
@@ -420,6 +435,7 @@ export default function ChallengeDetailClient({
               {submitting ? "Submitting…" : "Submit Entry"}
             </button>
           </form>
+          )}
         </section>
       </div>
     </div>

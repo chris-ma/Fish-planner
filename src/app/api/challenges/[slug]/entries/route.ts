@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { db } from "@/db";
 import { catchLog } from "@/db/schema";
-import { eq } from "drizzle-orm";
+import { and, eq, isNull } from "drizzle-orm";
 import { CHALLENGES } from "@/lib/challenges";
 
 export const dynamic = "force-dynamic";
@@ -28,10 +28,17 @@ export async function GET(
   const challenge = CHALLENGES.find((c) => c.slug === slug);
   if (!challenge) return NextResponse.json({ error: "Challenge not found" }, { status: 404 });
 
+  // bucket_list challenges pull from existing bucket list catches rather than manual submissions
   const rows = await db
     .select()
     .from(catchLog)
-    .where(eq(catchLog.challengeSlug, slug));
+    .where(
+      challenge.dataSource === "bucket_list"
+        ? challenge.speciesSlug
+          ? eq(catchLog.speciesSlug, challenge.speciesSlug)
+          : isNull(catchLog.challengeSlug)
+        : eq(catchLog.challengeSlug, slug)
+    );
 
   let entries: RankedEntry[] = [];
 

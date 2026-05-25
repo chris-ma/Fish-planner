@@ -1,7 +1,7 @@
 import { db } from "@/db";
 import { catchLog } from "@/db/schema";
-import { eq } from "drizzle-orm";
-import { CHALLENGES, ChallengeMetric } from "@/lib/challenges";
+import { eq, isNull } from "drizzle-orm";
+import { CHALLENGES, ChallengeDataSource, ChallengeMetric } from "@/lib/challenges";
 import ChallengesIndexClient from "./ChallengesIndexClient";
 
 export const dynamic = "force-dynamic";
@@ -11,10 +11,18 @@ type Leader = { catcherName: string; metric: number; unit: string } | null;
 async function computeLeaderAndCount(
   slug: string,
   metric: ChallengeMetric,
-  unit: string | null
+  unit: string | null,
+  dataSource: ChallengeDataSource,
+  speciesSlug: string | null
 ): Promise<{ count: number; leader: Leader }> {
   try {
-    const rows = await db.select().from(catchLog).where(eq(catchLog.challengeSlug, slug));
+    const rows = await db.select().from(catchLog).where(
+      dataSource === "bucket_list"
+        ? speciesSlug
+          ? eq(catchLog.speciesSlug, speciesSlug)
+          : isNull(catchLog.challengeSlug)
+        : eq(catchLog.challengeSlug, slug)
+    );
     if (rows.length === 0) return { count: 0, leader: null };
 
     if (metric === "length") {
@@ -79,7 +87,7 @@ async function computeLeaderAndCount(
 export default async function ChallengesPage() {
   const enriched = await Promise.all(
     CHALLENGES.map(async (c) => {
-      const { count, leader } = await computeLeaderAndCount(c.slug, c.metric, c.unit);
+      const { count, leader } = await computeLeaderAndCount(c.slug, c.metric, c.unit, c.dataSource, c.speciesSlug);
       return { ...c, entryCount: count, leader };
     })
   );

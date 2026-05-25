@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 import { CHALLENGES } from "@/lib/challenges";
 import { db } from "@/db";
 import { catchLog } from "@/db/schema";
-import { eq } from "drizzle-orm";
+import { eq, isNull } from "drizzle-orm";
 import type { RankedEntry } from "@/app/api/challenges/[slug]/entries/route";
 import ChallengeDetailClient from "./ChallengeDetailClient";
 
@@ -122,7 +122,12 @@ export default async function ChallengeDetailPage({
 
   let entries: RankedEntry[] = [];
   try {
-    const rows = await db.select().from(catchLog).where(eq(catchLog.challengeSlug, slug));
+    const where = challenge.dataSource === "bucket_list"
+      ? challenge.speciesSlug
+        ? eq(catchLog.speciesSlug, challenge.speciesSlug)
+        : isNull(catchLog.challengeSlug)
+      : eq(catchLog.challengeSlug, slug);
+    const rows = await db.select().from(catchLog).where(where);
     entries = buildEntries(rows, challenge.metric);
   } catch {
     // DB unavailable or column missing — render empty leaderboard so the page still loads
