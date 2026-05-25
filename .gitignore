@@ -30,3 +30,6 @@ drizzle/
 # Generated SQL scripts
 seed.sql
 full-setup.sql
+
+# Claude Code local config
+.claude/
