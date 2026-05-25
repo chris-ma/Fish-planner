@@ -1,6 +1,7 @@
 import { db } from "@/db";
 import { regions, seasonWindows, species } from "@/db/schema";
 import { eq, inArray } from "drizzle-orm";
+import { nanoid } from "nanoid";
 import { ratingScore, type Rating } from "@/lib/utils/season";
 
 const NZ_REGIONS = [
@@ -21,8 +22,66 @@ const NZ_REGIONS = [
   { id: "nzr015", slug: "west-coast-greymouth", name: "West Coast / Greymouth", state: "NZ", zone: "nz_south_island", latitude: -42.4502, longitude: 171.2100, description: "Wild, remote west coast with challenging bar crossings. Blue cod, tarakihi, and hapuku offshore. Exceptional brown trout fishing in the Grey, Buller, and Hokitika rivers. Uncrowded wilderness fishing.", tags: null, createdAt: "2025-01-01T00:00:00.000Z" },
 ];
 
+type NZRating = "poor" | "fair" | "good" | "peak";
+type ZoneRatings = Record<string, (NZRating | null)[]>;
+const NZ_SEASON_DATA: Record<string, ZoneRatings> = {
+  "yellowfin-tuna":      { nz_north_island: [null, "peak", "peak", "good", "fair", null, null, null, null, null, null, null, "fair"] },
+  "longtail-tuna":       { nz_north_island: [null, "good", "peak", "good", "fair", null, null, null, null, null, null, "fair", "good"] },
+  "mahi-mahi":           { nz_north_island: [null, "peak", "peak", "good", "fair", null, null, null, null, null, null, "fair", "good"] },
+  "yellowtail-kingfish": { nz_north_island: [null, "peak", "peak", "peak", "good", "good", "fair", null, null, null, "fair", "good", "peak"], nz_south_island: [null, "good", "peak", "good", "fair", "fair", null, null, null, null, "fair", "fair", "good"] },
+  "tailor":              { nz_north_island: [null, "fair", "fair", "good", "good", "fair", null, null, null, null, null, "fair", "fair"] },
+  "australian-salmon":   { nz_north_island: [null, "fair", "good", "peak", "peak", "peak", "good", "good", "fair", "fair", "fair", "fair", "fair"], nz_south_island: [null, "fair", "good", "peak", "peak", "peak", "peak", "good", "good", "fair", "fair", "fair", "fair"] },
+  "gummy-shark":         { nz_south_island: [null, "fair", "fair", "good", "good", "good", "fair", "fair", "fair", "fair", "fair", "fair", "fair"] },
+  "nannygai":            { nz_north_island: [null, "fair", "fair", "fair", "good", "good", "fair", "fair", "fair", "good", "good", "fair", "fair"] },
+  "snapper":             { nz_north_island: [null, "peak", "peak", "good", "good", "fair", "fair", "fair", "fair", "fair", "good", "peak", "peak"], nz_south_island: [null, "fair", "good", "good", "good", "peak", "peak", "peak", "good", "good", "fair", "fair", "fair"] },
+  "blue-eye-trevalla":   { nz_south_island: [null, "fair", "fair", "good", "peak", "peak", "good", "good", "good", "good", "good", "fair", "fair"] },
+  "striped-trumpeter":   { nz_south_island: [null, "fair", "fair", "good", "good", "peak", "peak", "good", "fair", "fair", "fair", "fair", "fair"] },
+  "brown-trout":         { nz_north_island: [null, "good", "good", "good", "good", "fair", null, null, null, "fair", "peak", "peak", "good"], nz_south_island: [null, "good", "good", "good", "fair", "fair", null, null, null, "good", "peak", "peak", "good"] },
+  "rainbow-trout":       { nz_north_island: [null, "good", "good", "good", "good", "fair", "fair", "fair", "fair", "fair", "peak", "peak", "good"], nz_south_island: [null, "good", "good", "good", "fair", "fair", "fair", "fair", "fair", "good", "peak", "peak", "good"] },
+  "ocean-trout":         { nz_north_island: [null, "fair", "fair", "fair", "fair", null, null, null, null, null, "fair", "fair", "fair"], nz_south_island: [null, "good", "peak", "peak", "good", "fair", null, null, null, "fair", "good", "good", "good"] },
+  "european-carp":       { nz_north_island: [null, "good", "good", "peak", "good", "fair", "poor", "poor", "fair", "good", "peak", "good", "good"] },
+  "yellowtail-scad":     { nz_north_island: [null, "good", "peak", "good", "good", "fair", "fair", "fair", "fair", "fair", "good", "good", "good"], nz_south_island: [null, "fair", "good", "good", "fair", "fair", "fair", "fair", "fair", "fair", "good", "fair", "fair"] },
+  "calamari-squid":      { nz_north_island: [null, "fair", "fair", "good", "good", "good", "peak", "peak", "good", "fair", "fair", "fair", "fair"], nz_south_island: [null, "fair", "fair", "good", "peak", "peak", "peak", "peak", "good", "good", "fair", "fair", "fair"] },
+  "blue-cod":            { nz_north_island: [null, "fair", "fair", "fair", "good", "good", "good", "good", "fair", "fair", "good", "fair", "fair"], nz_south_island: [null, "good", "good", "peak", "peak", "peak", "peak", "good", "good", "good", "good", "good", "good"] },
+  "tarakihi":            { nz_north_island: [null, "fair", "fair", "good", "good", "peak", "peak", "good", "fair", "fair", "fair", "fair", "fair"], nz_south_island: [null, "good", "good", "peak", "peak", "peak", "peak", "good", "good", "good", "good", "good", "good"] },
+  "hapuku-groper":       { nz_north_island: [null, "fair", "fair", "good", "good", "peak", "peak", "good", "good", "good", "fair", "fair", "fair"], nz_south_island: [null, "good", "good", "peak", "peak", "peak", "good", "good", "good", "peak", "peak", "good", "good"] },
+  "john-dory":           { nz_north_island: [null, "fair", "fair", "good", "good", "peak", "peak", "good", "fair", "good", "fair", "fair", "fair"], nz_south_island: [null, "fair", "fair", "good", "peak", "peak", "peak", "good", "fair", "good", "good", "fair", "fair"] },
+  "blue-moki":           { nz_north_island: [null, "fair", "fair", "good", "good", "good", "fair", "fair", "fair", "fair", "fair", "fair", "fair"], nz_south_island: [null, "good", "good", "peak", "peak", "good", "good", "fair", "fair", "good", "good", "good", "good"] },
+};
+
+async function seedNZSeasonWindows() {
+  const existing = await db
+    .select({ id: seasonWindows.id })
+    .from(seasonWindows)
+    .innerJoin(regions, eq(seasonWindows.regionId, regions.id))
+    .where(eq(regions.state, "NZ"))
+    .limit(1);
+  if (existing.length > 0) return;
+
+  const allSpecies = await db.select({ id: species.id, slug: species.slug }).from(species);
+  const speciesMap = Object.fromEntries(allSpecies.map((s) => [s.slug, s.id]));
+
+  for (const [speciesSlug, zoneRatings] of Object.entries(NZ_SEASON_DATA)) {
+    const speciesId = speciesMap[speciesSlug];
+    if (!speciesId) continue;
+    for (const nzRegion of NZ_REGIONS) {
+      const zoneData = zoneRatings[nzRegion.zone];
+      if (!zoneData) continue;
+      for (let month = 1; month <= 12; month++) {
+        const rating = zoneData[month];
+        if (!rating) continue;
+        await db
+          .insert(seasonWindows)
+          .values({ id: nanoid(), regionId: nzRegion.id, speciesId, month, rating, notes: null })
+          .onConflictDoNothing();
+      }
+    }
+  }
+}
+
 export async function listRegions() {
   await db.insert(regions).values(NZ_REGIONS).onConflictDoNothing();
+  await seedNZSeasonWindows();
   return db.select().from(regions).orderBy(regions.state, regions.name);
 }
 

@@ -41,6 +41,7 @@ export const SEASON_DATA: Record<string, ZoneRatings> = {
     cocos_islands:   [null, "peak", "peak", "peak", "good", "fair", null, null, "fair", "good", "peak", "peak", "peak"],
   },
   "yellowfin-tuna": {
+    nz_north_island: [null, "peak", "peak", "good", "fair", null, null, null, null, null, null, null, "fair"],
     far_north_qld: [null, "good", "good", "fair", "fair", "poor", "poor", "poor", "fair", "good", "peak", "peak", "good"],
     central_qld:   [null, "good", "good", "good", "fair", "poor", "poor", "poor", "fair", "good", "peak", "peak", "good"],
     southeast_qld: [null, "good", "peak", "good", "fair", "poor", "poor", "poor", "fair", "good", "peak", "peak", "good"],
@@ -60,6 +61,7 @@ export const SEASON_DATA: Record<string, ZoneRatings> = {
     cocos_islands:   [null, "peak", "peak", "good", "good", "fair", "poor", "poor", "fair", "good", "peak", "peak", "peak"],
   },
   "longtail-tuna": {
+    nz_north_island: [null, "good", "peak", "good", "fair", null, null, null, null, null, null, "fair", "good"],
     far_north_qld: [null, "fair", "fair", "fair", "good", "good", "fair", "fair", "good", "peak", "peak", "good", "fair"],
     central_qld:   [null, "fair", "fair", "fair", "good", "good", "fair", "fair", "good", "peak", "peak", "good", "fair"],
     southeast_qld: [null, "fair", "good", "good", "peak", "good", "fair", "fair", "good", "peak", "peak", "good", "fair"],
@@ -95,6 +97,7 @@ export const SEASON_DATA: Record<string, ZoneRatings> = {
     cocos_islands:   [null, "peak", "peak", "peak", "good", "fair", null, null, "fair", "peak", "peak", "peak", "peak"],
   },
   "mahi-mahi": {
+    nz_north_island: [null, "peak", "peak", "good", "fair", null, null, null, null, null, null, "fair", "good"],
     far_north_qld: [null, "peak", "peak", "good", "fair", "fair", "poor", "poor", "fair", "good", "peak", "peak", "peak"],
     central_qld:   [null, "good", "peak", "good", "fair", "poor", "poor", "poor", "fair", "good", "peak", "peak", "good"],
     southeast_qld: [null, "good", "good", "fair", "poor", null, null, null, null, "fair", "good", "good", "good"],
@@ -115,6 +118,8 @@ export const SEASON_DATA: Record<string, ZoneRatings> = {
     sa_spencer_gulf: [null, "fair", "good", "fair", null, null, null, null, null, null, null, "fair", "fair"],
   },
   "yellowtail-kingfish": {
+    nz_north_island: [null, "peak", "peak", "peak", "good", "good", "fair", null, null, null, "fair", "good", "peak"],
+    nz_south_island: [null, "good", "peak", "good", "fair", "fair", null, null, null, null, "fair", "fair", "good"],
     far_north_qld: [null, "fair", "fair", "fair", "fair", "good", "good", "good", "fair", "fair", "fair", "fair", "fair"],
     central_qld:   [null, "fair", "fair", "fair", "fair", "good", "good", "good", "fair", "fair", "fair", "fair", "fair"],
     southeast_qld: [null, "fair", "fair", "fair", "good", "peak", "peak", "peak", "good", "fair", "fair", "fair", "fair"],
@@ -148,6 +153,7 @@ export const SEASON_DATA: Record<string, ZoneRatings> = {
     wa_pilbara:      [null, "good", "good", "fair", "fair", null, null, null, "fair", "good", "peak", "peak", "good"],
   },
   "tailor": {
+    nz_north_island: [null, "fair", "fair", "good", "good", "fair", null, null, null, null, null, "fair", "fair"],
     far_north_qld: [null, "fair", "fair", "fair", "fair", "fair", "fair", "fair", "fair", "fair", "fair", "fair", "fair"],
     central_qld:   [null, "fair", "fair", "fair", "fair", "good", "good", "good", "good", "fair", "fair", "fair", "fair"],
     southeast_qld: [null, "fair", "fair", "fair", "good", "peak", "peak", "good", "good", "fair", "fair", "fair", "fair"],
@@ -161,6 +167,8 @@ export const SEASON_DATA: Record<string, ZoneRatings> = {
     sa_spencer_gulf: [null, "fair", "fair", "fair", "good", "peak", "good", "fair", "fair", "fair", "fair", "fair", "fair"],
   },
   "australian-salmon": {
+    nz_north_island: [null, "fair", "good", "peak", "peak", "peak", "good", "good", "fair", "fair", "fair", "fair", "fair"],
+    nz_south_island: [null, "fair", "good", "peak", "peak", "peak", "peak", "good", "good", "fair", "fair", "fair", "fair"],
     vic_coast:     [null, "fair", "fair", "good", "peak", "peak", "good", "good", "good", "good", "fair", "fair", "fair"],
     tas:           [null, "fair", "fair", "good", "peak", "peak", "good", "good", "good", "good", "fair", "fair", "fair"],
     nsw:           [null, "fair", "fair", "good", "peak", "peak", "good", "good", "good", "good", "fair", "fair", "fair"],
@@ -170,6 +178,7 @@ export const SEASON_DATA: Record<string, ZoneRatings> = {
     sa_spencer_gulf: [null, "fair", "fair", "fair", "peak", "peak", "peak", "fair", "fair", "fair", "fair", "fair", "fair"],
   },
   "gummy-shark": {
+    nz_south_island: [null, "fair", "fair", "good", "good", "good", "fair", "fair", "fair", "fair", "fair", "fair", "fair"],
     vic_coast:     [null, "good", "good", "good", "peak", "good", "fair", "fair", "fair", "good", "good", "good", "good"],
     tas:           [null, "good", "good", "good", "peak", "good", "fair", "fair", "fair", "good", "good", "good", "good"],
     nsw:           [null, "fair", "fair", "good", "peak", "good", "fair", "fair", "fair", "good", "good", "fair", "fair"],
@@ -204,6 +213,7 @@ export const SEASON_DATA: Record<string, ZoneRatings> = {
     wa_mid_west:     [null, "good", "peak", "good", "fair", "poor", "poor", "poor", "fair", "good", "peak", "peak", "good"],
   },
   "nannygai": {
+    nz_north_island: [null, "fair", "fair", "fair", "good", "good", "fair", "fair", "fair", "good", "good", "fair", "fair"],
     far_north_qld: [null, "good", "good", "good", "peak", "peak", "peak", "peak", "peak", "good", "good", "good", "good"],
     central_qld:   [null, "good", "good", "fair", "peak", "peak", "peak", "peak", "good", "good", "good", "good", "good"],
     southeast_qld: [null, "good", "good", "good", "peak", "peak", "peak", "peak", "good", "good", "good", "good", "good"],
@@ -212,6 +222,8 @@ export const SEASON_DATA: Record<string, ZoneRatings> = {
     tas:           [null, "fair", "fair", "fair", "good", "peak", "peak", "good", "good", "good", "fair", "fair", "fair"],
   },
   "snapper": {
+    nz_north_island: [null, "peak", "peak", "good", "good", "fair", "fair", "fair", "fair", "fair", "good", "peak", "peak"],
+    nz_south_island: [null, "fair", "good", "good", "good", "peak", "peak", "peak", "good", "good", "fair", "fair", "fair"],
     far_north_qld: [null, "fair", "fair", "fair", "good", "peak", "peak", "peak", "good", "good", "fair", "fair", "fair"],
     central_qld:   [null, "fair", "fair", "fair", "good", "peak", "peak", "peak", "good", "good", "fair", "fair", "fair"],
     southeast_qld: [null, "good", "fair", "fair", "good", "peak", "peak", "peak", "good", "good", "good", "good", "good"],
@@ -234,11 +246,13 @@ export const SEASON_DATA: Record<string, ZoneRatings> = {
     lord_howe:     [null, "good", "good", "fair", "fair", "good", "good", "good", "fair", "good", "good", "good", "good"],
   },
   "blue-eye-trevalla": {
+    nz_south_island: [null, "fair", "fair", "good", "peak", "peak", "good", "good", "good", "good", "good", "fair", "fair"],
     vic_coast:     [null, "good", "fair", "good", "peak", "peak", "good", "good", "good", "good", "fair", "fair", "good"],
     tas:           [null, "good", "fair", "good", "peak", "peak", "good", "good", "good", "good", "fair", "fair", "good"],
     nsw:           [null, "fair", "fair", "good", "peak", "peak", "good", "good", "fair", "fair", "fair", "fair", "fair"],
   },
   "striped-trumpeter": {
+    nz_south_island: [null, "fair", "fair", "good", "good", "peak", "peak", "good", "fair", "fair", "fair", "fair", "fair"],
     tas:           [null, "good", "good", "fair", "peak", "peak", "peak", "peak", "good", "good", "good", "good", "good"],
     vic_coast:     [null, "fair", "fair", "fair", "good", "peak", "peak", "good", "good", "fair", "fair", "fair", "fair"],
   },
@@ -333,16 +347,22 @@ export const SEASON_DATA: Record<string, ZoneRatings> = {
     nsw:            [null, "good", "good", "fair", "fair", "poor", "poor", "poor", "fair", "good", "peak", "peak", "good"],
   },
   "brown-trout": {
+    nz_north_island: [null, "good", "good", "good", "good", "fair", null, null, null, "fair", "peak", "peak", "good"],
+    nz_south_island: [null, "good", "good", "good", "fair", "fair", null, null, null, "good", "peak", "peak", "good"],
     alpine:         [null, "fair", "fair", "good", "peak", "peak", "fair", "poor", "poor", "good", "peak", "peak", "good"],
     murray_darling: [null, "fair", "fair", "good", "peak", "good", "fair", "poor", "poor", "good", "peak", "good", "fair"],
     tas:            [null, "fair", "good", "good", "peak", "peak", "good", "fair", "fair", "good", "peak", "peak", "fair"],
   },
   "rainbow-trout": {
+    nz_north_island: [null, "good", "good", "good", "good", "fair", "fair", "fair", "fair", "fair", "peak", "peak", "good"],
+    nz_south_island: [null, "good", "good", "good", "fair", "fair", "fair", "fair", "fair", "good", "peak", "peak", "good"],
     alpine:         [null, "fair", "good", "good", "peak", "peak", "good", "fair", "poor", "good", "peak", "peak", "good"],
     murray_darling: [null, "fair", "good", "good", "peak", "good", "fair", "poor", "poor", "good", "peak", "good", "fair"],
     tas:            [null, "good", "good", "good", "peak", "peak", "good", "fair", "fair", "good", "peak", "peak", "good"],
   },
   "ocean-trout": {
+    nz_north_island: [null, "fair", "fair", "fair", "fair", null, null, null, null, null, "fair", "fair", "fair"],
+    nz_south_island: [null, "good", "peak", "peak", "good", "fair", null, null, null, "fair", "good", "good", "good"],
     tas:            [null, "good", "good", "peak", "peak", "good", "fair", "fair", "good", "peak", "peak", "good", "good"],
     alpine:         [null, "good", "good", "good", "peak", "peak", "good", "fair", "fair", "peak", "peak", "good", "good"],
     vic_coast:      [null, "fair", "fair", "good", "peak", "good", "fair", "fair", "fair", "good", "good", "fair", "fair"],
@@ -436,6 +456,7 @@ export const SEASON_DATA: Record<string, ZoneRatings> = {
   // ── New species ───────────────────────────────────────────────────────────
   "european-carp": {
     // Warm months best (warmer water = more active). Cold winter = slow.
+    nz_north_island: [null, "good", "good", "peak", "good", "fair", "poor", "poor", "fair", "good", "peak", "good", "good"],
     murray_darling:  [null, "peak", "peak", "good", "fair", "poor", "poor", "poor", "fair", "good", "peak", "peak", "peak"],
     alpine:          [null, "good", "good", "fair", "fair", "poor", null,   null,   "fair", "good", "peak", "good", "good"],
     nsw:             [null, "good", "good", "good", "fair", "poor", "poor", "poor", "fair", "good", "good", "peak", "peak"],
@@ -449,5 +470,51 @@ export const SEASON_DATA: Record<string, ZoneRatings> = {
     vic_coast:       [null, "fair", "fair", "good", "good", "peak", "peak", "good", "good", "fair", "fair", "fair", "fair"],
     southeast_qld:   [null, "fair", "fair", "fair", "good", "good", "peak", "good", "fair", "fair", "fair", "fair", "fair"],
     tas:             [null, "fair", "fair", "good", "good", "peak", "peak", "good", "good", "fair", "fair", "fair", "fair"],
+  },
+  // ── Baitfish & Invertebrates ──────────────────────────────────────────────
+  "yellowtail-scad": {
+    // Schooling baitfish; abundant year-round, peaks with warmer water in summer/autumn.
+    nz_north_island: [null, "good", "peak", "good", "good", "fair", "fair", "fair", "fair", "fair", "good", "good", "good"],
+    nz_south_island: [null, "fair", "good", "good", "fair", "fair", "fair", "fair", "fair", "fair", "good", "fair", "fair"],
+    far_north_qld:   [null, "peak", "peak", "good", "fair", "fair", "fair", "fair", "fair", "good", "peak", "peak", "peak"],
+    central_qld:     [null, "peak", "peak", "good", "fair", "fair", "fair", "fair", "fair", "good", "peak", "peak", "peak"],
+    southeast_qld:   [null, "peak", "peak", "good", "fair", "fair", "fair", "fair", "good", "good", "peak", "peak", "peak"],
+    nsw:             [null, "peak", "peak", "good", "fair", "fair", "fair", "fair", "good", "good", "good", "peak", "peak"],
+    vic_coast:       [null, "good", "good", "good", "fair", "fair", "fair", "fair", "fair", "fair", "fair", "good", "good"],
+    tas:             [null, "fair", "fair", "fair", "fair", "fair", "fair", "fair", "fair", "fair", "fair", "fair", "fair"],
+    lord_howe:       [null, "peak", "peak", "peak", "good", "fair", "fair", "fair", "good", "peak", "peak", "peak", "peak"],
+  },
+  "calamari-squid": {
+    // Peaks in cooler months when squid aggregate in bays and estuaries. Year-round NZ.
+    nz_north_island: [null, "fair", "fair", "good", "good", "good", "peak", "peak", "good", "fair", "fair", "fair", "fair"],
+    nz_south_island: [null, "fair", "fair", "good", "peak", "peak", "peak", "peak", "good", "good", "fair", "fair", "fair"],
+    vic_coast:       [null, "good", "fair", "good", "peak", "peak", "peak", "peak", "good", "fair", "fair", "good", "good"],
+    tas:             [null, "good", "fair", "good", "peak", "peak", "peak", "peak", "good", "fair", "fair", "good", "good"],
+    nsw:             [null, "good", "fair", "good", "good", "peak", "peak", "good", "good", "fair", "fair", "fair", "good"],
+    sa_south:        [null, "good", "fair", "good", "peak", "peak", "peak", "good", "good", "fair", "fair", "good", "good"],
+    sa_spencer_gulf: [null, "good", "fair", "fair", "peak", "peak", "peak", "good", "fair", "fair", "fair", "fair", "good"],
+    wa_southwest:    [null, "good", "good", "good", "peak", "peak", "peak", "good", "fair", "fair", "fair", "fair", "good"],
+    southeast_qld:   [null, "fair", "fair", "fair", "fair", "good", "good", "good", "fair", "fair", "fair", "fair", "fair"],
+  },
+  // ── NZ endemic species ────────────────────────────────────────────────────
+  "blue-cod": {
+    nz_north_island: [null, "fair", "fair", "fair", "good", "good", "good", "good", "fair", "fair", "good", "fair", "fair"],
+    nz_south_island: [null, "good", "good", "peak", "peak", "peak", "peak", "good", "good", "good", "good", "good", "good"],
+  },
+  "tarakihi": {
+    nz_north_island: [null, "fair", "fair", "good", "good", "peak", "peak", "good", "fair", "fair", "fair", "fair", "fair"],
+    nz_south_island: [null, "good", "good", "peak", "peak", "peak", "peak", "good", "good", "good", "good", "good", "good"],
+  },
+  "hapuku-groper": {
+    nz_north_island: [null, "fair", "fair", "good", "good", "peak", "peak", "good", "good", "good", "fair", "fair", "fair"],
+    nz_south_island: [null, "good", "good", "peak", "peak", "peak", "good", "good", "good", "peak", "peak", "good", "good"],
+  },
+  "john-dory": {
+    nz_north_island: [null, "fair", "fair", "good", "good", "peak", "peak", "good", "fair", "good", "fair", "fair", "fair"],
+    nz_south_island: [null, "fair", "fair", "good", "peak", "peak", "peak", "good", "fair", "good", "good", "fair", "fair"],
+  },
+  "blue-moki": {
+    nz_north_island: [null, "fair", "fair", "good", "good", "good", "fair", "fair", "fair", "fair", "fair", "fair", "fair"],
+    nz_south_island: [null, "good", "good", "peak", "peak", "good", "good", "fair", "fair", "good", "good", "good", "good"],
   },
 };
