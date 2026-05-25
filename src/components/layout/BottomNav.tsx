@@ -16,7 +16,7 @@ export function BottomNav() {
   const pathname = usePathname();
 
   return (
-    <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-[#020B14] border-t border-white/10">
+    <nav className="md:hidden fixed bottom-0 left-0 right-0 z-[1100] bg-[#020B14] border-t border-white/10">
       <div className="flex items-stretch h-16">
         {/* Left tabs */}
         {NAV_ITEMS.slice(0, 2).map(({ href, label, Icon }) => {

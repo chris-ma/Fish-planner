@@ -9,7 +9,7 @@ const NavbarAuth = dynamic(() => import("./NavbarAuth").then((m) => m.NavbarAuth
 
 export function Navbar() {
   return (
-    <header className="absolute top-0 left-0 right-0 z-40 w-full">
+    <header className="absolute top-0 left-0 right-0 z-[1100] w-full">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 flex h-14 items-center justify-between">
         <Link href="/" className="flex items-center gap-2.5">
           <span className="flex items-center justify-center w-8 h-8 rounded-lg bg-ocean-500">
