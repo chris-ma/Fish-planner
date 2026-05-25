@@ -182,6 +182,12 @@ export const SPECIES_IMAGES: Record<string, string> = {
   // New species
   "yellowtail-scad": INSHORE_SURF,
   "calamari-squid": REEF_FISH,
+  // NZ species
+  "blue-cod": REEF_FISH,
+  "tarakihi": REEF_TROPICAL,
+  "hapuku-groper": OCEAN_BLUE,
+  "john-dory": REEF_FISH,
+  "blue-moki": REEF_FISH,
 };
 
 // ─── Category image fallbacks ─────────────────────────────────────────────────
@@ -208,6 +214,10 @@ export function getSpeciesImage(slug: string, category: string, size: 600 | 1200
 // Pexels search terms noted per zone.
 
 export const ZONE_IMAGES: Record<string, string> = {
+  // Pexels: "new zealand north island coast ocean fishing"
+  nz_north_island: OCEAN_ACTIVE,
+  // Pexels: "new zealand south island fiordland mountain"
+  nz_south_island: STREAM_FLY,
   // Pexels: "great barrier reef cairns tropical underwater"
   far_north_qld: REEF_TROPICAL,
   // Pexels: "whitsundays queensland tropical water sailing"

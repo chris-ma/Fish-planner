@@ -12,6 +12,8 @@ import { REGION_EPISODES, PODCAST_SHOW_URL } from "@/lib/podcast-episodes";
 export const revalidate = 86400;
 
 const ZONE_LABELS: Record<string, string> = {
+  nz_north_island: "New Zealand — North Island",
+  nz_south_island: "New Zealand — South Island",
   far_north_qld: "Far North Queensland",
   central_qld: "Central Queensland",
   southeast_qld: "Southeast Queensland",
