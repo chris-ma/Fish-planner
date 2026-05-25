@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { db } from "@/db";
 import { catchLog } from "@/db/schema";
-import { and, eq, isNull } from "drizzle-orm";
+import { and, eq, isNotNull, isNull, lte } from "drizzle-orm";
 import { CHALLENGES } from "@/lib/challenges";
 
 export const dynamic = "force-dynamic";
@@ -36,7 +36,9 @@ export async function GET(
       challenge.dataSource === "bucket_list"
         ? challenge.speciesSlug
           ? eq(catchLog.speciesSlug, challenge.speciesSlug)
-          : isNull(catchLog.challengeSlug)
+          : challenge.maxLineWeightLb
+            ? and(isNull(catchLog.challengeSlug), isNotNull(catchLog.lineWeightLb), lte(catchLog.lineWeightLb, challenge.maxLineWeightLb))
+            : isNull(catchLog.challengeSlug)
         : eq(catchLog.challengeSlug, slug)
     );
 

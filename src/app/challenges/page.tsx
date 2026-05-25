@@ -1,6 +1,6 @@
 import { db } from "@/db";
 import { catchLog } from "@/db/schema";
-import { eq, isNull } from "drizzle-orm";
+import { and, eq, isNotNull, isNull, lte } from "drizzle-orm";
 import { CHALLENGES, ChallengeDataSource, ChallengeMetric } from "@/lib/challenges";
 import ChallengesIndexClient from "./ChallengesIndexClient";
 
@@ -13,14 +13,17 @@ async function computeLeaderAndCount(
   metric: ChallengeMetric,
   unit: string | null,
   dataSource: ChallengeDataSource,
-  speciesSlug: string | null
+  speciesSlug: string | null,
+  maxLineWeightLb: number | undefined
 ): Promise<{ count: number; leader: Leader }> {
   try {
     const rows = await db.select().from(catchLog).where(
       dataSource === "bucket_list"
         ? speciesSlug
           ? eq(catchLog.speciesSlug, speciesSlug)
-          : isNull(catchLog.challengeSlug)
+          : maxLineWeightLb
+            ? and(isNull(catchLog.challengeSlug), isNotNull(catchLog.lineWeightLb), lte(catchLog.lineWeightLb, maxLineWeightLb))
+            : isNull(catchLog.challengeSlug)
         : eq(catchLog.challengeSlug, slug)
     );
     if (rows.length === 0) return { count: 0, leader: null };
@@ -87,7 +90,7 @@ async function computeLeaderAndCount(
 export default async function ChallengesPage() {
   const enriched = await Promise.all(
     CHALLENGES.map(async (c) => {
-      const { count, leader } = await computeLeaderAndCount(c.slug, c.metric, c.unit, c.dataSource, c.speciesSlug);
+      const { count, leader } = await computeLeaderAndCount(c.slug, c.metric, c.unit, c.dataSource, c.speciesSlug, c.maxLineWeightLb);
       return { ...c, entryCount: count, leader };
     })
   );

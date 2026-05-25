@@ -12,6 +12,7 @@ export interface ChallengeConfig {
   requiresField: "lengthCm" | "weightKg" | "lineWeightLb" | null;
   dataSource: ChallengeDataSource;
   hashtags?: string[];
+  maxLineWeightLb?: number;
 }
 
 export const CHALLENGES: ChallengeConfig[] = [
@@ -29,13 +30,14 @@ export const CHALLENGES: ChallengeConfig[] = [
   {
     slug: "4lb-club",
     title: "4lb Club",
-    description: "Scored on length ÷ leader weight (lb). A 60cm bream on 2lb leader beats a 90cm jewfish on 10lb. Light line, big fish.",
+    description: "Caught on 4lb leader or lighter. Log your catch in your bucket list with the leader weight and your biggest fish appears here automatically.",
     image: "https://images.pexels.com/photos/5200238/pexels-photo-5200238.jpeg?auto=compress&cs=tinysrgb&w=600",
-    metric: "ratio",
-    unit: "cm/lb",
+    metric: "length",
+    unit: "cm",
     speciesSlug: null,
-    requiresField: "lineWeightLb",
-    dataSource: "tagged",
+    requiresField: null,
+    dataSource: "bucket_list",
+    maxLineWeightLb: 4,
   },
   {
     slug: "the-dumbest-catch",

@@ -71,6 +71,7 @@ export function BucketListClient({ species }: BucketListClientProps) {
     tidePhase: "",
     lengthCm: "",
     weightKg: "",
+    lineWeightLb: "",
     gearUsed: "",
     photoUrl: "",
     notes: "",
@@ -128,7 +129,7 @@ export function BucketListClient({ species }: BucketListClientProps) {
   const openModal = (sp: Species) => {
     setSelectedSpecies(sp);
     setWeather(null);
-    setForm({ caughtAt: nowLocalDatetime(), location: "", tidePhase: "", lengthCm: "", weightKg: "", gearUsed: "", photoUrl: "", notes: "" });
+    setForm({ caughtAt: nowLocalDatetime(), location: "", tidePhase: "", lengthCm: "", weightKg: "", lineWeightLb: "", gearUsed: "", photoUrl: "", notes: "" });
   };
 
   const fetchWeather = async () => {
@@ -178,6 +179,7 @@ export function BucketListClient({ species }: BucketListClientProps) {
           tidePhase: form.tidePhase || null,
           lengthCm: form.lengthCm ? parseFloat(form.lengthCm) : null,
           weightKg: form.weightKg ? parseFloat(form.weightKg) : null,
+          lineWeightLb: form.lineWeightLb ? parseFloat(form.lineWeightLb) : null,
           gearUsed: form.gearUsed || null,
           photoUrl: form.photoUrl || null,
           notes: form.notes || null,
@@ -186,7 +188,7 @@ export function BucketListClient({ species }: BucketListClientProps) {
       if (res.ok) {
         const newCatch = await res.json();
         setCatches((prev) => [newCatch, ...prev]);
-        setForm({ caughtAt: nowLocalDatetime(), location: "", tidePhase: "", lengthCm: "", weightKg: "", gearUsed: "", photoUrl: "", notes: "" });
+        setForm({ caughtAt: nowLocalDatetime(), location: "", tidePhase: "", lengthCm: "", weightKg: "", lineWeightLb: "", gearUsed: "", photoUrl: "", notes: "" });
         setWeather(null);
       }
     } finally {
@@ -427,6 +429,20 @@ export function BucketListClient({ species }: BucketListClientProps) {
               </div>
             </div>
 
+            {/* Leader weight */}
+            <div className="space-y-2">
+              <Label>Leader / line weight (lb)</Label>
+              <Input
+                type="number"
+                min="0"
+                step="0.5"
+                placeholder="e.g. 4"
+                value={form.lineWeightLb}
+                onChange={(e) => setForm((f) => ({ ...f, lineWeightLb: e.target.value }))}
+              />
+              <p className="text-xs text-slate-400">Used for the 4lb Club challenge leaderboard</p>
+            </div>
+
             {/* Gear */}
             <div className="space-y-2">
               <Label>Gear used</Label>
@@ -484,6 +500,7 @@ export function BucketListClient({ species }: BucketListClientProps) {
                         <div className="flex gap-3 mt-1 text-xs text-slate-600">
                           {c.lengthCm && <span>{c.lengthCm} cm</span>}
                           {c.weightKg && <span>{c.weightKg} kg</span>}
+                          {c.lineWeightLb && <span>{c.lineWeightLb}lb leader</span>}
                           {c.gearUsed && <span className="truncate max-w-[12rem]">{c.gearUsed}</span>}
                         </div>
                         {c.notes && <p className="text-xs text-slate-500 mt-0.5 leading-snug">{c.notes}</p>}

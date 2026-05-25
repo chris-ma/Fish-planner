@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 import { CHALLENGES } from "@/lib/challenges";
 import { db } from "@/db";
 import { catchLog } from "@/db/schema";
-import { eq, isNull } from "drizzle-orm";
+import { and, eq, isNotNull, isNull, lte } from "drizzle-orm";
 import type { RankedEntry } from "@/app/api/challenges/[slug]/entries/route";
 import ChallengeDetailClient from "./ChallengeDetailClient";
 
@@ -125,7 +125,9 @@ export default async function ChallengeDetailPage({
     const where = challenge.dataSource === "bucket_list"
       ? challenge.speciesSlug
         ? eq(catchLog.speciesSlug, challenge.speciesSlug)
-        : isNull(catchLog.challengeSlug)
+        : challenge.maxLineWeightLb
+          ? and(isNull(catchLog.challengeSlug), isNotNull(catchLog.lineWeightLb), lte(catchLog.lineWeightLb, challenge.maxLineWeightLb))
+          : isNull(catchLog.challengeSlug)
       : eq(catchLog.challengeSlug, slug);
     const rows = await db.select().from(catchLog).where(where);
     entries = buildEntries(rows, challenge.metric);
