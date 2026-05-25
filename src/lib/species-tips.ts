@@ -417,4 +417,28 @@ export const FISHING_TIPS: Record<string, FishingTips> = {
     retrieve: "Slow-pitch jigging is the premium technique — use 150–250g jigs and methodical up-down movements. Bottom bait with squid and pilchard also works well.",
     hotTip: "Rankin cod are WA's best-kept reef fishing secret. They reach over 20kg and are explosive fighters. The Montebello Islands and Dampier Archipelago hold exceptional numbers.",
   },
+  "european-carp": {
+    tide: "Freshwater species — river flow matters more than tide. Moderate to low flow with stable or rising levels is best",
+    timeOfDay: "Dawn and dusk in warm months; midday in winter when water temperature peaks. Night fishing productive in hot weather",
+    conditions: "Warm water 18–28°C; activity drops sharply below 12°C. Post-rain turbidity can trigger feeding. Stable or rising barometer",
+    structure: "Shallow weedy bays, muddy flats, reed beds, snag edges, slow river bends and billabongs with muddy bottom",
+    retrieve: "Still bait on the bottom with a running sinker rig; or slowly rolled near snags in spring. Lure casting with slow-rolled swimbaits can trigger aggressive takes",
+    hotTip: "Sweet corn, bread, boilies, or worms on a running rig to minimise resistance. Carp MUST be euthanised immediately — it is illegal to return them to water in most states and territories",
+  },
+  "yellowtail-scad": {
+    tide: "Active on both tides; bait balls surface most visibly during current rips and channel edges. Rising tide over reefs best for feeding activity",
+    timeOfDay: "Dawn and late afternoon are prime. After dark under jetty and harbour lights scad school densely and are easily targeted",
+    conditions: "Clear blue water in 18–26°C; look for diving sea birds and surface splashing to locate schools. Current edges and upwellings concentrate fish",
+    structure: "Offshore reefs, rocky headlands, harbour walls, jetty pylons, current rips, and surface bait balls. Often visible from above",
+    retrieve: "Light sabiki rigs (size 10–12 gold hooks) on a slow sink or moderate fast retrieve through the school. Small metal slugs 10–20g also produce",
+    hotTip: "Keep scad alive in a bait tank and use as live bait immediately — they are one of the best livebait species available for kingfish, snapper, and tuna. Hook through the back of the head for maximum swim action",
+  },
+  "calamari-squid": {
+    tide: "Outgoing to low tide in estuaries concentrates squid over seagrass flats. Any tide works offshore when current is present to activate the jig",
+    timeOfDay: "After dark is peak — twilight through to midnight. Squid congregate under lights at jetties and harbour walls. Overcast days improve daytime results dramatically",
+    conditions: "Clear to slightly murky water 14–22°C. Look for sandy or seagrass bottom in 2–15m depth. Drops sharply in very cold or very warm water",
+    structure: "Jetty pylons, bridge legs, seagrass flats, rock walls, harbour walls, reef edges — anywhere with structure, current, and bait. Pontoons under lights at night are a top target",
+    retrieve: "Cast EGI (squid jig) and let it sink to bottom; 2–3 fast cranks then let it flutter back down on a tight line. Vary sink time to find the depth. Squid self-hook on the pause — don't jerk",
+    hotTip: "Pink and orange EGIs at night under lights; natural prawn colours and blue/green in daylight. Use a fluorocarbon leader minimum 10lb — squid are leader-shy in clear water. Watch the line for a sideways twitch on the sink",
+  },
 };

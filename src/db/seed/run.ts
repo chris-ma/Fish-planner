@@ -76,6 +76,8 @@ const SPECIES_TECHNIQUES: Record<string, string[]> = {
   "bonefish": ["fly-fishing", "casting-hard-bodies"],
   "milkfish": ["fly-fishing"],
   "rankin-cod": ["bottom-bait", "slow-pitch-jigging", "jigging"],
+  "yellowtail-scad": ["casting-hard-bodies", "jigging", "bait-fishing-estuary"],
+  "calamari-squid": ["jigging"],
 };
 
 async function seed() {

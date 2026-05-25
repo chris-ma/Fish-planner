@@ -1,6 +1,7 @@
 import { db } from "@/db";
 import { species, seasonWindows, regions, speciesTechniques, techniques } from "@/db/schema";
 import { eq, inArray } from "drizzle-orm";
+import { nanoid } from "nanoid";
 import { ratingScore, type Rating } from "@/lib/utils/season";
 
 const NEW_SPECIES = [
@@ -83,8 +84,79 @@ const NEW_SPECIES = [
   },
 ];
 
+const NEW_SPECIES_AU_SEASONS: Record<string, Record<string, (string | null)[]>> = {
+  "yellowtail-scad": {
+    far_north_qld:   [null, "peak","peak","good","fair","fair","fair","fair","fair","good","peak","peak","peak"],
+    central_qld:     [null, "peak","peak","good","fair","fair","fair","fair","fair","good","peak","peak","peak"],
+    southeast_qld:   [null, "peak","peak","good","fair","fair","fair","fair","good","good","peak","peak","peak"],
+    nsw:             [null, "peak","peak","good","fair","fair","fair","fair","good","good","good","peak","peak"],
+    vic_coast:       [null, "good","good","good","fair","fair","fair","fair","fair","fair","fair","good","good"],
+    tas:             [null, "fair","fair","fair","fair","fair","fair","fair","fair","fair","fair","fair","fair"],
+    lord_howe:       [null, "peak","peak","peak","good","fair","fair","fair","good","peak","peak","peak","peak"],
+  },
+  "calamari-squid": {
+    vic_coast:       [null, "good","fair","good","peak","peak","peak","peak","good","fair","fair","good","good"],
+    tas:             [null, "good","fair","good","peak","peak","peak","peak","good","fair","fair","good","good"],
+    nsw:             [null, "good","fair","good","good","peak","peak","good","good","fair","fair","fair","good"],
+    sa_south:        [null, "good","fair","good","peak","peak","peak","good","good","fair","fair","good","good"],
+    sa_spencer_gulf: [null, "good","fair","fair","peak","peak","peak","good","fair","fair","fair","fair","good"],
+    wa_southwest:    [null, "good","good","good","peak","peak","peak","good","fair","fair","fair","fair","good"],
+    southeast_qld:   [null, "fair","fair","fair","fair","good","good","good","fair","fair","fair","fair","fair"],
+  },
+};
+
+const NEW_SPECIES_TECHNIQUES: Record<string, string[]> = {
+  "european-carp":   ["bait-fishing-freshwater", "lure-casting-freshwater"],
+  "yellowtail-scad": ["casting-hard-bodies", "jigging", "bait-fishing-estuary"],
+  "calamari-squid":  ["jigging"],
+};
+
+async function seedNewSpeciesExtras() {
+  const ysRow = await db.select({ id: species.id })
+    .from(species).where(eq(species.slug, "yellowtail-scad")).limit(1);
+  if (!ysRow[0]) return;
+  const existing = await db.select({ id: speciesTechniques.speciesId })
+    .from(speciesTechniques).where(eq(speciesTechniques.speciesId, ysRow[0].id)).limit(1);
+  if (existing.length > 0) return;
+
+  const allSpecies = await db.select({ id: species.id, slug: species.slug }).from(species);
+  const allTechs = await db.select({ id: techniques.id, slug: techniques.slug }).from(techniques);
+  const spMap = Object.fromEntries(allSpecies.map(s => [s.slug, s.id]));
+  const techMap = Object.fromEntries(allTechs.map(t => [t.slug, t.id]));
+
+  for (const [slug, techSlugs] of Object.entries(NEW_SPECIES_TECHNIQUES)) {
+    const speciesId = spMap[slug];
+    if (!speciesId) continue;
+    for (const techSlug of techSlugs) {
+      const techniqueId = techMap[techSlug];
+      if (!techniqueId) continue;
+      await db.insert(speciesTechniques)
+        .values({ speciesId, techniqueId, effectiveness: null, notes: null })
+        .onConflictDoNothing();
+    }
+  }
+
+  const allRegions = await db.select({ id: regions.id, zone: regions.zone }).from(regions);
+  for (const [slug, zoneData] of Object.entries(NEW_SPECIES_AU_SEASONS)) {
+    const speciesId = spMap[slug];
+    if (!speciesId) continue;
+    for (const region of allRegions) {
+      const monthRatings = zoneData[region.zone];
+      if (!monthRatings) continue;
+      for (let month = 1; month <= 12; month++) {
+        const rating = monthRatings[month];
+        if (!rating) continue;
+        await db.insert(seasonWindows)
+          .values({ id: nanoid(), regionId: region.id, speciesId, month, rating, notes: null })
+          .onConflictDoNothing();
+      }
+    }
+  }
+}
+
 export async function listSpecies() {
   await db.insert(species).values(NEW_SPECIES).onConflictDoNothing();
+  await seedNewSpeciesExtras();
   return db.select().from(species).orderBy(species.commonName);
 }
 
