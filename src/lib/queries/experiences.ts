@@ -1,5 +1,5 @@
 import { db } from "@/db";
-import { experiences, destinations, experienceDestinations } from "@/db/schema";
+import { experiences, destinations, experienceDestinations, seasonWindows, species } from "@/db/schema";
 import { eq, and } from "drizzle-orm";
 import { EXPERIENCES } from "@/db/seed/experiences";
 
@@ -32,6 +32,13 @@ export async function getExperienceBySlug(slug: string) {
   await seedExperiences();
   const rows = await db.select().from(experiences).where(eq(experiences.slug, slug)).limit(1);
   return rows[0] ?? null;
+}
+
+export async function getRegionSpeciesSlugs(): Promise<{ regionId: string; speciesSlug: string }[]> {
+  return db
+    .selectDistinct({ regionId: seasonWindows.regionId, speciesSlug: species.slug })
+    .from(seasonWindows)
+    .innerJoin(species, eq(seasonWindows.speciesId, species.id));
 }
 
 export async function getDestinationsForExperience(experienceId: string, regionId: string) {
