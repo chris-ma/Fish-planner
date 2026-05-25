@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useUser } from "@clerk/nextjs";
 import Link from "next/link";
-import { ArrowRight, Fish } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { getSpeciesImage } from "@/lib/images";
 
 interface SpeciesData {
@@ -53,10 +53,10 @@ export function FeaturedFishClient({ month, monthName }: Props) {
 
   return (
     <section className="px-4 py-12 max-w-7xl mx-auto">
-      <p className="text-xs font-semibold text-[#0D9488] uppercase tracking-widest mb-4 flex items-center gap-2">
-        <Fish className="h-3.5 w-3.5" />
-        Your Featured Fish
-      </p>
+      <div className="mb-4">
+        <div className="h-1 w-12 bg-[#0D9488] rounded mb-3" />
+        <h2 className="text-2xl font-bold text-[#0D9488] mb-4">Featured Fish</h2>
+      </div>
 
       <div className="rounded-2xl overflow-hidden bg-[#040F1C] border border-white/10 flex flex-col md:flex-row">
         {/* Photo */}

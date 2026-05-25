@@ -2,12 +2,16 @@ import Link from "next/link";
 import { Compass, Fish, Package, Map, Users, ArrowRight } from "lucide-react";
 import { VideoParallaxHero } from "@/components/layout/VideoParallaxHero";
 import { IntentSearch } from "@/components/discovery/IntentSearch";
-import { SpeciesCarousel } from "@/components/home/SpeciesCarousel";
 import { AustraliaMap } from "@/components/home/AustraliaMap";
 import { FeaturedFishClient } from "@/components/home/FeaturedFishClient";
 import { NearbyRegionsClient } from "@/components/home/NearbyRegionsClient";
+import { ExperiencesForYouClient } from "@/components/home/ExperiencesForYouClient";
+import { OnTheBiteClient } from "@/components/home/OnTheBiteClient";
 import { getTopRegionsForMonth } from "@/lib/queries/regions";
 import { getInSeasonSpecies } from "@/lib/queries/species";
+import { getExperiences } from "@/lib/queries/experiences";
+import { db } from "@/db";
+import { species } from "@/db/schema";
 import { currentMonth, MONTH_NAMES_FULL } from "@/lib/utils/season";
 import { getSpeciesImage, getZoneImage } from "@/lib/images";
 import { CHALLENGES } from "@/lib/challenges";
@@ -65,10 +69,19 @@ export default async function HomePage({
   const params = await searchParams;
   const month = params.month ? parseInt(params.month) : currentMonth();
 
-  const [topRegions, inSeasonSpecies] = await Promise.all([
+  const [topRegions, inSeasonSpecies, allExperiences, allSpeciesForMap] = await Promise.all([
     getTopRegionsForMonth(month, 6),
     getInSeasonSpecies(month, 16),
+    getExperiences(),
+    db.select({ slug: species.slug, commonName: species.commonName }).from(species),
   ]);
+
+  const speciesNameMap: Record<string, string> = Object.fromEntries(allSpeciesForMap.map(s => [s.slug, s.commonName]));
+  const parsedExperiences = allExperiences.map(exp => ({
+    ...exp,
+    speciesSlugs: JSON.parse(exp.targetSpeciesSlugs) as string[],
+    speciesNames: (JSON.parse(exp.targetSpeciesSlugs) as string[]).map(s => speciesNameMap[s] ?? s),
+  }));
 
   return (
     <div>
@@ -86,13 +99,16 @@ export default async function HomePage({
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 -mt-8 pb-16 space-y-16">
 
-        {/* Seasonal species carousel */}
-        <section className="pt-8 md:pt-0">
-          <SpeciesCarousel species={inSeasonSpecies} monthName={MONTH_NAMES_FULL[month]} />
-        </section>
-
         {/* Featured fish — personalized for logged-in users */}
         <FeaturedFishClient month={month} monthName={MONTH_NAMES_FULL[month]} />
+
+        {/* Experiences personalised to dreamFish */}
+        <ExperiencesForYouClient experiences={parsedExperiences} />
+
+        {/* Seasonal species carousel — personalised to nearby region if available */}
+        <section className="pt-8 md:pt-0">
+          <OnTheBiteClient fallbackSpecies={inSeasonSpecies} month={month} monthName={MONTH_NAMES_FULL[month]} />
+        </section>
 
         {/* Top Destinations — interactive map */}
         <section>

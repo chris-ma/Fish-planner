@@ -1,10 +1,10 @@
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import Link from "next/link";
-import { MapPin, ArrowRight, Fish, Calendar, TrendingUp, Anchor } from "lucide-react";
+import { MapPin, ArrowRight, Fish, Calendar, TrendingUp } from "lucide-react";
 import { getZoneImage, getSpeciesImage } from "@/lib/images";
 import { SeasonalCalendar } from "@/components/discovery/SeasonalCalendar";
-import { getRegionBySlug, getSeasonCalendarForRegion, listRegions, getDestinationsForRegion } from "@/lib/queries/regions";
+import { getRegionBySlug, getSeasonCalendarForRegion, listRegions } from "@/lib/queries/regions";
 import { getExperiences } from "@/lib/queries/experiences";
 import { currentMonth, MONTH_NAMES_FULL } from "@/lib/utils/season";
 import { gregVinallYoutubeUrl } from "@/lib/affiliate";
@@ -74,9 +74,8 @@ export default async function RegionPage({ params }: { params: Promise<{ slug: s
   const region = await getRegionBySlug(slug);
   if (!region) notFound();
 
-  const [allCalendarRows, regionDestinations, allExperiences] = await Promise.all([
+  const [allCalendarRows, allExperiences] = await Promise.all([
     getSeasonCalendarForRegion(region.id),
-    getDestinationsForRegion(region.id),
     getExperiences(),
   ]);
   const month = currentMonth();
@@ -388,26 +387,6 @@ export default async function RegionPage({ params }: { params: Promise<{ slug: s
             </section>
           );
         })()}
-
-        {/* Fishing Spots */}
-        {regionDestinations.length > 0 && (
-          <section>
-            <div className="flex items-center gap-2 mb-4">
-              <Anchor className="h-4 w-4 text-[#0D9488]" />
-              <h2 className="text-lg font-bold text-[#F5F0E8]">Fishing Spots</h2>
-            </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-              {regionDestinations.map((dest) => (
-                <div key={dest.id} className="bg-[#040F1C] border border-white/10 rounded-xl p-4 hover:border-[#0D9488]/50 transition-colors">
-                  <p className="font-semibold text-[#F5F0E8] text-sm mb-1">{dest.name}</p>
-                  {dest.description && (
-                    <p className="text-white/50 text-xs leading-relaxed">{dest.description}</p>
-                  )}
-                </div>
-              ))}
-            </div>
-          </section>
-        )}
 
         {/* Popular Experiences */}
         {relevantExperiences.length > 0 && (

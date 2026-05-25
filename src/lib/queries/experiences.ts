@@ -1,5 +1,5 @@
 import { db } from "@/db";
-import { experiences, destinations, experienceDestinations, seasonWindows, species } from "@/db/schema";
+import { experiences, destinations, experienceDestinations, seasonWindows, species, regions } from "@/db/schema";
 import { eq, and } from "drizzle-orm";
 import { EXPERIENCES } from "@/db/seed/experiences";
 
@@ -52,4 +52,13 @@ export async function getDestinationsForExperience(experienceId: string, regionI
         eq(destinations.regionId, regionId)
       )
     );
+}
+
+export async function getDestinationsForExperienceAllRegions(experienceId: string) {
+  return db
+    .select({ destination: destinations, region: regions })
+    .from(experienceDestinations)
+    .innerJoin(destinations, eq(experienceDestinations.destinationId, destinations.id))
+    .innerJoin(regions, eq(destinations.regionId, regions.id))
+    .where(eq(experienceDestinations.experienceId, experienceId));
 }

@@ -2,13 +2,36 @@ export const dynamic = "force-dynamic";
 
 import { listSpecies } from "@/lib/queries/species";
 import { listRegions } from "@/lib/queries/regions";
+import { getExperiences, getRegionSpeciesSlugs } from "@/lib/queries/experiences";
+import { db } from "@/db";
+import { species } from "@/db/schema";
 import { PlanTabs } from "./PlanTabs";
 
 export default async function PlanPage() {
-  const [allSpecies, allRegions] = await Promise.all([
+  const [allSpecies, allRegions, allExperiences, regionSpeciesRows, allSpeciesForMap] = await Promise.all([
     listSpecies(),
     listRegions(),
+    getExperiences(),
+    getRegionSpeciesSlugs(),
+    db.select({ slug: species.slug, commonName: species.commonName }).from(species),
   ]);
+
+  const regionSpeciesMap: Record<string, string[]> = {};
+  for (const row of regionSpeciesRows) {
+    if (!regionSpeciesMap[row.regionId]) regionSpeciesMap[row.regionId] = [];
+    if (!regionSpeciesMap[row.regionId].includes(row.speciesSlug))
+      regionSpeciesMap[row.regionId].push(row.speciesSlug);
+  }
+
+  const speciesNameMap: Record<string, string> = Object.fromEntries(
+    allSpeciesForMap.map((s) => [s.slug, s.commonName])
+  );
+
+  const parsedExperiences = allExperiences.map((exp) => ({
+    ...exp,
+    speciesSlugs: JSON.parse(exp.targetSpeciesSlugs) as string[],
+    speciesNames: (JSON.parse(exp.targetSpeciesSlugs) as string[]).map((s) => speciesNameMap[s] ?? s),
+  }));
 
   return (
     <div>
@@ -22,7 +45,12 @@ export default async function PlanPage() {
           </p>
         </div>
       </div>
-      <PlanTabs species={allSpecies} regions={allRegions} />
+      <PlanTabs
+        species={allSpecies}
+        regions={allRegions}
+        experiences={parsedExperiences}
+        regionSpeciesMap={regionSpeciesMap}
+      />
     </div>
   );
 }

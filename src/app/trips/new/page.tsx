@@ -313,13 +313,33 @@ function NewTripForm() {
 
   const [experiences, setExperiences] = useState<ExperienceRow[]>([]);
   const [selectedExperience, setSelectedExperience] = useState<ExperienceRow | null>(null);
+  const [fromExperienceUrl, setFromExperienceUrl] = useState(false);
+  const [regionSpeciesMap, setRegionSpeciesMap] = useState<Record<string, string[]>>({});
   const [destinations, setDestinations] = useState<DestinationRow[]>([]);
   const [selectedDestinationIds, setSelectedDestinationIds] = useState<string[]>([]);
 
   useEffect(() => {
-    fetch("/api/experiences").then(r => r.ok ? r.json() : []).then(data => {
-      if (Array.isArray(data)) setExperiences(data);
+    fetch("/api/experiences").then(r => r.ok ? r.json() : []).then((data: ExperienceRow[]) => {
+      if (Array.isArray(data)) {
+        setExperiences(data);
+        const expSlug = searchParams.get("experience");
+        if (expSlug && data.length > 0) {
+          const match = data.find((e: ExperienceRow) => e.slug === expSlug);
+          if (match) {
+            setSelectedExperience(match);
+            setForm(f => ({ ...f, title: match.name }));
+            setFromExperienceUrl(true);
+          }
+        }
+      }
     }).catch(() => {});
+  }, [searchParams]);
+
+  useEffect(() => {
+    fetch("/api/regions/species-map")
+      .then(r => r.json())
+      .then((map: Record<string, string[]>) => setRegionSpeciesMap(map))
+      .catch(() => {});
   }, []);
 
   useEffect(() => {
@@ -456,13 +476,25 @@ function NewTripForm() {
     1: form.title.trim().length > 0,
     2: true,
     3: true,
-    4: true,
+    4: fromExperienceUrl || true,
     5: true,
     6: false,
   };
 
-  const goNext = () => setCurrentStep((s) => Math.min(s + 1, 6));
-  const goBack = () => setCurrentStep((s) => Math.max(s - 1, 1));
+  const goNext = () => {
+    if (currentStep === 3 && fromExperienceUrl) {
+      setCurrentStep(5);
+      return;
+    }
+    setCurrentStep((s) => Math.min(s + 1, 6));
+  };
+  const goBack = () => {
+    if (currentStep === 5 && fromExperienceUrl) {
+      setCurrentStep(3);
+      return;
+    }
+    setCurrentStep((s) => Math.max(s - 1, 1));
+  };
 
   const handleSubmit = async () => {
     if (!form.title.trim()) {
@@ -667,7 +699,16 @@ function NewTripForm() {
                 <p className="text-sm text-slate-400 py-4 text-center">Loading experiences…</p>
               ) : (
                 <div className="space-y-2 max-h-96 overflow-y-auto pr-1">
-                  {experiences.map((exp) => {
+                  {(selectedRegions.length > 0
+                    ? experiences.filter(exp => {
+                        const expSpecies: string[] = (() => { try { return JSON.parse(exp.targetSpeciesSlugs); } catch { return []; } })();
+                        return selectedRegions.some(regionSlug => {
+                          const regionSpecies = regionSpeciesMap[regionSlug] ?? [];
+                          return expSpecies.some(s => regionSpecies.includes(s));
+                        });
+                      })
+                    : experiences
+                  ).map((exp) => {
                     const isSelected = selectedExperience?.id === exp.id;
                     const CATEGORY_COLORS: Record<string, string> = {
                       offshore: "bg-blue-50 text-blue-700 border-blue-200",

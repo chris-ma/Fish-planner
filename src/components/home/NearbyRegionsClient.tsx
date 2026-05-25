@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 import { useUser } from "@clerk/nextjs";
 import Link from "next/link";
-import { MapPin } from "lucide-react";
 import { getZoneImage } from "@/lib/images";
 
 interface NearbyRegion {
@@ -47,13 +46,10 @@ export function NearbyRegionsClient({ month }: Props) {
 
   return (
     <section className="px-4 py-12 max-w-7xl mx-auto">
-      <p className="text-xs font-semibold text-[#0D9488] uppercase tracking-widest mb-2 flex items-center gap-2">
-        <MapPin className="h-3.5 w-3.5" />
-        Near you
-      </p>
-      <h2 className="text-2xl md:text-3xl font-bold text-[#F5F0E8] mb-6">
-        Spots near {locationName ?? "you"}
-      </h2>
+      <div className="mb-6">
+        <div className="h-1 w-12 bg-[#0D9488] rounded mb-3" />
+        <h2 className="text-2xl font-bold text-[#0D9488]">Fisheries near {locationName ?? "you"}</h2>
+      </div>
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
         {regions.map((region) => {

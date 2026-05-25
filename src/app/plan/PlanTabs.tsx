@@ -3,22 +3,30 @@
 import { useState } from "react";
 import { SpeciesBrowser } from "@/components/discovery/SpeciesBrowser";
 import { RegionCard } from "@/components/discovery/RegionCard";
+import { ExperiencesBrowser } from "@/components/discovery/ExperiencesBrowser";
 import type { Species, Region } from "@/db/schema";
+import type { ParsedExperience } from "@/components/discovery/ExperiencesBrowser";
+
+const TABS = ["experiences", "species", "locations"] as const;
+type Tab = (typeof TABS)[number];
 
 export function PlanTabs({
   species,
   regions,
+  experiences,
+  regionSpeciesMap,
 }: {
   species: Species[];
   regions: Region[];
+  experiences: ParsedExperience[];
+  regionSpeciesMap: Record<string, string[]>;
 }) {
-  const [tab, setTab] = useState<"species" | "locations">("species");
+  const [tab, setTab] = useState<Tab>("experiences");
 
   return (
     <div>
-      {/* Folder tab strip — dark bg, active tab is light and pops up */}
       <div className="bg-[#020B14] px-4 sm:px-6 pt-5 flex items-end gap-1">
-        {(["species", "locations"] as const).map((t) => {
+        {TABS.map((t) => {
           const active = tab === t;
           return (
             <button
@@ -36,9 +44,14 @@ export function PlanTabs({
         })}
       </div>
 
-      {/* Full-bleed content panels — light bg matches active tab */}
+      {tab === "experiences" && (
+        <ExperiencesBrowser
+          experiences={experiences}
+          regions={regions}
+          regionSpeciesMap={regionSpeciesMap}
+        />
+      )}
       {tab === "species" && <SpeciesBrowser species={species} />}
-
       {tab === "locations" && (
         <div className="bg-[#F5F0E8] min-h-screen">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
