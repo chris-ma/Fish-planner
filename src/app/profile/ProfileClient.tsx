@@ -61,6 +61,44 @@ function SavedBadge({ saved }: { saved: boolean }) {
   );
 }
 
+function ProfileAvatar({ avatarUrl, clerkImageUrl, displayName }: { avatarUrl: string; clerkImageUrl: string; displayName: string }) {
+  const preferred = avatarUrl || clerkImageUrl;
+  const [src, setSrc] = useState(preferred);
+  const [showInitials, setShowInitials] = useState(false);
+
+  const initials = displayName
+    .split(" ")
+    .map((p) => p[0])
+    .slice(0, 2)
+    .join("")
+    .toUpperCase() || "?";
+
+  function handleError() {
+    if (src === avatarUrl && clerkImageUrl && src !== clerkImageUrl) {
+      setSrc(clerkImageUrl);
+    } else {
+      setShowInitials(true);
+    }
+  }
+
+  if (showInitials || !src) {
+    return (
+      <div className="w-20 h-20 rounded-full bg-[#0D9488]/20 flex items-center justify-center border-2 border-[#0D9488]/30 shrink-0">
+        <span className="text-2xl font-bold text-[#0D9488]">{initials}</span>
+      </div>
+    );
+  }
+
+  return (
+    <img
+      src={src}
+      alt={displayName}
+      className="w-20 h-20 rounded-full object-cover border-2 border-[#0D9488]/30 shrink-0"
+      onError={handleError}
+    />
+  );
+}
+
 export function ProfileClient({
   email,
   firstName,
@@ -244,13 +282,11 @@ export function ProfileClient({
 
         {/* Avatar + name */}
         <div className="flex items-center gap-5 mb-10">
-          <div className="relative shrink-0">
-            <img
-              src={avatarUrl || imageUrl}
-              alt={nickname || fullName}
-              className="w-20 h-20 rounded-full object-cover border-2 border-[#0D9488]/30"
-            />
-          </div>
+          <ProfileAvatar
+            avatarUrl={avatarUrl}
+            clerkImageUrl={imageUrl}
+            displayName={nickname || fullName}
+          />
           <div>
             <h1 className="text-2xl font-bold text-[#040F1C]">{nickname || fullName}</h1>
             <p className="text-slate-500 text-sm mt-0.5">{email}</p>

@@ -78,6 +78,9 @@ export const INAT_SPECIES_PHOTOS: Record<string, string> = {
   "brown-trout": "https://inaturalist-open-data.s3.amazonaws.com/photos/34847723/square.jpg",
   "rainbow-trout": "https://static.inaturalist.org/photos/60921460/square.jpg",
   "ocean-trout": "https://static.inaturalist.org/photos/60921460/square.jpg",
+  // New species
+  "yellowtail-scad": "https://inaturalist-open-data.s3.amazonaws.com/photos/58360952/square.jpeg",
+  "calamari-squid": "https://inaturalist-open-data.s3.amazonaws.com/photos/132859816/square.jpg",
 };
 
 function inatPhoto(url: string, size: "medium" | "large" | "original"): string {
@@ -176,6 +179,9 @@ export const SPECIES_IMAGES: Record<string, string> = {
   "brown-trout": STREAM_FLY,
   "rainbow-trout": STREAM_FLY,
   "ocean-trout": STREAM_FLY,
+  // New species
+  "yellowtail-scad": INSHORE_SURF,
+  "calamari-squid": REEF_FISH,
 };
 
 // ─── Category image fallbacks ─────────────────────────────────────────────────

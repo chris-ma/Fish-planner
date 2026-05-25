@@ -21,6 +21,49 @@ function initials(name: string) {
     .toUpperCase();
 }
 
+function AvatarImg({ src, fallback, className }: { src: string; fallback: string; className: string }) {
+  const [broken, setBroken] = useState(false);
+  if (broken) {
+    return (
+      <div className="w-8 h-8 rounded-full bg-[#0D9488]/20 flex items-center justify-center shrink-0">
+        <span className="text-xs font-bold text-[#0D9488]">{fallback}</span>
+      </div>
+    );
+  }
+  return <img src={src} alt="" className={className} onError={() => setBroken(true)} />;
+}
+
+function ThumbImg({ src, className }: { src: string; className: string }) {
+  const [broken, setBroken] = useState(false);
+  if (broken) return null;
+  return (
+    <div className={className}>
+      <img src={src} alt="" className="w-full h-full object-cover" onError={() => setBroken(true)} />
+    </div>
+  );
+}
+
+function GalleryPhoto({ src, alt }: { src: string; alt: string }) {
+  const [broken, setBroken] = useState(false);
+  if (broken) {
+    return (
+      <div className="aspect-video bg-slate-100 flex items-center justify-center">
+        <Fish className="h-10 w-10 text-slate-300" />
+      </div>
+    );
+  }
+  return (
+    <div className="aspect-video overflow-hidden">
+      <img
+        src={src}
+        alt={alt}
+        className="w-full h-full object-cover"
+        onError={() => setBroken(true)}
+      />
+    </div>
+  );
+}
+
 const SPECIES_OPTIONS = [
   "Barramundi",
   "Flathead",
@@ -176,13 +219,7 @@ export default function ChallengeDetailClient({
               {entries.map((e) => (
                 <div key={e.id} className="rounded-xl overflow-hidden border border-slate-200 bg-white">
                   {e.photoUrl ? (
-                    <div className="aspect-video overflow-hidden">
-                      <img
-                        src={e.photoUrl}
-                        alt={e.catcherName}
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
+                    <GalleryPhoto src={e.photoUrl} alt={e.catcherName} />
                   ) : (
                     <div className="aspect-video bg-slate-100 flex items-center justify-center">
                       <Fish className="h-10 w-10 text-slate-300" />
@@ -218,9 +255,9 @@ export default function ChallengeDetailClient({
                     )}
                   </div>
                   {currentUserNickname && e.catcherName === currentUserNickname && currentUserAvatarUrl ? (
-                    <img
+                    <AvatarImg
                       src={currentUserAvatarUrl}
-                      alt={e.catcherName}
+                      fallback={initials(e.catcherName)}
                       className="w-8 h-8 rounded-full object-cover shrink-0 border border-[#0D9488]/30"
                     />
                   ) : (
@@ -241,9 +278,7 @@ export default function ChallengeDetailClient({
                     <p className="text-xs text-slate-400">{formatDate(e.caughtAt)}</p>
                   </div>
                   {e.photoUrl && (
-                    <div className="w-10 h-10 rounded-lg overflow-hidden shrink-0">
-                      <img src={e.photoUrl} alt="" className="w-full h-full object-cover" />
-                    </div>
+                    <ThumbImg src={e.photoUrl} className="w-10 h-10 rounded-lg overflow-hidden shrink-0" />
                   )}
                 </div>
               ))}
