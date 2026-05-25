@@ -21,6 +21,8 @@ export default async function ProfilePage() {
       firstName={user.firstName ?? ""}
       lastName={user.lastName ?? ""}
       imageUrl={user.imageUrl}
+      nickname={(user.unsafeMetadata?.nickname as string) ?? ""}
+      avatarUrl={(user.unsafeMetadata?.avatarUrl as string) ?? ""}
       location={(user.unsafeMetadata?.location as string) ?? ""}
       locationCoords={(user.unsafeMetadata?.locationCoords as { lat: number; lng: number }) ?? null}
       dreamFish={(user.unsafeMetadata?.dreamFish as string) ?? ""}

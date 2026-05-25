@@ -40,6 +40,8 @@ interface ProfileClientProps {
   firstName: string;
   lastName: string;
   imageUrl: string;
+  nickname: string;
+  avatarUrl: string;
   location: string;
   locationCoords: { lat: number; lng: number } | null;
   dreamFish: string;
@@ -64,6 +66,8 @@ export function ProfileClient({
   firstName,
   lastName,
   imageUrl,
+  nickname: initialNickname,
+  avatarUrl: initialAvatarUrl,
   location: initialLocation,
   locationCoords: initialCoords,
   dreamFish: initialDreamFish,
@@ -71,6 +75,16 @@ export function ProfileClient({
   allSpecies,
 }: ProfileClientProps) {
   const { user } = useUser();
+
+  // Nickname
+  const [nickname, setNickname] = useState(initialNickname);
+  const [nicknameSaved, setNicknameSaved] = useState(false);
+  const [nicknameSaving, setNicknameSaving] = useState(false);
+
+  // Avatar URL
+  const [avatarUrl, setAvatarUrl] = useState(initialAvatarUrl);
+  const [avatarSaved, setAvatarSaved] = useState(false);
+  const [avatarSaving, setAvatarSaving] = useState(false);
 
   // Location
   const [locationInput, setLocationInput] = useState(initialLocation);
@@ -166,6 +180,25 @@ export function ProfileClient({
     s.commonName.toLowerCase().includes(fishSearch.toLowerCase())
   );
 
+  async function saveNickname() {
+    if (!user) return;
+    setNicknameSaving(true);
+    await user.update({ unsafeMetadata: { ...user.unsafeMetadata, nickname: nickname.trim() } });
+    if (nickname.trim()) localStorage.setItem("bucketListName", nickname.trim());
+    setNicknameSaving(false);
+    setNicknameSaved(true);
+    setTimeout(() => setNicknameSaved(false), 2500);
+  }
+
+  async function saveAvatar() {
+    if (!user) return;
+    setAvatarSaving(true);
+    await user.update({ unsafeMetadata: { ...user.unsafeMetadata, avatarUrl: avatarUrl.trim() } });
+    setAvatarSaving(false);
+    setAvatarSaved(true);
+    setTimeout(() => setAvatarSaved(false), 2500);
+  }
+
   async function saveLocation() {
     if (!user) return;
     setLocationSaving(true);
@@ -211,13 +244,15 @@ export function ProfileClient({
 
         {/* Avatar + name */}
         <div className="flex items-center gap-5 mb-10">
-          <img
-            src={imageUrl}
-            alt={fullName}
-            className="w-20 h-20 rounded-full object-cover border-2 border-[#0D9488]/30"
-          />
+          <div className="relative shrink-0">
+            <img
+              src={avatarUrl || imageUrl}
+              alt={nickname || fullName}
+              className="w-20 h-20 rounded-full object-cover border-2 border-[#0D9488]/30"
+            />
+          </div>
           <div>
-            <h1 className="text-2xl font-bold text-[#040F1C]">{fullName}</h1>
+            <h1 className="text-2xl font-bold text-[#040F1C]">{nickname || fullName}</h1>
             <p className="text-slate-500 text-sm mt-0.5">{email}</p>
           </div>
         </div>
@@ -239,6 +274,60 @@ export function ProfileClient({
             <div className="flex-1 min-w-0">
               <p className="text-[10px] font-semibold text-slate-400 uppercase tracking-wide mb-0.5">Email</p>
               <p className="text-sm text-[#040F1C] font-medium truncate">{email}</p>
+            </div>
+          </div>
+
+          {/* Nickname */}
+          <div className="flex items-start gap-4 px-5 py-4">
+            <Pencil className="h-4 w-4 text-slate-400 shrink-0 mt-2.5" />
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center justify-between mb-1.5">
+                <p className="text-[10px] font-semibold text-slate-400 uppercase tracking-wide">Nickname</p>
+                <SavedBadge saved={nicknameSaved} />
+              </div>
+              <input
+                value={nickname}
+                onChange={(e) => setNickname(e.target.value)}
+                placeholder="e.g. Mick"
+                className="w-full text-sm bg-slate-50 border border-slate-200 rounded-lg px-3 py-1.5 text-[#040F1C] focus:outline-none focus:border-[#0D9488] focus:ring-1 focus:ring-[#0D9488]"
+              />
+              <p className="text-[10px] text-slate-400 mt-1">Used as your name in challenges and bucket list</p>
+              <button
+                onClick={saveNickname}
+                disabled={nicknameSaving || !nickname.trim()}
+                className="mt-2 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#0D9488] text-white text-xs font-semibold hover:bg-[#0F766E] transition-colors disabled:opacity-60"
+              >
+                {nicknameSaving ? "Saving…" : "Save"}
+              </button>
+            </div>
+          </div>
+
+          {/* Profile Photo */}
+          <div className="flex items-start gap-4 px-5 py-4">
+            <User className="h-4 w-4 text-slate-400 shrink-0 mt-2.5" />
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center justify-between mb-1.5">
+                <p className="text-[10px] font-semibold text-slate-400 uppercase tracking-wide">Profile Photo</p>
+                <SavedBadge saved={avatarSaved} />
+              </div>
+              <input
+                value={avatarUrl}
+                onChange={(e) => setAvatarUrl(e.target.value)}
+                placeholder="https://… (paste an image URL)"
+                className="w-full text-sm bg-slate-50 border border-slate-200 rounded-lg px-3 py-1.5 text-[#040F1C] focus:outline-none focus:border-[#0D9488] focus:ring-1 focus:ring-[#0D9488]"
+              />
+              <div className="flex items-center justify-between mt-2">
+                <button
+                  onClick={saveAvatar}
+                  disabled={avatarSaving}
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#0D9488] text-white text-xs font-semibold hover:bg-[#0F766E] transition-colors disabled:opacity-60"
+                >
+                  {avatarSaving ? "Saving…" : "Save"}
+                </button>
+                <a href="/profile/manage" className="text-[10px] text-[#0D9488] font-semibold hover:underline">
+                  Or upload via account settings →
+                </a>
+              </div>
             </div>
           </div>
 

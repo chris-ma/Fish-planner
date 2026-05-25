@@ -5,6 +5,7 @@ import { catchLog } from "@/db/schema";
 import { and, eq, isNotNull, isNull, lte } from "drizzle-orm";
 import type { RankedEntry } from "@/app/api/challenges/[slug]/entries/route";
 import ChallengeDetailClient from "./ChallengeDetailClient";
+import { currentUser } from "@clerk/nextjs/server";
 
 export const dynamic = "force-dynamic";
 
@@ -120,6 +121,10 @@ export default async function ChallengeDetailPage({
   const challenge = CHALLENGES.find((c) => c.slug === slug);
   if (!challenge) notFound();
 
+  const user = await currentUser();
+  const currentUserNickname = (user?.unsafeMetadata?.nickname as string) || "";
+  const currentUserAvatarUrl = (user?.unsafeMetadata?.avatarUrl as string) || user?.imageUrl || "";
+
   let entries: RankedEntry[] = [];
   try {
     const where = challenge.dataSource === "bucket_list"
@@ -135,5 +140,5 @@ export default async function ChallengeDetailPage({
     // DB unavailable or column missing — render empty leaderboard so the page still loads
   }
 
-  return <ChallengeDetailClient challenge={challenge} initialEntries={entries} />;
+  return <ChallengeDetailClient challenge={challenge} initialEntries={entries} currentUserNickname={currentUserNickname} currentUserAvatarUrl={currentUserAvatarUrl} />;
 }

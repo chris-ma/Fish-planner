@@ -3,7 +3,33 @@ import { species, seasonWindows, regions, speciesTechniques, techniques } from "
 import { eq, inArray } from "drizzle-orm";
 import { ratingScore, type Rating } from "@/lib/utils/season";
 
+const NEW_SPECIES = [
+  {
+    id: "s0051",
+    slug: "yellowtail-scad",
+    commonName: "Yellowtail Scad",
+    scientificName: "Trachurus novaezelandiae",
+    category: "inshore",
+    description: "Prolific schooling baitfish found all along the east coast. Outstanding live bait for kingfish, snapper, and tuna — and genuinely good eating when kept fresh. Schools are marked by diving birds and frigate-birds over bait balls.",
+    minLegalSizeMm: 180,
+    bagLimit: null,
+    createdAt: "2025-01-01T00:00:00.000Z",
+  },
+  {
+    id: "s0052",
+    slug: "calamari-squid",
+    commonName: "Calamari / Squid / Cuttlefish",
+    scientificName: null,
+    category: "inshore",
+    description: "Covers southern calamari, arrow squid, broad squid, and cuttlefish. Jigged at night under lights in bays and estuaries across southern Australia; found over reef and sand flats in warmer months. Exceptional eating and the ultimate all-purpose bait.",
+    minLegalSizeMm: 150,
+    bagLimit: 15,
+    createdAt: "2025-01-01T00:00:00.000Z",
+  },
+];
+
 export async function listSpecies() {
+  await db.insert(species).values(NEW_SPECIES).onConflictDoNothing();
   return db.select().from(species).orderBy(species.commonName);
 }
 

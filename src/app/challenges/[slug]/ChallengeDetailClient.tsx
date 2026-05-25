@@ -46,9 +46,13 @@ const SPECIES_OPTIONS = [
 export default function ChallengeDetailClient({
   challenge,
   initialEntries,
+  currentUserNickname = "",
+  currentUserAvatarUrl = "",
 }: {
   challenge: ChallengeConfig;
   initialEntries: RankedEntry[];
+  currentUserNickname?: string;
+  currentUserAvatarUrl?: string;
 }) {
   const [entries, setEntries] = useState<RankedEntry[]>(initialEntries);
   const [name, setName] = useState("");
@@ -213,9 +217,17 @@ export default function ChallengeDetailClient({
                       <span className="text-sm font-bold text-slate-400">{e.rank}</span>
                     )}
                   </div>
-                  <div className="w-8 h-8 rounded-full bg-[#0D9488]/20 flex items-center justify-center shrink-0">
-                    <span className="text-xs font-bold text-[#0D9488]">{initials(e.catcherName)}</span>
-                  </div>
+                  {currentUserNickname && e.catcherName === currentUserNickname && currentUserAvatarUrl ? (
+                    <img
+                      src={currentUserAvatarUrl}
+                      alt={e.catcherName}
+                      className="w-8 h-8 rounded-full object-cover shrink-0 border border-[#0D9488]/30"
+                    />
+                  ) : (
+                    <div className="w-8 h-8 rounded-full bg-[#0D9488]/20 flex items-center justify-center shrink-0">
+                      <span className="text-xs font-bold text-[#0D9488]">{initials(e.catcherName)}</span>
+                    </div>
+                  )}
                   <div className="flex-1 min-w-0">
                     <p className="font-semibold text-sm text-slate-800 truncate">{e.catcherName}</p>
                     {e.location && (
