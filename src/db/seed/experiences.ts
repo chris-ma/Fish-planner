@@ -211,4 +211,171 @@ export const EXPERIENCES: ExperienceSeed[] = [
     targetSpeciesSlugs: ["bonefish"],
     primaryTechniqueSlug: "fly-fishing",
   },
+  // ── Offshore ────────────────────────────────────────────────────────────────
+  {
+    slug: "southern-bluefin-tuna",
+    name: "Southern Bluefin Tuna",
+    description:
+      "Southern bluefin tuna are one of the most powerful and prized pelagic fish in Australian waters, targeted by trolling lures and rigged baits or chunking live and dead baits along the continental shelf edge of southern Australia from SA through Victoria and Tasmania. These fish can grow to over 200 kg and are capable of sustained high-speed runs that test tackle to the limit.",
+    category: "offshore",
+    targetSpeciesSlugs: ["southern-bluefin-tuna"],
+    primaryTechniqueSlug: "trolling",
+  },
+  {
+    slug: "wahoo-speed-trolling",
+    name: "Wahoo Speed Trolling",
+    description:
+      "Wahoo are the fastest fish in Australian waters and are targeted by trolling high-speed skirted lures at 14 to 18 knots over offshore FADs, current edges and temperature breaks in tropical and subtropical waters. Their razor-sharp teeth and lightning-quick strikes make them one of the most exciting pelagic species to target, and they share habitat with Spanish mackerel on inshore reefs.",
+    category: "offshore",
+    targetSpeciesSlugs: ["wahoo", "spanish-mackerel"],
+    primaryTechniqueSlug: "trolling",
+  },
+  {
+    slug: "cobia-casting",
+    name: "Cobia Casting & Jigging",
+    description:
+      "Cobia are a large, hard-fighting offshore species found in warm Australian waters from WA through Queensland, frequently encountered around channel markers, FADs, whale sharks, manta rays and offshore structure. They respond eagerly to large soft plastic jigs, hard-bodied lures and live baits, and are known for following hooked fish to the surface, providing exciting sight-casting opportunities.",
+    category: "offshore",
+    targetSpeciesSlugs: ["cobia"],
+    primaryTechniqueSlug: "casting-hard-bodies",
+  },
+  // ── Reef ────────────────────────────────────────────────────────────────────
+  {
+    slug: "samson-fish-jigging",
+    name: "Samson Fish & Amberjack Jigging",
+    description:
+      "Samson fish and amberjack are among Australia's hardest fighting reef species, notorious for diving into structure and breaking tackle on the initial run. These powerful fish are targeted primarily in WA and Queensland waters using speed jigs and slow-pitch jigs worked over rocky pinnacles, bomboras and offshore reefs from 30 to 100 metres depth.",
+    category: "reef",
+    targetSpeciesSlugs: ["kingfish-qld"],
+    primaryTechniqueSlug: "jigging",
+  },
+  {
+    slug: "spangled-emperor-bashing",
+    name: "Spangled Emperor Reef Fishing",
+    description:
+      "Spangled emperor are a prized tropical reef species found across northern Australian reefs from WA through the NT and Queensland, targeted with fresh baits on paternoster rigs in 10 to 50 metres over coral and rubble substrate. They are excellent table fish and are frequently caught alongside coral trout and red emperor on shallow inshore and offshore reefs.",
+    category: "reef",
+    targetSpeciesSlugs: ["spangled-emperor", "red-emperor", "coral-trout"],
+    primaryTechniqueSlug: "bottom-bait",
+  },
+  {
+    slug: "southern-reef-mixed",
+    name: "Southern Reef Mixed Bag",
+    description:
+      "The temperate reefs of southern Australia and Tasmania hold a diverse mix of premium table fish including striped trumpeter, blue-eye trevalla and blue morwong, targeted by bottom fishing with baits and slow-pitch jigs in depths from 60 to 300 metres. Cold, nutrient-rich southern waters produce exceptional eating fish and the mixed-bag nature of this style keeps every drop interesting.",
+    category: "reef",
+    targetSpeciesSlugs: ["striped-trumpeter", "blue-eye-trevalla"],
+    primaryTechniqueSlug: "bottom-bait",
+  },
+  {
+    slug: "ningaloo-reef",
+    name: "Ningaloo Reef Fishing",
+    description:
+      "Ningaloo Reef in WA's Coral Coast is a world heritage site with outstanding fishing for coral trout, rankin cod, spangled emperor and a host of tropical species over pristine coral reef in crystal-clear water. The accessibility of the reef from the shore and the diversity of species on offer makes Ningaloo one of Australia's premier reef fishing destinations.",
+    category: "reef",
+    targetSpeciesSlugs: ["coral-trout", "rankin-cod", "spangled-emperor"],
+    primaryTechniqueSlug: "bottom-bait",
+  },
+  {
+    slug: "nz-hapuku-deep",
+    name: "NZ Deep Groper Fishing",
+    description:
+      "Hapuku, also known as groper, are New Zealand's premier deep-sea table fish, targeted over deep-water pinnacles and rock faces from 100 to 400 metres around both islands. Fresh squid and fish baits on heavy paternoster rigs dropped to the bottom produce consistent results on these large, powerful fish. John Dory and blue cod often share the same structure.",
+    category: "reef",
+    targetSpeciesSlugs: ["hapuku-groper", "blue-cod", "john-dory"],
+    primaryTechniqueSlug: "bottom-bait",
+  },
+  // ── Inshore ─────────────────────────────────────────────────────────────────
+  {
+    slug: "gummy-shark-fishing",
+    name: "Gummy Shark Night Fishing",
+    description:
+      "Gummy sharks are Victoria and SA's most popular inshore target, sought at night in tidal bays, channels and coastal surf beaches using large fresh baits of squid, pilchard and tuna on wire or heavy mono traces. Port Phillip Bay, Westernport Bay and the Yorke Peninsula are consistent producers, particularly on the tide change during the warmer months.",
+    category: "inshore",
+    targetSpeciesSlugs: ["gummy-shark"],
+    primaryTechniqueSlug: "live-bait",
+  },
+  {
+    slug: "kingfish-livebait",
+    name: "Kingfish on Live Bait",
+    description:
+      "Yellowtail kingfish are extremely responsive to live baits, particularly slimy mackerel, yakkas and squid drifted over offshore reefs and pinnacles along the NSW and VIC coast. Live baiting is particularly effective when kingfish are finicky and not responding to jigs or lures, and regularly produces the largest fish of a session.",
+    category: "inshore",
+    targetSpeciesSlugs: ["yellowtail-kingfish"],
+    primaryTechniqueSlug: "live-bait",
+  },
+  {
+    slug: "rock-fishing",
+    name: "Rock Platform & Drummer Fishing",
+    description:
+      "Rock fishing for black drummer and Australian salmon from exposed headlands and rock platforms is a traditional Australian fishing experience, particularly popular in NSW and VIC. Black drummer (luderick) are targeted with green weed on light float rigs in surging gutters while Australian salmon and tailor smash metal lures cast into the white water from the same platforms.",
+    category: "inshore",
+    targetSpeciesSlugs: ["black-drummer", "australian-salmon"],
+    primaryTechniqueSlug: "beach-casting",
+  },
+  {
+    slug: "milkfish-fly",
+    name: "Milkfish on the Fly",
+    description:
+      "Milkfish are one of the ultimate fly fishing challenges, a large, fast and incredibly powerful filter-feeder found on the surface scum lines and current edges around Christmas Island and Cocos Keeling Islands. Presenting tiny flies in surface foam to finicky fish that rarely take and then make blistering 200 m runs is the pinnacle of tropical saltwater fly fishing.",
+    category: "inshore",
+    targetSpeciesSlugs: ["milkfish"],
+    primaryTechniqueSlug: "fly-fishing",
+  },
+  // ── Estuary ─────────────────────────────────────────────────────────────────
+  {
+    slug: "black-jewfish-estuary",
+    name: "Black Jewfish Estuary Fishing",
+    description:
+      "Black jewfish are a large, nocturnal estuary predator found in the tidal rivers and estuaries of northern Australia from the Kimberley through to central Queensland, prized for both their size and exceptional eating quality. Large live mullet and catfish baits fished in tidal holes and deep channel bends produce the best results during low light periods.",
+    category: "estuary",
+    targetSpeciesSlugs: ["jewfish", "mulloway"],
+    primaryTechniqueSlug: "live-bait",
+  },
+  {
+    slug: "threadfin-salmon",
+    name: "Threadfin Salmon Casting",
+    description:
+      "Threadfin salmon are one of the most exciting lure fishing targets in tropical Australia, found in the turbid estuaries and creek mouths of Queensland and the NT where they ambush prawns and baitfish on tidal run-outs. These powerful fish respond aggressively to large soft plastic lures and hard-bodied swimbaits worked through the dirty water of tidal outflows.",
+    category: "estuary",
+    targetSpeciesSlugs: ["threadfin-salmon", "barramundi"],
+    primaryTechniqueSlug: "casting-hard-bodies",
+  },
+  {
+    slug: "king-george-whiting-sa",
+    name: "King George Whiting",
+    description:
+      "King George whiting are South Australia's most prized table fish and are found in the shallow seagrass beds and sandy bays of Gulf St Vincent, Spencer Gulf and the Yorke and Eyre peninsulas. Fishing fresh peeled prawn, pippi or bluebait on small hooks with running sinker rigs over clean sandy ground produces consistent catches of these delicately flavoured fish.",
+    category: "estuary",
+    targetSpeciesSlugs: ["king-george-whiting", "whiting"],
+    primaryTechniqueSlug: "bait-fishing-estuary",
+  },
+  {
+    slug: "mangrove-jack-lure",
+    name: "Mangrove Jack Lure Fishing",
+    description:
+      "Mangrove jack are one of Australia's most aggressive and frustrating estuary species, ambushing lures from beneath mangrove overhangs, submerged timber and bridge pylon shadows in tidal rivers from the Kimberley to northern NSW. These fish hit hard, turn instantly and use every piece of structure to bust off anglers, demanding heavy leader and immediate pressure after the strike.",
+    category: "estuary",
+    targetSpeciesSlugs: ["mangrove-jack"],
+    primaryTechniqueSlug: "casting-hard-bodies",
+  },
+  // ── Freshwater ──────────────────────────────────────────────────────────────
+  {
+    slug: "saratoga-topwater",
+    name: "Saratoga Topwater Fishing",
+    description:
+      "Saratoga are a prehistoric-looking freshwater predator native to northern Queensland and the NT, highly prized by lure anglers for their aggression on surface lures and hard-bodied stickbaits worked over weed beds and submerged timber in impoundments and slow-moving rivers. Their acrobatic jumps after being hooked make them one of Australia's most exciting freshwater sport fish.",
+    category: "freshwater",
+    targetSpeciesSlugs: ["saratoga"],
+    primaryTechniqueSlug: "lure-casting-freshwater",
+  },
+  {
+    slug: "redfin-impoundment",
+    name: "Redfin Perch Impoundment",
+    description:
+      "Redfin perch are a highly regarded sport fish in southern Australian impoundments, schooling over submerged structure and rocky points in lakes throughout Victoria, SA and the ACT. They are aggressive biters that respond well to blade vibes, small soft plastics and Tassie Devil lures retrieved at mid-depth, and provide fast-action fishing when located with a sounder.",
+    category: "freshwater",
+    targetSpeciesSlugs: ["redfin"],
+    primaryTechniqueSlug: "lure-casting-freshwater",
+  },
 ];
