@@ -6,6 +6,9 @@ import { REGIONS } from "./regions";
 import { SPECIES } from "./species";
 import { SEASON_DATA } from "./season-windows";
 import { GEAR_TEMPLATES } from "./gear-templates";
+import { EXPERIENCES } from "./experiences";
+import { DESTINATIONS } from "./destinations";
+import { EXPERIENCE_DESTINATIONS } from "./experience-destinations";
 
 const TECHNIQUES_DATA = [
   { slug: "trolling", name: "Trolling", category: "offshore", description: "Dragging lures or baits at speed behind a moving boat. Primary technique for pelagics." },
@@ -208,6 +211,60 @@ async function seed() {
         quantity: item.quantity ?? 1,
         notes: (item as { notes?: string }).notes ?? null,
         isEssential: item.isEssential ?? false,
+      })
+      .onConflictDoNothing();
+  }
+
+  // 7. Experiences
+  console.log("  → Experiences...");
+  for (const exp of EXPERIENCES) {
+    await db
+      .insert(schema.experiences)
+      .values({
+        id: `exp-${exp.slug}`,
+        slug: exp.slug,
+        name: exp.name,
+        description: exp.description ?? null,
+        category: exp.category,
+        targetSpeciesSlugs: JSON.stringify(exp.targetSpeciesSlugs),
+        primaryTechniqueSlug: exp.primaryTechniqueSlug ?? null,
+      })
+      .onConflictDoNothing();
+  }
+
+  // 8. Destinations and experience-destination junctions
+  console.log("  → Destinations...");
+  const freshRegionMap = Object.fromEntries(
+    (await db.select({ id: schema.regions.id, slug: schema.regions.slug }).from(schema.regions))
+      .map((r) => [r.slug, r.id])
+  );
+
+  for (const dest of DESTINATIONS) {
+    const regionId = freshRegionMap[dest.regionSlug];
+    if (!regionId) continue;
+    await db
+      .insert(schema.destinations)
+      .values({
+        id: `dest-${dest.slug}`,
+        slug: dest.slug,
+        name: dest.name,
+        regionId,
+        description: dest.description,
+        latitude: null,
+        longitude: null,
+        tags: null,
+        createdAt: new Date().toISOString(),
+      })
+      .onConflictDoNothing();
+  }
+
+  console.log("  → Experience-destination links...");
+  for (const ed of EXPERIENCE_DESTINATIONS) {
+    await db
+      .insert(schema.experienceDestinations)
+      .values({
+        experienceId: `exp-${ed.experienceSlug}`,
+        destinationId: `dest-${ed.destinationSlug}`,
       })
       .onConflictDoNothing();
   }

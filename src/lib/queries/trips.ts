@@ -31,6 +31,8 @@ export async function createTrip(data: {
   endDate?: string;
   targetSpecies?: string[];
   description?: string;
+  experienceId?: string;
+  destinationIds?: string[];
 }) {
   const id = nanoid();
   const shareCode = nanoid(8);
@@ -44,6 +46,8 @@ export async function createTrip(data: {
     endDate: data.endDate ?? null,
     targetSpecies: data.targetSpecies ? JSON.stringify(data.targetSpecies) : null,
     description: data.description ?? null,
+    experienceId: data.experienceId ?? null,
+    destinationIds: data.destinationIds ? JSON.stringify(data.destinationIds) : null,
     shareCode,
     status: "planning",
     createdAt: new Date().toISOString(),

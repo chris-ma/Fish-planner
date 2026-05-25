@@ -1,10 +1,11 @@
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import Link from "next/link";
-import { MapPin, ArrowRight, Fish, Calendar, TrendingUp } from "lucide-react";
+import { MapPin, ArrowRight, Fish, Calendar, TrendingUp, Anchor } from "lucide-react";
 import { getZoneImage, getSpeciesImage } from "@/lib/images";
 import { SeasonalCalendar } from "@/components/discovery/SeasonalCalendar";
-import { getRegionBySlug, getSeasonCalendarForRegion, listRegions } from "@/lib/queries/regions";
+import { getRegionBySlug, getSeasonCalendarForRegion, listRegions, getDestinationsForRegion } from "@/lib/queries/regions";
+import { getExperiences } from "@/lib/queries/experiences";
 import { currentMonth, MONTH_NAMES_FULL } from "@/lib/utils/season";
 import { gregVinallYoutubeUrl } from "@/lib/affiliate";
 import { REGION_EPISODES, PODCAST_SHOW_URL } from "@/lib/podcast-episodes";
@@ -73,7 +74,11 @@ export default async function RegionPage({ params }: { params: Promise<{ slug: s
   const region = await getRegionBySlug(slug);
   if (!region) notFound();
 
-  const allCalendarRows = await getSeasonCalendarForRegion(region.id);
+  const [allCalendarRows, regionDestinations, allExperiences] = await Promise.all([
+    getSeasonCalendarForRegion(region.id),
+    getDestinationsForRegion(region.id),
+    getExperiences(),
+  ]);
   const month = currentMonth();
 
   const calendarRows = allCalendarRows.filter((row) =>
@@ -117,6 +122,13 @@ export default async function RegionPage({ params }: { params: Promise<{ slug: s
 
   // Top target species (up to 8, sorted by peak score already from query)
   const topSpecies = calendarRows.slice(0, 8);
+
+  // Filter experiences to ones relevant to this region's species
+  const regionSpeciesSlugs = new Set(calendarRows.map((r) => r.speciesSlug));
+  const relevantExperiences = allExperiences.filter((exp) => {
+    const targetSlugs: string[] = JSON.parse(exp.targetSpeciesSlugs || "[]");
+    return targetSlugs.some((s) => regionSpeciesSlugs.has(s));
+  }).slice(0, 6);
 
   return (
     <div className="bg-[#020B14] min-h-screen">
@@ -376,6 +388,74 @@ export default async function RegionPage({ params }: { params: Promise<{ slug: s
             </section>
           );
         })()}
+
+        {/* Fishing Spots */}
+        {regionDestinations.length > 0 && (
+          <section>
+            <div className="flex items-center gap-2 mb-4">
+              <Anchor className="h-4 w-4 text-[#0D9488]" />
+              <h2 className="text-lg font-bold text-[#F5F0E8]">Fishing Spots</h2>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+              {regionDestinations.map((dest) => (
+                <div key={dest.id} className="bg-[#040F1C] border border-white/10 rounded-xl p-4 hover:border-[#0D9488]/50 transition-colors">
+                  <p className="font-semibold text-[#F5F0E8] text-sm mb-1">{dest.name}</p>
+                  {dest.description && (
+                    <p className="text-white/50 text-xs leading-relaxed">{dest.description}</p>
+                  )}
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {/* Popular Experiences */}
+        {relevantExperiences.length > 0 && (
+          <section>
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-lg font-bold text-[#F5F0E8]">Fishing Experiences</h2>
+              <Link href="/trips/new" className="text-sm text-[#0D9488] hover:text-[#2DD4BF] transition-colors">
+                Plan a trip →
+              </Link>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+              {relevantExperiences.map((exp) => {
+                const CATEGORY_COLORS: Record<string, string> = {
+                  offshore: "bg-blue-900/50 text-blue-300 border-blue-800/50",
+                  reef: "bg-orange-900/50 text-orange-300 border-orange-800/50",
+                  estuary: "bg-teal-900/50 text-teal-300 border-teal-800/50",
+                  inshore: "bg-sky-900/50 text-sky-300 border-sky-800/50",
+                  freshwater: "bg-emerald-900/50 text-emerald-300 border-emerald-800/50",
+                };
+                const colorClass = CATEGORY_COLORS[exp.category] ?? "bg-slate-800/50 text-slate-300 border-slate-700/50";
+                const targetSlugs: string[] = JSON.parse(exp.targetSpeciesSlugs || "[]");
+                return (
+                  <Link key={exp.id} href={`/trips/new?experience=${exp.slug}&region=${region.slug}`}>
+                    <div className="bg-[#040F1C] border border-white/10 rounded-xl p-4 hover:border-[#0D9488]/50 transition-colors cursor-pointer group h-full">
+                      <div className="flex items-start justify-between gap-2 mb-2">
+                        <p className="font-semibold text-[#F5F0E8] text-sm group-hover:text-[#2DD4BF] transition-colors leading-tight">{exp.name}</p>
+                        <span className={`shrink-0 text-[10px] font-bold px-2 py-0.5 rounded-full border uppercase tracking-wide ${colorClass}`}>
+                          {exp.category}
+                        </span>
+                      </div>
+                      {exp.description && (
+                        <p className="text-white/40 text-xs leading-relaxed line-clamp-2 mb-2">{exp.description}</p>
+                      )}
+                      <div className="flex flex-wrap gap-1 mt-auto">
+                        {targetSlugs.slice(0, 3).map((s) => (
+                          <span key={s} className="text-[10px] px-1.5 py-0.5 rounded bg-white/5 text-white/40">{s.replace(/-/g, " ")}</span>
+                        ))}
+                        {targetSlugs.length > 3 && (
+                          <span className="text-[10px] px-1.5 py-0.5 rounded bg-white/5 text-white/40">+{targetSlugs.length - 3} more</span>
+                        )}
+                      </div>
+                    </div>
+                  </Link>
+                );
+              })}
+            </div>
+          </section>
+        )}
 
         {/* CTA */}
         <section className="bg-[#040F1C] border border-white/10 rounded-3xl p-10 text-center">

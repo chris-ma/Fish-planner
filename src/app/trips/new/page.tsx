@@ -15,6 +15,26 @@ import { currentMonth, MONTH_NAMES_FULL } from "@/lib/utils/season";
 import { SPECIES_OPTIONS, REGION_OPTIONS } from "@/lib/data/options";
 import { SPECIES_GEAR } from "@/lib/gear-specs";
 
+const SLUG_TO_SPECIES_NAME: Record<string, string> = {
+  "black-marlin": "Black Marlin", "blue-marlin": "Blue Marlin", "sailfish": "Sailfish",
+  "yellowfin-tuna": "Yellowfin Tuna", "longtail-tuna": "Longtail Tuna", "spanish-mackerel": "Spanish Mackerel",
+  "wahoo": "Wahoo", "mahi-mahi": "Mahi-Mahi", "southern-bluefin-tuna": "Southern Bluefin Tuna",
+  "yellowtail-kingfish": "Yellowtail Kingfish", "giant-trevally": "Giant Trevally", "cobia": "Cobia",
+  "tailor": "Tailor", "australian-salmon": "Australian Salmon", "gummy-shark": "Gummy Shark",
+  "coral-trout": "Coral Trout", "red-emperor": "Red Emperor", "nannygai": "Nannygai", "snapper": "Snapper",
+  "blue-eye-trevalla": "Blue-eye Trevalla", "striped-trumpeter": "Striped Trumpeter",
+  "barramundi": "Barramundi", "mangrove-jack": "Mangrove Jack", "flathead": "Flathead",
+  "mulloway": "Mulloway", "bream": "Bream", "whiting": "Whiting",
+  "murray-cod": "Murray Cod", "golden-perch": "Golden Perch", "silver-perch": "Silver Perch",
+  "australian-bass": "Australian Bass", "brown-trout": "Brown Trout", "rainbow-trout": "Rainbow Trout",
+  "redfin": "Redfin", "saratoga": "Saratoga", "ocean-trout": "Ocean Trout",
+  "queenfish": "Queenfish", "threadfin-salmon": "Threadfin Salmon", "dhufish": "Dhufish",
+  "baldchin-groper": "Baldchin Groper", "bonefish": "Bonefish", "milkfish": "Milkfish",
+  "calamari-squid": "Calamari / Squid", "yellowtail-scad": "Yellowtail Scad",
+  "hapuku-groper": "Hapuku / Groper", "blue-cod": "Blue Cod", "tarakihi": "Tarakihi",
+  "blue-moki": "Blue Moki", "john-dory": "John Dory",
+};
+
 // ── Which zones each species is active in ────────────────────────────────────
 const SPECIES_ACTIVE_ZONES: Record<string, string[]> = {
   "Black Marlin": ["far_north_qld", "central_qld"],
@@ -73,8 +93,9 @@ const STEP_TITLES: Record<number, string> = {
   1: "Name your trip",
   2: "When are you going?",
   3: "Where are you headed?",
-  4: "What do you want to catch?",
-  5: "Review & create",
+  4: "What experience are you after?",
+  5: "What do you want to catch?",
+  6: "Review & create",
 };
 
 type ScheduleEvent = { id: string; startTime: string; endTime: string; activity: string; species: string[] };
@@ -287,6 +308,28 @@ function NewTripForm() {
     }).catch(() => {});
   }, []);
 
+  type ExperienceRow = { id: string; slug: string; name: string; description: string | null; category: string; targetSpeciesSlugs: string; primaryTechniqueSlug: string | null };
+  type DestinationRow = { id: string; slug: string; name: string; description: string | null };
+
+  const [experiences, setExperiences] = useState<ExperienceRow[]>([]);
+  const [selectedExperience, setSelectedExperience] = useState<ExperienceRow | null>(null);
+  const [destinations, setDestinations] = useState<DestinationRow[]>([]);
+  const [selectedDestinationIds, setSelectedDestinationIds] = useState<string[]>([]);
+
+  useEffect(() => {
+    fetch("/api/experiences").then(r => r.ok ? r.json() : []).then(data => {
+      if (Array.isArray(data)) setExperiences(data);
+    }).catch(() => {});
+  }, []);
+
+  useEffect(() => {
+    if (selectedRegions.length === 0) { setDestinations([]); return; }
+    const slug = selectedRegions[0];
+    fetch(`/api/destinations?regionSlug=${encodeURIComponent(slug)}`).then(r => r.ok ? r.json() : []).then(data => {
+      if (Array.isArray(data)) setDestinations(data);
+    }).catch(() => {});
+  }, [selectedRegions]);
+
   const [form, setForm] = useState({
     title: "",
     startDate: "",
@@ -414,10 +457,11 @@ function NewTripForm() {
     2: true,
     3: true,
     4: true,
-    5: false,
+    5: true,
+    6: false,
   };
 
-  const goNext = () => setCurrentStep((s) => Math.min(s + 1, 5));
+  const goNext = () => setCurrentStep((s) => Math.min(s + 1, 6));
   const goBack = () => setCurrentStep((s) => Math.max(s - 1, 1));
 
   const handleSubmit = async () => {
@@ -445,6 +489,8 @@ function NewTripForm() {
           endDate: form.endDate || undefined,
           targetSpecies: allSelectedSpecies,
           description: descriptionPayload,
+          experienceId: selectedExperience?.id,
+          destinationIds: selectedDestinationIds.length > 0 ? selectedDestinationIds : undefined,
         }),
       });
       if (!res.ok) throw new Error("Failed to create trip");
@@ -509,10 +555,10 @@ function NewTripForm() {
 
       <div className="max-w-2xl mx-auto px-4 sm:px-6 py-10">
         <div className="bg-[#F5F0E8] rounded-2xl p-6 shadow-sm border border-slate-100">
-          <StepProgress current={currentStep} total={5} />
+          <StepProgress current={currentStep} total={6} />
 
           <h2 className="text-2xl font-bold text-[#040F1C] mb-6">
-            {currentStep === 4 && useItinerary ? "Plan your days" : STEP_TITLES[currentStep]}
+            {currentStep === 5 && useItinerary ? "Plan your days" : STEP_TITLES[currentStep]}
           </h2>
 
           {/* Step 1: Trip name */}
@@ -613,8 +659,106 @@ function NewTripForm() {
             </div>
           )}
 
-          {/* Step 4: Itinerary / Species */}
+          {/* Step 4: Experience */}
           {currentStep === 4 && (
+            <div className="space-y-3">
+              <p className="text-sm text-slate-500">Choose the type of fishing experience you're planning. This will pre-fill target species.</p>
+              {experiences.length === 0 ? (
+                <p className="text-sm text-slate-400 py-4 text-center">Loading experiences…</p>
+              ) : (
+                <div className="space-y-2 max-h-96 overflow-y-auto pr-1">
+                  {experiences.map((exp) => {
+                    const isSelected = selectedExperience?.id === exp.id;
+                    const CATEGORY_COLORS: Record<string, string> = {
+                      offshore: "bg-blue-50 text-blue-700 border-blue-200",
+                      reef: "bg-orange-50 text-orange-700 border-orange-200",
+                      estuary: "bg-teal-50 text-teal-700 border-teal-200",
+                      inshore: "bg-sky-50 text-sky-700 border-sky-200",
+                      freshwater: "bg-emerald-50 text-emerald-700 border-emerald-200",
+                    };
+                    const badgeColor = CATEGORY_COLORS[exp.category] ?? "bg-slate-50 text-slate-700 border-slate-200";
+                    const targetSlugs: string[] = JSON.parse(exp.targetSpeciesSlugs || "[]");
+                    return (
+                      <button
+                        key={exp.id}
+                        type="button"
+                        onClick={() => {
+                          setSelectedExperience(isSelected ? null : exp);
+                          if (!isSelected) {
+                            const names = targetSlugs
+                              .map(s => SLUG_TO_SPECIES_NAME[s])
+                              .filter((n): n is string => Boolean(n) && SPECIES_OPTIONS.includes(n));
+                            setSelectedSpecies(names);
+                          }
+                        }}
+                        className={`w-full text-left px-3 py-3 rounded-xl border transition-all ${
+                          isSelected
+                            ? "border-[#0D9488] bg-teal-50"
+                            : "border-slate-200 bg-white hover:border-slate-300"
+                        }`}
+                      >
+                        <div className="flex items-start justify-between gap-2 mb-1">
+                          <p className={`font-semibold text-sm ${isSelected ? "text-[#0F766E]" : "text-[#040F1C]"}`}>{exp.name}</p>
+                          <span className={`shrink-0 text-[10px] font-bold px-2 py-0.5 rounded-full border uppercase tracking-wide ${badgeColor}`}>
+                            {exp.category}
+                          </span>
+                        </div>
+                        {exp.description && (
+                          <p className="text-xs text-slate-500 leading-relaxed line-clamp-2 mb-2">{exp.description}</p>
+                        )}
+                        <div className="flex flex-wrap gap-1">
+                          {targetSlugs.slice(0, 4).map(s => (
+                            <span key={s} className="text-[10px] px-1.5 py-0.5 rounded bg-slate-100 text-slate-500">
+                              {SLUG_TO_SPECIES_NAME[s] ?? s.replace(/-/g, " ")}
+                            </span>
+                          ))}
+                          {targetSlugs.length > 4 && (
+                            <span className="text-[10px] px-1.5 py-0.5 rounded bg-slate-100 text-slate-500">+{targetSlugs.length - 4} more</span>
+                          )}
+                        </div>
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
+
+              {/* Destinations for the selected region */}
+              {destinations.length > 0 && (
+                <div className="mt-4">
+                  <p className="text-sm font-medium text-[#040F1C] mb-2">Fishing spots in this region</p>
+                  <div className="space-y-1 max-h-48 overflow-y-auto pr-1">
+                    {destinations.map(dest => {
+                      const checked = selectedDestinationIds.includes(dest.id);
+                      return (
+                        <button
+                          key={dest.id}
+                          type="button"
+                          onClick={() =>
+                            setSelectedDestinationIds(prev =>
+                              checked ? prev.filter(id => id !== dest.id) : [...prev, dest.id]
+                            )
+                          }
+                          className={`w-full text-left px-3 py-2 rounded-lg border text-sm transition-all flex items-center gap-2 ${
+                            checked
+                              ? "border-[#0D9488] bg-teal-50 text-[#0F766E]"
+                              : "border-slate-200 bg-white text-slate-700 hover:border-slate-300"
+                          }`}
+                        >
+                          <div className={`w-4 h-4 rounded border shrink-0 flex items-center justify-center ${checked ? "bg-[#0D9488] border-[#0D9488]" : "border-slate-300"}`}>
+                            {checked && <Check className="h-2.5 w-2.5 text-white" />}
+                          </div>
+                          <span className="font-medium">{dest.name}</span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Step 5: Itinerary / Species */}
+          {currentStep === 5 && (
             <div className="space-y-3">
               {useItinerary ? (
                 <>
@@ -822,8 +966,8 @@ function NewTripForm() {
             </div>
           )}
 
-          {/* Step 5: Gear preview + notes + submit */}
-          {currentStep === 5 && (
+          {/* Step 6: Gear preview + notes + submit */}
+          {currentStep === 6 && (
             <div className="space-y-4">
               {allSelectedSpecies.length > 0 && (
                 <div className="bg-white rounded-xl border border-slate-200 p-4 space-y-2">
@@ -841,6 +985,13 @@ function NewTripForm() {
                 </div>
               )}
 
+              {selectedExperience && (
+                <div className="bg-white rounded-xl border border-slate-200 p-4">
+                  <p className="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-2">Experience</p>
+                  <p className="text-sm font-medium text-[#040F1C]">{selectedExperience.name}</p>
+                </div>
+              )}
+
               {selectedRegions.length > 0 && (
                 <div className="bg-white rounded-xl border border-slate-200 p-4">
                   <p className="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-2">Destinations</p>
@@ -853,6 +1004,19 @@ function NewTripForm() {
                         </span>
                       ) : null;
                     })}
+                  </div>
+                </div>
+              )}
+
+              {selectedDestinationIds.length > 0 && (
+                <div className="bg-white rounded-xl border border-slate-200 p-4">
+                  <p className="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-2">Fishing Spots</p>
+                  <div className="flex flex-wrap gap-2">
+                    {destinations.filter(d => selectedDestinationIds.includes(d.id)).map(d => (
+                      <span key={d.id} className="px-3 py-1 rounded-full text-sm bg-blue-50 text-blue-700 border border-blue-200">
+                        {d.name}
+                      </span>
+                    ))}
                   </div>
                 </div>
               )}
@@ -895,7 +1059,7 @@ function NewTripForm() {
               <ArrowLeft className="h-4 w-4" />
               Back
             </button>
-            {currentStep < 5 && (
+            {currentStep < 6 && (
               <button
                 type="button"
                 onClick={goNext}

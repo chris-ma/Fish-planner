@@ -67,6 +67,41 @@ export const seasonWindows = sqliteTable(
   (t) => ({ uniq: unique().on(t.regionId, t.speciesId, t.month) })
 );
 
+export const destinations = sqliteTable("destinations", {
+  id: text("id").primaryKey(),
+  slug: text("slug").unique().notNull(),
+  name: text("name").notNull(),
+  regionId: text("region_id").notNull().references(() => regions.id, { onDelete: "cascade" }),
+  description: text("description"),
+  latitude: real("latitude"),
+  longitude: real("longitude"),
+  tags: text("tags"),
+  createdAt: text("created_at").notNull().$defaultFn(() => new Date().toISOString()),
+});
+
+export const experiences = sqliteTable("experiences", {
+  id: text("id").primaryKey(),
+  slug: text("slug").unique().notNull(),
+  name: text("name").notNull(),
+  description: text("description"),
+  category: text("category").notNull(), // offshore | reef | estuary | inshore | freshwater
+  targetSpeciesSlugs: text("target_species_slugs").notNull(), // JSON array
+  primaryTechniqueSlug: text("primary_technique_slug"),
+});
+
+export const experienceDestinations = sqliteTable(
+  "experience_destinations",
+  {
+    experienceId: text("experience_id")
+      .notNull()
+      .references(() => experiences.id, { onDelete: "cascade" }),
+    destinationId: text("destination_id")
+      .notNull()
+      .references(() => destinations.id, { onDelete: "cascade" }),
+  },
+  (t) => ({ pk: unique().on(t.experienceId, t.destinationId) })
+);
+
 export const gearTemplates = sqliteTable("gear_templates", {
   id: text("id").primaryKey(),
   name: text("name").notNull(),
@@ -90,6 +125,8 @@ export const trips = sqliteTable("trips", {
   targetSpecies: text("target_species"), // JSON array of species IDs
   description: text("description"),
   shareCode: text("share_code").unique().notNull(),
+  experienceId: text("experience_id").references(() => experiences.id),
+  destinationIds: text("destination_ids"), // JSON array of destination IDs
   status: text("status").notNull().default("planning"), // planning | confirmed | active | completed
   createdAt: text("created_at").notNull().$defaultFn(() => new Date().toISOString()),
   updatedAt: text("updated_at").notNull().$defaultFn(() => new Date().toISOString()),
@@ -196,6 +233,9 @@ export const catchLog = sqliteTable("catch_log", {
 // ─── Type exports ───────────────────────────────────────────────────────────
 
 export type Region = typeof regions.$inferSelect;
+export type Destination = typeof destinations.$inferSelect;
+export type Experience = typeof experiences.$inferSelect;
+export type ExperienceDestination = typeof experienceDestinations.$inferSelect;
 export type Species = typeof species.$inferSelect;
 export type Technique = typeof techniques.$inferSelect;
 export type SpeciesTechnique = typeof speciesTechniques.$inferSelect;

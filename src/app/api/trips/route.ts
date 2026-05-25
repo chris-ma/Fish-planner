@@ -17,7 +17,7 @@ export async function POST(request: Request) {
   try {
     const { userId } = await auth();
     const body = await request.json();
-    const { title, regionSlug, startDate, endDate, targetSpecies, description } = body;
+    const { title, regionSlug, startDate, endDate, targetSpecies, description, experienceId, destinationIds } = body;
 
     if (!title || typeof title !== "string" || !title.trim()) {
       return NextResponse.json({ error: "Title is required" }, { status: 400 });
@@ -37,6 +37,8 @@ export async function POST(request: Request) {
       endDate,
       targetSpecies: Array.isArray(targetSpecies) ? targetSpecies : [],
       description,
+      experienceId: typeof experienceId === "string" ? experienceId : undefined,
+      destinationIds: Array.isArray(destinationIds) ? destinationIds : undefined,
     });
 
     return NextResponse.json({ id, shareCode });

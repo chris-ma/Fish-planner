@@ -1,5 +1,5 @@
 import { db } from "@/db";
-import { regions, seasonWindows, species } from "@/db/schema";
+import { regions, seasonWindows, species, destinations, experiences, experienceDestinations } from "@/db/schema";
 import { eq, inArray } from "drizzle-orm";
 import { nanoid } from "nanoid";
 import { ratingScore, type Rating } from "@/lib/utils/season";
@@ -82,6 +82,7 @@ async function seedNZSeasonWindows() {
 export async function listRegions() {
   await db.insert(regions).values(NZ_REGIONS).onConflictDoNothing();
   await seedNZSeasonWindows();
+  await seedDestinationsAndExperiences();
   return db.select().from(regions).orderBy(regions.state, regions.name);
 }
 
@@ -138,6 +139,58 @@ export async function getSeasonCalendarForRegion(regionId: string): Promise<Seas
     const scoreB = b.months.reduce((s, r) => s + ratingScore(r as Rating | null), 0);
     return scoreB - scoreA;
   });
+}
+
+export async function getDestinationsForRegion(regionId: string) {
+  return db.select().from(destinations).where(eq(destinations.regionId, regionId));
+}
+
+async function seedDestinationsAndExperiences() {
+  const existing = await db.select({ id: destinations.id }).from(destinations).limit(1);
+  if (existing.length > 0) return;
+
+  const { DESTINATIONS } = await import("@/db/seed/destinations");
+  const { EXPERIENCE_DESTINATIONS } = await import("@/db/seed/experience-destinations");
+
+  const allRegions = await db.select({ id: regions.id, slug: regions.slug }).from(regions);
+  const regionMap = Object.fromEntries(allRegions.map((r) => [r.slug, r.id]));
+
+  const allExperiences = await db.select({ id: experiences.id, slug: experiences.slug }).from(experiences);
+  const experienceMap = Object.fromEntries(allExperiences.map((e) => [e.slug, e.id]));
+
+  const destRows = DESTINATIONS
+    .filter((d) => regionMap[d.regionSlug])
+    .map((d) => ({
+      id: `dest-${d.slug}`,
+      slug: d.slug,
+      name: d.name,
+      regionId: regionMap[d.regionSlug],
+      description: d.description,
+      latitude: null,
+      longitude: null,
+      tags: null,
+      createdAt: new Date().toISOString(),
+    }));
+
+  if (destRows.length > 0) {
+    for (let i = 0; i < destRows.length; i += 100) {
+      await db.insert(destinations).values(destRows.slice(i, i + 100)).onConflictDoNothing();
+    }
+  }
+
+  const junctionRows = EXPERIENCE_DESTINATIONS
+    .filter((ed) => experienceMap[ed.experienceSlug] && `dest-${ed.destinationSlug}`)
+    .map((ed) => ({
+      experienceId: experienceMap[ed.experienceSlug],
+      destinationId: `dest-${ed.destinationSlug}`,
+    }))
+    .filter((row) => row.experienceId && row.destinationId);
+
+  if (junctionRows.length > 0) {
+    for (let i = 0; i < junctionRows.length; i += 100) {
+      await db.insert(experienceDestinations).values(junctionRows.slice(i, i + 100)).onConflictDoNothing();
+    }
+  }
 }
 
 export async function getTopRegionsForMonth(month: number, limit = 6) {
