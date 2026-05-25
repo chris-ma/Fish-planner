@@ -153,7 +153,6 @@ export function ExperiencesBrowser({ experiences, regions, regionSpeciesMap }: P
 
   const selectedRegion = regions.find((r) => r.id === selectedRegionId) ?? null;
 
-  // Filter experiences by region (by species overlap)
   const filtered =
     selectedRegionId === null
       ? experiences
@@ -162,7 +161,7 @@ export function ExperiencesBrowser({ experiences, regions, regionSpeciesMap }: P
           return exp.speciesSlugs.some((s) => regionSpecies.includes(s));
         });
 
-  // Group regions by zone
+  // Group regions by zone for <optgroup> elements
   const zoneMap: Record<string, Region[]> = {};
   for (const region of regions) {
     if (!zoneMap[region.zone]) zoneMap[region.zone] = [];
@@ -175,87 +174,51 @@ export function ExperiencesBrowser({ experiences, regions, regionSpeciesMap }: P
   }`;
 
   return (
-    <div className="min-h-screen bg-[#040F1C] text-[#F5F0E8]">
-      {/* Page header */}
-      <div className="px-4 sm:px-6 pt-20 pb-6 border-b border-white/10">
-        <div className="max-w-7xl mx-auto">
-          <h1
-            className="text-4xl sm:text-5xl font-bold tracking-wide text-[#F5F0E8]"
-            style={{ fontFamily: "var(--font-bebas), system-ui, sans-serif" }}
+    <div className="min-h-screen bg-[#F5F0E8]">
+      {/* Filter bar */}
+      <div className="px-4 sm:px-6 py-5 border-b border-black/10">
+        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row sm:items-center gap-3">
+          <label htmlFor="region-filter" className="text-sm font-semibold text-[#040F1C] shrink-0">
+            Filter by region
+          </label>
+          <select
+            id="region-filter"
+            value={selectedRegionId ?? ""}
+            onChange={(e) => setSelectedRegionId(e.target.value || null)}
+            className="w-full sm:w-72 px-3 py-2 rounded-lg border border-black/15 bg-white text-[#040F1C] text-sm focus:outline-none focus:ring-2 focus:ring-[#0D9488]"
           >
-            Fishing Experiences
-          </h1>
-          <p className="text-white/60 mt-2 text-base max-w-xl">
-            Discover curated fishing experiences. Filter by region to find what&apos;s on in your area.
-          </p>
+            <option value="">All regions</option>
+            {Object.entries(zoneMap).map(([zone, zoneRegions]) => (
+              <optgroup key={zone} label={ZONE_LABELS[zone] ?? zone}>
+                {zoneRegions.map((region) => (
+                  <option key={region.id} value={region.id}>
+                    {region.name}
+                  </option>
+                ))}
+              </optgroup>
+            ))}
+          </select>
+          <p className="text-xs text-black/40 sm:ml-2">{countLabel}</p>
         </div>
       </div>
 
-      {/* Two-column layout */}
-      <div className="max-w-7xl mx-auto flex flex-col md:flex-row gap-0 md:gap-6 px-0 md:px-6 pb-24">
-        {/* ── Left panel: region selector ── */}
-        <aside className="md:w-64 shrink-0 md:sticky md:top-4 md:self-start md:max-h-[calc(100vh-6rem)] md:overflow-y-auto border-b md:border-b-0 md:border-r border-white/10 px-4 py-4 md:py-6">
-          {/* "All" button */}
-          <button
-            onClick={() => setSelectedRegionId(null)}
-            className={`w-full text-left px-3 py-2 rounded-lg text-sm font-semibold mb-4 transition-colors ${
-              selectedRegionId === null
-                ? "text-[#0D9488] border-l-2 border-[#0D9488] pl-2"
-                : "text-white/60 hover:text-white/90"
-            }`}
-          >
-            All Experiences
-          </button>
-
-          {/* Zone groups */}
-          {Object.entries(zoneMap).map(([zone, zoneRegions]) => (
-            <div key={zone} className="mb-4">
-              <p className="text-[10px] font-semibold uppercase tracking-widest text-white/35 mb-1.5 px-1">
-                {ZONE_LABELS[zone] ?? zone}
-              </p>
-              <div className="flex flex-col gap-0.5">
-                {zoneRegions.map((region) => {
-                  const isActive = selectedRegionId === region.id;
-                  return (
-                    <button
-                      key={region.id}
-                      onClick={() => setSelectedRegionId(region.id)}
-                      className={`text-left pl-4 pr-3 py-1.5 rounded-lg text-sm transition-colors ${
-                        isActive
-                          ? "text-[#0D9488] border-l-2 border-[#0D9488] pl-3 bg-[#0D9488]/5"
-                          : "text-white/55 hover:text-white/85 hover:bg-white/5"
-                      }`}
-                    >
-                      {region.name}
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-          ))}
-        </aside>
-
-        {/* ── Right panel: cards ── */}
-        <main className="flex-1 px-4 md:px-0 py-4 md:py-6">
-          {/* Count header */}
-          <p className="text-white/50 text-sm mb-4 font-medium">{countLabel}</p>
-
-          {filtered.length === 0 ? (
-            <div className="flex items-center justify-center py-24 text-white/40 text-sm">
-              No experiences match this region yet. Try selecting a different region.
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
-              {filtered.map((exp) => (
-                <ExperienceCard
-                  key={exp.id}
-                  exp={exp}
-                  regionSlug={selectedRegion?.slug ?? ""}
-                />
-              ))}
-            </div>
-          )}
-        </main>
+      {/* Cards */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6 pb-24">
+        {filtered.length === 0 ? (
+          <div className="flex items-center justify-center py-24 text-black/30 text-sm">
+            No experiences match this region yet. Try selecting a different region.
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
+            {filtered.map((exp) => (
+              <ExperienceCard
+                key={exp.id}
+                exp={exp}
+                regionSlug={selectedRegion?.slug ?? ""}
+              />
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

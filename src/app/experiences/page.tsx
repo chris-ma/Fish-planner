@@ -61,10 +61,12 @@ export default async function ExperiencesPage() {
   });
 
   return (
-    <ExperiencesBrowser
-      experiences={parsedExperiences}
-      regions={allRegions}
-      regionSpeciesMap={regionSpeciesMap}
-    />
+    <div className="pt-14">
+      <ExperiencesBrowser
+        experiences={parsedExperiences}
+        regions={allRegions}
+        regionSpeciesMap={regionSpeciesMap}
+      />
+    </div>
   );
 }
