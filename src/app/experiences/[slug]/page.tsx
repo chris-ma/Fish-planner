@@ -7,6 +7,8 @@ import { db } from "@/db";
 import { species } from "@/db/schema";
 import { getExperienceBySlug, getExperiences, getDestinationsForExperienceAllRegions } from "@/lib/queries/experiences";
 import type { Region, Destination } from "@/db/schema";
+import { EXPERIENCE_TIPS } from "@/lib/experience-tips";
+import { SPECIES_GEAR } from "@/lib/gear-specs";
 
 const CATEGORY_BADGE: Record<string, string> = {
   offshore:   "bg-blue-500/20 text-blue-300",
@@ -66,6 +68,12 @@ export default async function ExperiencePage({ params }: { params: Promise<{ slu
       groupedLocations.set(row.region.id, { region: row.region, dests: [row.destination] });
     }
   }
+
+  const tips = EXPERIENCE_TIPS[exp.slug] ?? [];
+  const gearSpecs = speciesSlugs
+    .map((s) => SPECIES_GEAR.find((g) => g.slug === s))
+    .filter((g): g is NonNullable<typeof g> => g !== undefined)
+    .slice(0, 2);
 
   const categoryBadge = CATEGORY_BADGE[exp.category] ?? "bg-slate-500/20 text-slate-300";
   const categoryImageUrl = CATEGORY_IMAGE[exp.category] ?? CATEGORY_IMAGE.offshore;
@@ -128,6 +136,61 @@ export default async function ExperiencePage({ params }: { params: Promise<{ slu
                   </ul>
                 </div>
               ))}
+            </div>
+          </section>
+        )}
+
+        {/* Fishing Tips */}
+        {tips.length > 0 && (
+          <section>
+            <div className="h-1 w-12 bg-[#0D9488] rounded mb-3" />
+            <h2 className="text-2xl font-bold text-[#0D9488] mb-6">Fishing Tips</h2>
+            <ol className="space-y-4">
+              {tips.map((tip, i) => (
+                <li key={i} className="flex gap-4 bg-white/5 rounded-2xl p-5 border border-white/10">
+                  <span className="shrink-0 w-7 h-7 rounded-full bg-[#0D9488] text-white text-sm font-bold flex items-center justify-center mt-0.5">
+                    {i + 1}
+                  </span>
+                  <p className="text-white/80 text-sm leading-relaxed">{tip}</p>
+                </li>
+              ))}
+            </ol>
+          </section>
+        )}
+
+        {/* Gear Setup */}
+        {gearSpecs.length > 0 && (
+          <section>
+            <div className="h-1 w-12 bg-[#0D9488] rounded mb-3" />
+            <h2 className="text-2xl font-bold text-[#0D9488] mb-6">Gear Setup</h2>
+            <div className="space-y-6">
+              {gearSpecs.map((gear) => {
+                const rows: { label: string; value: string }[] = [
+                  { label: "Rod", value: gear.rod },
+                  { label: "Reel", value: gear.reel },
+                  { label: "Main Line", value: gear.mainline },
+                  { label: "Leader", value: gear.leader },
+                  ...(gear.lures ? [{ label: "Lures / Terminal", value: gear.lures }] : []),
+                  ...(gear.hooks ? [{ label: "Hooks", value: gear.hooks }] : []),
+                  ...(gear.dragSetting ? [{ label: "Drag Setting", value: gear.dragSetting }] : []),
+                ];
+                return (
+                  <div key={gear.slug} className="bg-white/5 rounded-2xl p-5 border border-white/10">
+                    <h3 className="font-bold text-lg mb-4">{gear.name}</h3>
+                    <dl className="space-y-2">
+                      {rows.map(({ label, value }) => (
+                        <div key={label} className="grid grid-cols-[120px_1fr] gap-2 text-sm">
+                          <dt className="text-white/40 font-medium">{label}</dt>
+                          <dd className="text-white/85">{value}</dd>
+                        </div>
+                      ))}
+                    </dl>
+                    {gear.notes && (
+                      <p className="mt-4 text-white/55 text-xs leading-relaxed border-t border-white/10 pt-3">{gear.notes}</p>
+                    )}
+                  </div>
+                );
+              })}
             </div>
           </section>
         )}

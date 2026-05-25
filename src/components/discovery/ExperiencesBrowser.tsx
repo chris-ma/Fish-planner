@@ -76,7 +76,7 @@ function ExperienceCard({
   const bg = CATEGORY_BG[exp.category] ?? CATEGORY_BG.offshore;
   const badge = CATEGORY_BADGE[exp.category] ?? "bg-slate-600";
   const overlay = CATEGORY_OVERLAY[exp.category] ?? "from-blue-900/50 to-transparent";
-  const href = `/trips/new?experience=${exp.slug}${regionSlug ? `&region=${regionSlug}` : ""}`;
+  const href = `/experiences/${exp.slug}`;
 
   const MAX_CHIPS = 4;
   const visibleNames = exp.speciesNames.slice(0, MAX_CHIPS);
