@@ -16,6 +16,7 @@ async function ensureTable() {
       tide_phase TEXT,
       length_cm REAL,
       weight_kg REAL,
+      line_weight_lb REAL,
       gear_used TEXT,
       photo_url TEXT,
       notes TEXT,
@@ -23,6 +24,11 @@ async function ensureTable() {
       created_at TEXT NOT NULL
     )
   `);
+  try {
+    await db.run(sql`ALTER TABLE catch_log ADD COLUMN line_weight_lb REAL`);
+  } catch {
+    // column already exists
+  }
 }
 
 export async function GET(request: Request) {
@@ -44,7 +50,7 @@ export async function POST(request: Request) {
   try {
     await ensureTable();
     const body = await request.json();
-    const { speciesSlug, catcherName, caughtAt, location, weatherConditions, tidePhase, lengthCm, weightKg, gearUsed, photoUrl, notes, challengeSlug } = body;
+    const { speciesSlug, catcherName, caughtAt, location, weatherConditions, tidePhase, lengthCm, weightKg, lineWeightLb, gearUsed, photoUrl, notes, challengeSlug } = body;
     if (!speciesSlug || !caughtAt) {
       return NextResponse.json({ error: "speciesSlug and caughtAt are required" }, { status: 400 });
     }
@@ -58,6 +64,7 @@ export async function POST(request: Request) {
       tidePhase: tidePhase || null,
       lengthCm: lengthCm ? Number(lengthCm) : null,
       weightKg: weightKg ? Number(weightKg) : null,
+      lineWeightLb: lineWeightLb ? Number(lineWeightLb) : null,
       gearUsed: gearUsed || null,
       photoUrl: photoUrl || null,
       notes: notes || null,

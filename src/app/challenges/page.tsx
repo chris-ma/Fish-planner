@@ -57,6 +57,18 @@ async function computeLeaderAndCount(
       };
     }
 
+    if (metric === "ratio") {
+      const sorted = rows
+        .filter((r) => r.lengthCm != null && r.lineWeightLb != null && r.lineWeightLb > 0)
+        .sort((a, b) => (b.lengthCm! / b.lineWeightLb!) - (a.lengthCm! / a.lineWeightLb!));
+      return {
+        count: rows.length,
+        leader: sorted[0]
+          ? { catcherName: sorted[0].catcherName, metric: Math.round((sorted[0].lengthCm! / sorted[0].lineWeightLb!) * 10) / 10, unit: unit ?? "cm/lb" }
+          : null,
+      };
+    }
+
     // gallery
     return { count: rows.length, leader: null };
   } catch {

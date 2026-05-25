@@ -22,6 +22,7 @@ function buildEntries(rows: CatchRow[], metric: string): RankedEntry[] {
         speciesSlug: r.speciesSlug,
         location: r.location,
         caughtAt: r.caughtAt,
+        lineWeightLb: r.lineWeightLb,
         gearUsed: r.gearUsed,
         photoUrl: r.photoUrl,
         notes: r.notes,
@@ -40,6 +41,7 @@ function buildEntries(rows: CatchRow[], metric: string): RankedEntry[] {
         speciesSlug: r.speciesSlug,
         location: r.location,
         caughtAt: r.caughtAt,
+        lineWeightLb: r.lineWeightLb,
         gearUsed: r.gearUsed,
         photoUrl: r.photoUrl,
         notes: r.notes,
@@ -64,10 +66,30 @@ function buildEntries(rows: CatchRow[], metric: string): RankedEntry[] {
         speciesSlug: Array.from(s.species).join(", "),
         location: null,
         caughtAt: s.date,
+        lineWeightLb: null,
         gearUsed: null,
         photoUrl: null,
         notes: null,
         id: `${s.catcherName}-${s.date}`,
+      }));
+  }
+
+  if (metric === "ratio") {
+    return rows
+      .filter((r) => r.lengthCm != null && r.lineWeightLb != null && r.lineWeightLb > 0)
+      .sort((a, b) => (b.lengthCm! / b.lineWeightLb!) - (a.lengthCm! / a.lineWeightLb!))
+      .map((r, i) => ({
+        rank: i + 1,
+        catcherName: r.catcherName,
+        metric: Math.round((r.lengthCm! / r.lineWeightLb!) * 10) / 10,
+        speciesSlug: r.speciesSlug,
+        location: r.location,
+        caughtAt: r.caughtAt,
+        lineWeightLb: r.lineWeightLb,
+        gearUsed: r.gearUsed,
+        photoUrl: r.photoUrl,
+        notes: r.notes,
+        id: r.id,
       }));
   }
 
@@ -81,6 +103,7 @@ function buildEntries(rows: CatchRow[], metric: string): RankedEntry[] {
       speciesSlug: r.speciesSlug,
       location: r.location,
       caughtAt: r.caughtAt,
+      lineWeightLb: r.lineWeightLb,
       gearUsed: r.gearUsed,
       photoUrl: r.photoUrl,
       notes: r.notes,

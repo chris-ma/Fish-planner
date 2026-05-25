@@ -55,6 +55,7 @@ export default function ChallengeDetailClient({
   const [species, setSpecies] = useState(challenge.speciesSlug ?? "");
   const [lengthCm, setLengthCm] = useState("");
   const [weightKg, setWeightKg] = useState("");
+  const [lineWeightLb, setLineWeightLb] = useState("");
   const [gearUsed, setGearUsed] = useState("");
   const [caughtAt, setCaughtAt] = useState(() => new Date().toISOString().slice(0, 16));
   const [location, setLocation] = useState("");
@@ -84,7 +85,7 @@ export default function ChallengeDetailClient({
     if (!name.trim()) { setError("Please enter your name."); return; }
     if (challenge.requiresField === "lengthCm" && !lengthCm) { setError("Length is required for this challenge."); return; }
     if (challenge.requiresField === "weightKg" && !weightKg) { setError("Weight is required for this challenge."); return; }
-    if (challenge.requiresField === "gearUsed" && !gearUsed.trim()) { setError("Gear description is required for this challenge."); return; }
+    if (challenge.requiresField === "lineWeightLb" && (!lengthCm || !lineWeightLb)) { setError("Length and line weight are both required for this challenge."); return; }
 
     setSubmitting(true);
     try {
@@ -99,6 +100,7 @@ export default function ChallengeDetailClient({
       if (notes) body.notes = notes;
       if (lengthCm) body.lengthCm = parseFloat(lengthCm);
       if (weightKg) body.weightKg = parseFloat(weightKg);
+      if (lineWeightLb) body.lineWeightLb = parseFloat(lineWeightLb);
       if (gearUsed) body.gearUsed = gearUsed;
 
       const res = await fetch("/api/catches", {
@@ -112,6 +114,7 @@ export default function ChallengeDetailClient({
       setSubmitted(true);
       setLengthCm("");
       setWeightKg("");
+      setLineWeightLb("");
       setGearUsed("");
       setLocation("");
       setPhotoUrl("");
@@ -287,15 +290,32 @@ export default function ChallengeDetailClient({
                 />
               </div>
             )}
-            {challenge.requiresField === "gearUsed" && (
-              <div>
-                <label className="block text-xs font-semibold text-slate-600 mb-1">Gear / Lure Used *</label>
-                <input
-                  value={gearUsed}
-                  onChange={(e) => setGearUsed(e.target.value)}
-                  placeholder="e.g. A bread crust tied to a bent paperclip"
-                  className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0D9488]/30"
-                />
+            {challenge.requiresField === "lineWeightLb" && (
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xs font-semibold text-slate-600 mb-1">Length (cm) *</label>
+                  <input
+                    type="number"
+                    step="0.1"
+                    min="0"
+                    value={lengthCm}
+                    onChange={(e) => setLengthCm(e.target.value)}
+                    placeholder="e.g. 60"
+                    className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0D9488]/30"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-semibold text-slate-600 mb-1">Line Weight (lb) *</label>
+                  <input
+                    type="number"
+                    step="0.5"
+                    min="0.5"
+                    value={lineWeightLb}
+                    onChange={(e) => setLineWeightLb(e.target.value)}
+                    placeholder="e.g. 2"
+                    className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0D9488]/30"
+                  />
+                </div>
               </div>
             )}
 
@@ -348,20 +368,29 @@ export default function ChallengeDetailClient({
               />
             </div>
 
-            {/* Photo URL */}
+            {/* Photo URL / Instagram Post URL */}
             <div>
               <label className="block text-xs font-semibold text-slate-600 mb-1">
-                Photo URL{" "}
-                {isGallery && (
+                {challenge.dataSource === "instagram" ? "Instagram Post URL" : "Photo URL"}{" "}
+                {isGallery && challenge.dataSource !== "instagram" && (
                   <span className="text-[#0D9488] font-normal">(encouraged)</span>
                 )}
               </label>
               <input
                 value={photoUrl}
                 onChange={(e) => setPhotoUrl(e.target.value)}
-                placeholder="https://…"
+                placeholder={challenge.dataSource === "instagram" ? "https://www.instagram.com/p/…" : "https://…"}
                 className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0D9488]/30"
               />
+              {challenge.dataSource === "instagram" && challenge.hashtags && (
+                <p className="text-xs text-slate-400 mt-1">
+                  Remember to tag{" "}
+                  {challenge.hashtags.map((h) => (
+                    <span key={h} className="text-[#0D9488] font-semibold">#{h}</span>
+                  ))}{" "}
+                  in your post before submitting.
+                </p>
+              )}
             </div>
 
             {/* Notes */}

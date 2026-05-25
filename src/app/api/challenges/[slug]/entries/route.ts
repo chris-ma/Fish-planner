@@ -13,6 +13,7 @@ export type RankedEntry = {
   speciesSlug: string;
   location: string | null;
   caughtAt: string;
+  lineWeightLb: number | null;
   gearUsed: string | null;
   photoUrl: string | null;
   notes: string | null;
@@ -45,6 +46,7 @@ export async function GET(
       speciesSlug: r.speciesSlug,
       location: r.location,
       caughtAt: r.caughtAt,
+      lineWeightLb: r.lineWeightLb,
       gearUsed: r.gearUsed,
       photoUrl: r.photoUrl,
       notes: r.notes,
@@ -62,6 +64,7 @@ export async function GET(
       speciesSlug: r.speciesSlug,
       location: r.location,
       caughtAt: r.caughtAt,
+      lineWeightLb: r.lineWeightLb,
       gearUsed: r.gearUsed,
       photoUrl: r.photoUrl,
       notes: r.notes,
@@ -88,10 +91,29 @@ export async function GET(
       speciesSlug: Array.from(s.species).join(", "),
       location: null,
       caughtAt: s.date,
+      lineWeightLb: null,
       gearUsed: null,
       photoUrl: null,
       notes: null,
       id: `${s.catcherName}-${s.date}`,
+    }));
+
+  } else if (challenge.metric === "ratio") {
+    const sorted = rows
+      .filter((r) => r.lengthCm != null && r.lineWeightLb != null && r.lineWeightLb > 0)
+      .sort((a, b) => (b.lengthCm! / b.lineWeightLb!) - (a.lengthCm! / a.lineWeightLb!));
+    entries = sorted.map((r, i) => ({
+      rank: i + 1,
+      catcherName: r.catcherName,
+      metric: Math.round((r.lengthCm! / r.lineWeightLb!) * 10) / 10,
+      speciesSlug: r.speciesSlug,
+      location: r.location,
+      caughtAt: r.caughtAt,
+      lineWeightLb: r.lineWeightLb,
+      gearUsed: r.gearUsed,
+      photoUrl: r.photoUrl,
+      notes: r.notes,
+      id: r.id,
     }));
 
   } else {
@@ -106,6 +128,7 @@ export async function GET(
       speciesSlug: r.speciesSlug,
       location: r.location,
       caughtAt: r.caughtAt,
+      lineWeightLb: r.lineWeightLb,
       gearUsed: r.gearUsed,
       photoUrl: r.photoUrl,
       notes: r.notes,

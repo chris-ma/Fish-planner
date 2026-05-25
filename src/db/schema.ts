@@ -185,6 +185,7 @@ export const catchLog = sqliteTable("catch_log", {
   tidePhase:         text("tide_phase"),          // incoming|outgoing|high|low|unknown
   lengthCm:          real("length_cm"),
   weightKg:          real("weight_kg"),
+  lineWeightLb:      real("line_weight_lb"),
   gearUsed:          text("gear_used"),
   photoUrl:          text("photo_url"),
   notes:             text("notes"),

@@ -1,4 +1,5 @@
-export type ChallengeMetric = "length" | "weight" | "gallery" | "species_count";
+export type ChallengeMetric = "length" | "weight" | "gallery" | "species_count" | "ratio";
+export type ChallengeDataSource = "bucket_list" | "tagged" | "instagram";
 
 export interface ChallengeConfig {
   slug: string;
@@ -8,49 +9,56 @@ export interface ChallengeConfig {
   metric: ChallengeMetric;
   unit: string | null;
   speciesSlug: string | null;
-  requiresField: "lengthCm" | "weightKg" | "gearUsed" | null;
+  requiresField: "lengthCm" | "weightKg" | "lineWeightLb" | null;
+  dataSource: ChallengeDataSource;
+  hashtags?: string[];
 }
 
 export const CHALLENGES: ChallengeConfig[] = [
   {
     slug: "3-meter-flatty",
     title: "3 Meter Flatty",
-    description: "The biggest flathead caught and documented. Platycephalus fuscus grows to 120cm — your PB is your target.",
+    description: "The longest flathead from anyone's bucket list. Log your PB catch and it appears here automatically.",
     image: "https://images.pexels.com/photos/3048522/pexels-photo-3048522.jpeg?auto=compress&cs=tinysrgb&w=600",
     metric: "length",
     unit: "cm",
     speciesSlug: "flathead",
-    requiresField: "lengthCm",
+    requiresField: null,
+    dataSource: "bucket_list",
   },
   {
     slug: "4lb-club",
     title: "4lb Club",
-    description: "The heaviest fish on 4lb fluorocarbon leader. Finesse, patience, and a lot of luck required.",
+    description: "Scored on length ÷ leader weight (lb). A 60cm bream on 2lb leader beats a 90cm jewfish on 10lb. Light line, big fish.",
     image: "https://images.pexels.com/photos/5200238/pexels-photo-5200238.jpeg?auto=compress&cs=tinysrgb&w=600",
-    metric: "weight",
-    unit: "kg",
+    metric: "ratio",
+    unit: "cm/lb",
     speciesSlug: null,
-    requiresField: "weightKg",
+    requiresField: "lineWeightLb",
+    dataSource: "tagged",
   },
   {
     slug: "the-dumbest-catch",
     title: "The Dumbest Catch",
-    description: "Catch a legal fish on something that has no right working — bread, a rubber duck, a spoon from the camp kitchen.",
+    description: "Catch a legal fish on something that has no right working. Post it on Instagram with #HooklineDumbest then submit your post link — the community votes with hearts.",
     image: "https://images.pexels.com/photos/994605/pexels-photo-994605.jpeg?auto=compress&cs=tinysrgb&w=600",
     metric: "gallery",
     unit: null,
     speciesSlug: null,
-    requiresField: "gearUsed",
+    requiresField: null,
+    dataSource: "instagram",
+    hashtags: ["HooklineDumbest"],
   },
   {
     slug: "grand-slam",
     title: "Grand Slam",
-    description: "Most different species in a single session. Estuary, inshore, reef — the angler with the longest list wins.",
+    description: "Most distinct bucket list species logged in a single day. The session with the longest species list tops the board.",
     image: "https://images.pexels.com/photos/2156311/pexels-photo-2156311.jpeg?auto=compress&cs=tinysrgb&w=600",
     metric: "species_count",
     unit: "species",
     speciesSlug: null,
     requiresField: null,
+    dataSource: "bucket_list",
   },
   {
     slug: "catch-and-cook",
@@ -61,15 +69,17 @@ export const CHALLENGES: ChallengeConfig[] = [
     unit: null,
     speciesSlug: null,
     requiresField: null,
+    dataSource: "tagged",
   },
   {
     slug: "mud-marlin",
     title: "Mud Marlin",
-    description: "The biggest European carp you can find. Invasive and destructive, but a hell of a fight. Kill it, eat it, compost it.",
+    description: "The heaviest European carp from anyone's bucket list. Invasive and destructive, but a hell of a fight.",
     image: "https://images.pexels.com/photos/1461471/pexels-photo-1461471.jpeg?auto=compress&cs=tinysrgb&w=600",
     metric: "weight",
     unit: "kg",
     speciesSlug: "european-carp",
-    requiresField: "weightKg",
+    requiresField: null,
+    dataSource: "bucket_list",
   },
 ];
