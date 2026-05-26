@@ -62,7 +62,7 @@ export default async function CharterPage({ params }: { params: Promise<{ slug: 
         <div className="relative max-w-4xl mx-auto pt-8">
           <div className="flex items-center gap-2 mb-4">
             <span className="bg-[#0D9488]/20 text-[#0D9488] text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full border border-[#0D9488]/30">
-              Charter
+              Guided Experience
             </span>
             {charter.featured && (
               <span className="bg-amber-500/20 text-amber-400 text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full border border-amber-500/30">
@@ -140,7 +140,7 @@ export default async function CharterPage({ params }: { params: Promise<{ slug: 
         {/* Enquiry form */}
         <section>
           <div className="h-1 w-12 bg-[#0D9488] rounded mb-3" />
-          <h2 className="text-2xl font-bold text-[#0D9488] mb-2">Book This Charter</h2>
+          <h2 className="text-2xl font-bold text-[#0D9488] mb-2">Book This Guided Experience</h2>
           <p className="text-white/60 mb-8">
             Send an enquiry directly to {charter.operatorName}. They will confirm availability and provide full trip details.
           </p>

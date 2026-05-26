@@ -177,15 +177,15 @@ export function ExperiencesBrowser({ experiences, regions, regionSpeciesMap, cha
 
   return (
     <div className="min-h-screen bg-[#F5F0E8]">
-      {/* ── Charter Experiences ── */}
+      {/* ── Guided Experiences ── */}
       {charters.length > 0 && (
-        <div className="bg-[#040F1C] px-4 sm:px-6 py-8">
+        <div className="bg-[#F0EBE1] px-4 sm:px-6 py-8 border-b border-black/10">
           <div className="max-w-7xl mx-auto">
             <div className="h-1 w-12 bg-[#0D9488] rounded mb-3" />
             <div className="flex items-end justify-between mb-5">
               <div>
-                <h2 className="text-2xl font-bold text-[#0D9488]">Charter Experiences</h2>
-                <p className="text-white/50 text-sm mt-1">Guided trips with expert local operators</p>
+                <h2 className="text-2xl font-bold text-[#0D9488]">Guided Experiences</h2>
+                <p className="text-black/40 text-sm mt-1">Guided trips with expert local operators</p>
               </div>
               <Link href="/charters" className="text-[#0D9488] text-sm hover:underline hidden sm:block">
                 View all →
