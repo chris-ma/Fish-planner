@@ -3,17 +3,19 @@ export const dynamic = "force-dynamic";
 import { listSpecies } from "@/lib/queries/species";
 import { listRegions } from "@/lib/queries/regions";
 import { getExperiences, getRegionSpeciesSlugs } from "@/lib/queries/experiences";
+import { getCharters } from "@/lib/queries/charters";
 import { db } from "@/db";
 import { species } from "@/db/schema";
 import { PlanTabs } from "./PlanTabs";
 
 export default async function PlanPage() {
-  const [allSpecies, allRegions, allExperiences, regionSpeciesRows, allSpeciesForMap] = await Promise.all([
+  const [allSpecies, allRegions, allExperiences, regionSpeciesRows, allSpeciesForMap, allCharters] = await Promise.all([
     listSpecies(),
     listRegions(),
     getExperiences(),
     getRegionSpeciesSlugs(),
     db.select({ slug: species.slug, commonName: species.commonName }).from(species),
+    getCharters(),
   ]);
 
   const regionSpeciesMap: Record<string, string[]> = {};
@@ -50,6 +52,7 @@ export default async function PlanPage() {
         regions={allRegions}
         experiences={parsedExperiences}
         regionSpeciesMap={regionSpeciesMap}
+        charters={allCharters}
       />
     </div>
   );

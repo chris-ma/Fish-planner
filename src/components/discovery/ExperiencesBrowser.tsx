@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import type { Experience, Region } from "@/db/schema";
+import type { Experience, Region, Charter } from "@/db/schema";
+import { CharterCard } from "./CharterCard";
 
 // Copied from RegionCard.tsx
 const ZONE_LABELS: Record<string, string> = {
@@ -62,6 +63,7 @@ interface Props {
   experiences: ParsedExperience[];
   regions: Region[];
   regionSpeciesMap: Record<string, string[]>;
+  charters?: Charter[];
 }
 
 // ── Experience Card ───────────────────────────────────────────────────────────
@@ -148,7 +150,7 @@ function ExperienceCard({
 
 // ── Main Browser ──────────────────────────────────────────────────────────────
 
-export function ExperiencesBrowser({ experiences, regions, regionSpeciesMap }: Props) {
+export function ExperiencesBrowser({ experiences, regions, regionSpeciesMap, charters = [] }: Props) {
   const [selectedRegionId, setSelectedRegionId] = useState<string | null>(null);
 
   const selectedRegion = regions.find((r) => r.id === selectedRegionId) ?? null;
@@ -175,6 +177,29 @@ export function ExperiencesBrowser({ experiences, regions, regionSpeciesMap }: P
 
   return (
     <div className="min-h-screen bg-[#F5F0E8]">
+      {/* ── Charter Experiences ── */}
+      {charters.length > 0 && (
+        <div className="bg-[#040F1C] px-4 sm:px-6 py-8">
+          <div className="max-w-7xl mx-auto">
+            <div className="h-1 w-12 bg-[#0D9488] rounded mb-3" />
+            <div className="flex items-end justify-between mb-5">
+              <div>
+                <h2 className="text-2xl font-bold text-[#0D9488]">Charter Experiences</h2>
+                <p className="text-white/50 text-sm mt-1">Guided trips with expert local operators</p>
+              </div>
+              <Link href="/charters" className="text-[#0D9488] text-sm hover:underline hidden sm:block">
+                View all →
+              </Link>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              {charters.map((c) => (
+                <CharterCard key={c.id} charter={c} />
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Filter bar */}
       <div className="px-4 sm:px-6 py-5 border-b border-black/10">
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row sm:items-center gap-3">

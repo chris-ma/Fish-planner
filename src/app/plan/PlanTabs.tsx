@@ -4,7 +4,7 @@ import { useState } from "react";
 import { SpeciesBrowser } from "@/components/discovery/SpeciesBrowser";
 import { RegionCard } from "@/components/discovery/RegionCard";
 import { ExperiencesBrowser } from "@/components/discovery/ExperiencesBrowser";
-import type { Species, Region } from "@/db/schema";
+import type { Species, Region, Charter } from "@/db/schema";
 import type { ParsedExperience } from "@/components/discovery/ExperiencesBrowser";
 
 const TABS = ["experiences", "species", "locations"] as const;
@@ -15,11 +15,13 @@ export function PlanTabs({
   regions,
   experiences,
   regionSpeciesMap,
+  charters,
 }: {
   species: Species[];
   regions: Region[];
   experiences: ParsedExperience[];
   regionSpeciesMap: Record<string, string[]>;
+  charters: Charter[];
 }) {
   const [tab, setTab] = useState<Tab>("experiences");
 
@@ -49,6 +51,7 @@ export function PlanTabs({
           experiences={experiences}
           regions={regions}
           regionSpeciesMap={regionSpeciesMap}
+          charters={charters}
         />
       )}
       {tab === "species" && <SpeciesBrowser species={species} />}

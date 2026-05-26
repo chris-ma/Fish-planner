@@ -230,6 +230,47 @@ export const catchLog = sqliteTable("catch_log", {
   createdAt:         text("created_at").notNull().$defaultFn(() => new Date().toISOString()),
 });
 
+// ─── Charter tables ─────────────────────────────────────────────────────────
+
+export const charters = sqliteTable("charters", {
+  id: text("id").primaryKey(),
+  slug: text("slug").unique().notNull(),
+  name: text("name").notNull(),
+  operatorName: text("operator_name").notNull(),
+  operatorEmail: text("operator_email").notNull(),
+  operatorPhone: text("operator_phone"),
+  description: text("description"),
+  experienceSlug: text("experience_slug"), // links to experiences.slug for context
+  homePort: text("home_port").notNull(),
+  regionId: text("region_id").references(() => regions.id),
+  boatName: text("boat_name"),
+  boatType: text("boat_type"),
+  maxGuests: integer("max_guests").notNull().default(6),
+  durationDays: integer("duration_days").notNull().default(1),
+  priceLabel: text("price_label"), // e.g. "From $850/person"
+  heroImage: text("hero_image"),
+  featured: integer("featured", { mode: "boolean" }).default(false),
+  createdAt: text("created_at").notNull().$defaultFn(() => new Date().toISOString()),
+});
+
+export const charterEnquiries = sqliteTable("charter_enquiries", {
+  id: text("id").primaryKey(),
+  charterId: text("charter_id")
+    .notNull()
+    .references(() => charters.id, { onDelete: "cascade" }),
+  userId: text("user_id"),
+  guestName: text("guest_name").notNull(),
+  guestEmail: text("guest_email").notNull(),
+  guestPhone: text("guest_phone"),
+  preferredDateFrom: text("preferred_date_from").notNull(),
+  preferredDateTo: text("preferred_date_to").notNull(),
+  guestCount: integer("guest_count").notNull().default(1),
+  skillLevel: text("skill_level"),
+  message: text("message"),
+  status: text("status").notNull().default("pending"), // pending | responded | booked | cancelled
+  createdAt: text("created_at").notNull().$defaultFn(() => new Date().toISOString()),
+});
+
 // ─── Type exports ───────────────────────────────────────────────────────────
 
 export type Region = typeof regions.$inferSelect;
@@ -249,3 +290,5 @@ export type TripParticipant = typeof tripParticipants.$inferSelect;
 export type TripTask = typeof tripTasks.$inferSelect;
 export type TripBudgetItem = typeof tripBudgetItems.$inferSelect;
 export type CatchLog = typeof catchLog.$inferSelect;
+export type Charter = typeof charters.$inferSelect;
+export type CharterEnquiry = typeof charterEnquiries.$inferSelect;
