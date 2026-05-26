@@ -1,14 +1,20 @@
 import { Resend } from "resend";
 import type { Charter, CharterEnquiry } from "@/db/schema";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
 const FROM = "HookLine <noreply@hookline.app>";
+
+function getResend() {
+  const key = process.env.RESEND_API_KEY;
+  if (!key) return null;
+  return new Resend(key);
+}
 
 export async function sendCharterEnquiryToOperator(
   charter: Charter,
   enquiry: CharterEnquiry
 ) {
-  if (!process.env.RESEND_API_KEY) return;
+  const resend = getResend();
+  if (!resend) return;
 
   const dateRange = `${enquiry.preferredDateFrom} → ${enquiry.preferredDateTo}`;
 
@@ -52,7 +58,8 @@ export async function sendCharterEnquiryConfirmation(
   charter: Charter,
   enquiry: CharterEnquiry
 ) {
-  if (!process.env.RESEND_API_KEY) return;
+  const resend = getResend();
+  if (!resend) return;
 
   const dateRange = `${enquiry.preferredDateFrom} to ${enquiry.preferredDateTo}`;
 
