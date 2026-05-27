@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Compass, Fish, Package, Map, Users, ArrowRight } from "lucide-react";
+import { Compass, Fish, Package, Map, Users, ArrowRight, Anchor } from "lucide-react";
 import { VideoParallaxHero } from "@/components/layout/VideoParallaxHero";
 import { IntentSearch } from "@/components/discovery/IntentSearch";
 import { AustraliaMap } from "@/components/home/AustraliaMap";
@@ -115,18 +115,24 @@ export default async function HomePage({
       {/* Platform value strip */}
       <div className="bg-[#020B14] border-b border-white/5">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 py-8 grid grid-cols-3 gap-6 text-center">
-          <div>
-            <div className="text-2xl mb-2">🎣</div>
+          <div className="flex flex-col items-center">
+            <div className="w-10 h-10 rounded-xl bg-[#0D9488]/15 border border-[#0D9488]/20 flex items-center justify-center mb-3">
+              <Compass className="h-5 w-5 text-[#0D9488]" />
+            </div>
             <p className="text-white font-semibold text-sm">Discover</p>
             <p className="text-white/40 text-xs mt-1 leading-relaxed hidden sm:block">Curated fishing experiences for every target species and style</p>
           </div>
-          <div>
-            <div className="text-2xl mb-2">📋</div>
+          <div className="flex flex-col items-center">
+            <div className="w-10 h-10 rounded-xl bg-[#0D9488]/15 border border-[#0D9488]/20 flex items-center justify-center mb-3">
+              <Map className="h-5 w-5 text-[#0D9488]" />
+            </div>
             <p className="text-white font-semibold text-sm">Plan</p>
             <p className="text-white/40 text-xs mt-1 leading-relaxed hidden sm:block">Species, gear, logistics and dates — all in one shared doc</p>
           </div>
-          <div>
-            <div className="text-2xl mb-2">🚤</div>
+          <div className="flex flex-col items-center">
+            <div className="w-10 h-10 rounded-xl bg-[#0D9488]/15 border border-[#0D9488]/20 flex items-center justify-center mb-3">
+              <Anchor className="h-5 w-5 text-[#0D9488]" />
+            </div>
             <p className="text-white font-semibold text-sm">Book a Guide</p>
             <p className="text-white/40 text-xs mt-1 leading-relaxed hidden sm:block">Expert local operators for guided charter experiences</p>
           </div>
