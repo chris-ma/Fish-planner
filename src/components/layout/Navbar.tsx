@@ -19,7 +19,7 @@ export function Navbar() {
             className="font-bold text-[#F5F0E8] text-xl tracking-wide"
             style={{ fontFamily: "var(--font-bebas), system-ui, sans-serif" }}
           >
-            HookLine
+            Fish Tripper
           </span>
         </Link>
 

@@ -31,7 +31,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const { slug } = await params;
   const charter = await getCharterBySlug(slug);
   if (!charter) return {};
-  return { title: `${charter.name} | HookLine Charters`, description: charter.description ?? undefined };
+  return { title: `${charter.name} | Fish Tripper`, description: charter.description ?? undefined };
 }
 
 export default async function CharterPage({ params }: { params: Promise<{ slug: string }> }) {

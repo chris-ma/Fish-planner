@@ -5,7 +5,7 @@ import { SpeciesBrowser } from "@/components/discovery/SpeciesBrowser";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "Fish Species Guide | HookLine",
+  title: "Fish Species Guide | Fish Tripper",
   description:
     "Browse all Australian fish species. Seasonal guides, fishing tactics, and gear recommendations for every species.",
 };

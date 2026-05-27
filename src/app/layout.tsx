@@ -20,9 +20,9 @@ const bebasNeue = Bebas_Neue({
 });
 
 export const metadata: Metadata = {
-  title: "HookLine — Australian Fishing Planner",
+  title: "Fish Tripper — Fishing Trip Planner",
   description:
-    "Plan your Australian fishing trip around the best seasonal windows. Discover top species, seasonal calendars, gear guides, and collaborative trip planning.",
+    "Plan your next fishing trip around the best seasonal windows. Discover curated experiences, species guides, gear recommendations, and collaborative trip planning.",
 };
 
 const clerkAppearance = {

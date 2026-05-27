@@ -87,15 +87,51 @@ export default async function HomePage({
     <div>
       {/* Hero with parallax video */}
       <VideoParallaxHero>
+        <span className="inline-block bg-[#0D9488]/20 border border-[#0D9488]/40 text-[#0D9488] text-xs font-bold uppercase tracking-widest px-4 py-1.5 rounded-full mb-6 drop-shadow-[0_1px_6px_rgba(0,0,0,0.7)]">
+          The fishing trip planner
+        </span>
         <h1 className="text-5xl md:text-7xl font-bold text-[#F5F0E8] mb-5 leading-tight tracking-tight drop-shadow-[0_2px_12px_rgba(0,0,0,0.8)]">
           Plan the trip.<br />Not just the idea.
         </h1>
-        <p className="text-white/65 text-lg md:text-xl mb-10 max-w-sm mx-auto leading-relaxed drop-shadow-[0_1px_6px_rgba(0,0,0,0.7)]">
-          Find your spot, choose your species,<br className="hidden md:block" />
-          and share the plan with your crew.
+        <p className="text-white/65 text-lg md:text-xl mb-10 max-w-lg mx-auto leading-relaxed drop-shadow-[0_1px_6px_rgba(0,0,0,0.7)]">
+          Giant trevally on the flats, barramundi in the mangroves, or bream in your local estuary —
+          find the experience, build the plan, fish with your crew.
         </p>
         <IntentSearch />
+        <div className="flex flex-col sm:flex-row gap-3 justify-center mt-6">
+          <Link href="/trips/new">
+            <button className="inline-flex items-center gap-2 bg-[#0D9488] hover:bg-[#0F766E] text-white font-semibold px-7 py-3.5 rounded-xl transition-colors text-sm drop-shadow-[0_2px_8px_rgba(0,0,0,0.6)]">
+              Start Planning <ArrowRight className="h-4 w-4" />
+            </button>
+          </Link>
+          <Link href="/plan">
+            <button className="inline-flex items-center gap-2 bg-white/10 hover:bg-white/15 text-white font-semibold px-7 py-3.5 rounded-xl transition-colors border border-white/20 text-sm backdrop-blur-sm">
+              Explore Experiences
+            </button>
+          </Link>
+        </div>
       </VideoParallaxHero>
+
+      {/* Platform value strip */}
+      <div className="bg-[#020B14] border-b border-white/5">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 py-8 grid grid-cols-3 gap-6 text-center">
+          <div>
+            <div className="text-2xl mb-2">🎣</div>
+            <p className="text-white font-semibold text-sm">Discover</p>
+            <p className="text-white/40 text-xs mt-1 leading-relaxed hidden sm:block">Curated fishing experiences for every target species and style</p>
+          </div>
+          <div>
+            <div className="text-2xl mb-2">📋</div>
+            <p className="text-white font-semibold text-sm">Plan</p>
+            <p className="text-white/40 text-xs mt-1 leading-relaxed hidden sm:block">Species, gear, logistics and dates — all in one shared doc</p>
+          </div>
+          <div>
+            <div className="text-2xl mb-2">🚤</div>
+            <p className="text-white font-semibold text-sm">Book a Guide</p>
+            <p className="text-white/40 text-xs mt-1 leading-relaxed hidden sm:block">Expert local operators for guided charter experiences</p>
+          </div>
+        </div>
+      </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 -mt-8 pb-16 space-y-16">
 
@@ -104,6 +140,35 @@ export default async function HomePage({
 
         {/* Experiences personalised to dreamFish */}
         <ExperiencesForYouClient experiences={parsedExperiences} />
+
+        {/* Section A: What's in a trip plan — moved up so new users understand the value early */}
+        <section>
+          <div className="h-1 w-12 bg-[#0D9488] rounded mb-3" />
+          <h2 className="text-2xl font-bold text-[#0D9488] mb-2">
+            Everything your fishing trip needs in one shared plan.
+          </h2>
+          <p className="text-sm text-slate-500 mb-6 max-w-2xl">
+            From destination research to gear packing and crew coordination.
+          </p>
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
+            {TRIP_FEATURES.map(({ Icon, title, description, image }) => (
+              <div key={title} className="relative rounded-2xl overflow-hidden aspect-[3/4] flex flex-col justify-end">
+                <div
+                  className="absolute inset-0 bg-cover bg-center"
+                  style={{ backgroundImage: `url('${image}')` }}
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-black/10" />
+                <div className="relative z-10 p-4">
+                  <div className="w-8 h-8 rounded-lg bg-white/15 backdrop-blur-sm flex items-center justify-center mb-2">
+                    <Icon className="h-4 w-4 text-white" />
+                  </div>
+                  <p className="font-bold text-sm text-white mb-1">{title}</p>
+                  <p className="text-xs text-white/60 leading-relaxed">{description}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
 
         {/* Seasonal species carousel — personalised to nearby region if available */}
         <section className="pt-8 md:pt-0">
@@ -197,35 +262,6 @@ export default async function HomePage({
           </div>
         </section>
 
-        {/* Section A: What's in a trip plan */}
-        <section>
-          <div className="h-1 w-12 bg-[#0D9488] rounded mb-3" />
-          <h2 className="text-2xl font-bold text-[#0D9488] mb-2">
-            Everything your fishing trip needs in one shared plan.
-          </h2>
-          <p className="text-sm text-slate-500 mb-6 max-w-2xl">
-            From destination research to gear packing and crew coordination.
-          </p>
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
-            {TRIP_FEATURES.map(({ Icon, title, description, image }) => (
-              <div key={title} className="relative rounded-2xl overflow-hidden aspect-[3/4] flex flex-col justify-end">
-                <div
-                  className="absolute inset-0 bg-cover bg-center"
-                  style={{ backgroundImage: `url('${image}')` }}
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-black/10" />
-                <div className="relative z-10 p-4">
-                  <div className="w-8 h-8 rounded-lg bg-white/15 backdrop-blur-sm flex items-center justify-center mb-2">
-                    <Icon className="h-4 w-4 text-white" />
-                  </div>
-                  <p className="font-bold text-sm text-white mb-1">{title}</p>
-                  <p className="text-xs text-white/60 leading-relaxed">{description}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
-
         {/* Section B: Plan with your crew */}
         <section className="relative rounded-3xl overflow-hidden">
           <div
@@ -237,15 +273,14 @@ export default async function HomePage({
           <div className="relative z-10 px-8 py-12 md:px-12 flex flex-col md:flex-row items-center gap-10">
             <div className="flex-1 text-center md:text-left">
               <h2 className="text-2xl font-bold text-[#F5F0E8] mb-3">
-                Plan with your crew, not across scattered group chats.
+                Stop planning across group chats.
               </h2>
               <p className="text-white/60 text-sm mb-6 max-w-sm mx-auto md:mx-0 leading-relaxed">
-                Share the destination, species, dates, gear list and logistics in one place.
-                No account needed — just create a plan and send the link.
+                One shared link. Destination, species, dates, gear list — everything your crew needs, in one place. No account required.
               </p>
               <Link href="/trips/new">
                 <button className="inline-flex items-center gap-2 bg-[#0D9488] hover:bg-[#0F766E] text-white font-semibold px-6 py-3 rounded-xl transition-colors">
-                  Create Shared Trip
+                  Build a Trip Plan
                   <ArrowRight className="h-4 w-4" />
                 </button>
               </Link>

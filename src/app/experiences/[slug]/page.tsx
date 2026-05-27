@@ -39,7 +39,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const { slug } = await params;
   const exp = await getExperienceBySlug(slug);
   if (!exp) return {};
-  return { title: `${exp.name} | HookLine`, description: exp.description ?? undefined };
+  return { title: `${exp.name} | Fish Tripper`, description: exp.description ?? undefined };
 }
 
 export default async function ExperiencePage({ params }: { params: Promise<{ slug: string }> }) {

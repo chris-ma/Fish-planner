@@ -1,7 +1,7 @@
 import { Resend } from "resend";
 import type { Charter, CharterEnquiry } from "@/db/schema";
 
-const FROM = "HookLine <noreply@hookline.app>";
+const FROM = "Fish Tripper <noreply@hookline.app>";
 
 function getResend() {
   const key = process.env.RESEND_API_KEY;
@@ -25,7 +25,7 @@ export async function sendCharterEnquiryToOperator(
     html: `
       <div style="font-family:sans-serif;max-width:600px;margin:0 auto;padding:24px">
         <h2 style="color:#0D9488;margin-bottom:4px">New Charter Enquiry</h2>
-        <p style="color:#555;margin-top:0">via HookLine</p>
+        <p style="color:#555;margin-top:0">via Fish Tripper</p>
         <hr style="border:1px solid #eee;margin:16px 0"/>
 
         <h3 style="margin-bottom:8px">${charter.name}</h3>
@@ -86,7 +86,7 @@ export async function sendCharterEnquiryConfirmation(
         </div>
 
         <p style="margin-top:24px;color:#888;font-size:13px">
-          Sent via HookLine — Australia's fishing experience platform.
+          Sent via Fish Tripper — your fishing trip planner.
         </p>
       </div>
     `,

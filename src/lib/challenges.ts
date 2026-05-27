@@ -42,14 +42,14 @@ export const CHALLENGES: ChallengeConfig[] = [
   {
     slug: "the-dumbest-catch",
     title: "The Dumbest Catch",
-    description: "Catch a legal fish on something that has no right working. Post it on Instagram with #HooklineDumbest then submit your post link — the community votes with hearts.",
+    description: "Catch a legal fish on something that has no right working. Post it on Instagram with #FishTripperDumbest then submit your post link — the community votes with hearts.",
     image: "https://images.pexels.com/photos/994605/pexels-photo-994605.jpeg?auto=compress&cs=tinysrgb&w=600",
     metric: "gallery",
     unit: null,
     speciesSlug: null,
     requiresField: null,
     dataSource: "instagram",
-    hashtags: ["HooklineDumbest"],
+    hashtags: ["FishTripperDumbest"],
   },
   {
     slug: "grand-slam",

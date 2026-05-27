@@ -101,7 +101,7 @@ export function OnboardingClient({ species }: OnboardingClientProps) {
       {/* Header */}
       <div className="px-4 py-6 border-b border-white/10">
         <div className="max-w-xl mx-auto flex items-center justify-between">
-          <span className="font-bold text-lg tracking-tight text-[#0D9488]">HookLine</span>
+          <span className="font-bold text-lg tracking-tight text-[#0D9488]">Fish Tripper</span>
           <div className="flex gap-2">
             {[1, 2, 3].map((s) => (
               <div

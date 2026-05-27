@@ -61,7 +61,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     const region = await getRegionBySlug(slug);
     if (!region) return {};
     return {
-      title: `Fishing in ${region.name} | HookLine`,
+      title: `Fishing in ${region.name} | Fish Tripper`,
       description: `Best times to fish in ${region.name}, ${region.state}. Monthly seasonal calendar, top species, fishing methods and trip planning guide.`,
     };
   } catch {

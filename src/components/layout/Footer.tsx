@@ -14,10 +14,10 @@ export function Footer() {
               <span className="flex items-center justify-center w-7 h-7 rounded-lg bg-ocean-500">
                 <Anchor className="h-3.5 w-3.5 text-white" />
               </span>
-              HookLine 🌊
+              Fish Tripper 🌊
             </div>
             <p className="text-xs text-white/50 leading-relaxed">
-              Season-aware trip planning for Australian fishing groups.
+              Plan smarter fishing trips with your crew.
             </p>
           </div>
 

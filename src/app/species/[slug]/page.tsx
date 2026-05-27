@@ -55,8 +55,8 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     const sp = await getSpeciesBySlug(slug);
     if (!sp) return {};
     return {
-      title: `${sp.commonName} Fishing in Australia | HookLine`,
-      description: `Best times and places to target ${sp.commonName} across Australia. Seasonal calendar, top regions, fishing techniques, and gear guide.`,
+      title: `${sp.commonName} Fishing | Fish Tripper`,
+      description: `Best times and places to target ${sp.commonName}. Seasonal calendar, top regions, fishing techniques, and gear guide.`,
     };
   } catch {
     return {};

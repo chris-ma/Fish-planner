@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { ExternalLink, Fish, BookOpen, ShieldCheck, Map } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Fishing Regulations & Resources | HookLine",
+  title: "Fishing Regulations & Resources | Fish Tripper",
   description: "Official links to state and federal fishing regulations, licensing portals, marine park rules, and bag limit information for all Australian states and territories.",
 };
 
@@ -250,7 +250,7 @@ export default function ResourcesPage() {
         <div className="bg-amber-50 border border-amber-200 rounded-2xl p-5 text-sm text-amber-800">
           <p className="font-semibold mb-1">Important notice</p>
           <p className="leading-relaxed">
-            Fishing regulations change regularly. The links above go directly to official government fisheries websites. HookLine does not hold or display bag limits or size limits — always verify current rules on the official state fisheries website before heading out.
+            Fishing regulations change regularly. The links above go directly to official government fisheries websites. Fish Tripper does not hold or display bag limits or size limits — always verify current rules on the official state fisheries website before heading out.
           </p>
         </div>
       </div>
