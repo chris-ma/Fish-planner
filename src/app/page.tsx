@@ -150,7 +150,7 @@ export default async function HomePage({
         {/* Section A: What's in a trip plan — moved up so new users understand the value early */}
         <section>
           <div className="h-1 w-12 bg-[#0D9488] rounded mb-3" />
-          <h2 className="text-2xl font-bold text-[#0D9488] mb-2 max-w-xl">
+          <h2 className="text-xl font-bold text-[#0D9488] mb-2 max-w-xl [font-family:var(--font-inter)]">
             Everything your trip needs, in one plan.
           </h2>
           <p className="text-sm text-slate-500 mb-6 max-w-2xl">
