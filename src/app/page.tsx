@@ -139,7 +139,7 @@ export default async function HomePage({
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 -mt-8 pb-16 space-y-16">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 pt-8 pb-16 space-y-16">
 
         {/* Featured fish — personalized for logged-in users */}
         <FeaturedFishClient month={month} monthName={MONTH_NAMES_FULL[month]} />
