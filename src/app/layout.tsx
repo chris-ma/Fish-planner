@@ -3,9 +3,7 @@ import { Inter, Bebas_Neue } from "next/font/google";
 import { ClerkProvider } from "@clerk/nextjs";
 import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
-import { Footer } from "@/components/layout/Footer";
-import { BottomNav } from "@/components/layout/BottomNav";
-import { Navbar } from "@/components/layout/Navbar";
+import { AppChrome } from "@/components/layout/AppChrome";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -58,10 +56,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   const body = (
     <html lang="en" className={`${inter.variable} ${bebasNeue.variable}`}>
       <body>
-        <Navbar />
-        <main className="min-h-screen pb-16 md:pb-0">{children}</main>
-        <Footer />
-        <BottomNav />
+        <AppChrome>{children}</AppChrome>
         <Analytics />
       </body>
     </html>
