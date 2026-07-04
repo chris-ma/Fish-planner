@@ -7,6 +7,11 @@ const V = "/campaign/videos";
 
 export function CampaignClient() {
   useEffect(() => {
+    // Matches the original design's `body{overflow-x:hidden}` — applied here to the real
+    // body (the true scroll root) rather than to a wrapping div, which would break sticky.
+    const prevOverflowX = document.body.style.overflowX;
+    document.body.style.overflowX = "hidden";
+
     const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
     const clamp = (v: number, a: number, b: number) => Math.min(b, Math.max(a, v));
     const $ = (id: string) => document.getElementById(id);
@@ -199,6 +204,7 @@ export function CampaignClient() {
       removeEventListener("resize", fitEmbers);
       removeEventListener("scroll", onScroll);
       if (rafId) cancelAnimationFrame(rafId);
+      document.body.style.overflowX = prevOverflowX;
     };
   }, []);
 
@@ -209,8 +215,11 @@ export function CampaignClient() {
   --foam:#eef5f8; --ink:#0d2233; --line:#8fd0e8; --ember:#e05a2b; --day:#f4f8fa;
   font-family:'Newsreader',Georgia,serif;
   background:#060d1c; color:var(--foam);
-  overflow-x:hidden; -webkit-font-smoothing:antialiased;
+  -webkit-font-smoothing:antialiased;
 }
+/* overflow-x:hidden is applied to the real <body> in the mount effect below, not here —
+   putting it on this wrapping div would make it a scrolling ancestor of every section's
+   sticky .frame and break position:sticky (see the .frame note further down). */
 .campaign *{margin:0;padding:0;box-sizing:border-box}
 .campaign h1,.campaign h2{font-family:'Anton',Impact,sans-serif;text-transform:uppercase;letter-spacing:.01em;line-height:.95;font-weight:400;
   text-shadow:0 2px 30px rgba(0,0,0,.55)}
