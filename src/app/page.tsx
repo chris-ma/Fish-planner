@@ -2,12 +2,10 @@ import Link from "next/link";
 import { Compass, Fish, Package, Map, Users, ArrowRight, Anchor } from "lucide-react";
 import { VideoParallaxHero } from "@/components/layout/VideoParallaxHero";
 import { IntentSearch } from "@/components/discovery/IntentSearch";
-import { AustraliaMap } from "@/components/home/AustraliaMap";
 import { FeaturedFishClient } from "@/components/home/FeaturedFishClient";
 import { NearbyRegionsClient } from "@/components/home/NearbyRegionsClient";
 import { ExperiencesForYouClient } from "@/components/home/ExperiencesForYouClient";
 import { OnTheBiteClient } from "@/components/home/OnTheBiteClient";
-import { getTopRegionsForMonth } from "@/lib/queries/regions";
 import { getInSeasonSpecies } from "@/lib/queries/species";
 import { getExperiences } from "@/lib/queries/experiences";
 import { db } from "@/db";
@@ -69,8 +67,7 @@ export default async function HomePage({
   const params = await searchParams;
   const month = params.month ? parseInt(params.month) : currentMonth();
 
-  const [topRegions, inSeasonSpecies, allExperiences, allSpeciesForMap] = await Promise.all([
-    getTopRegionsForMonth(month, 6),
+  const [inSeasonSpecies, allExperiences, allSpeciesForMap] = await Promise.all([
     getInSeasonSpecies(month, 16),
     getExperiences(),
     db.select({ slug: species.slug, commonName: species.commonName }).from(species),
@@ -179,11 +176,6 @@ export default async function HomePage({
         {/* Seasonal species carousel — personalised to nearby region if available */}
         <section className="pt-8 md:pt-0">
           <OnTheBiteClient fallbackSpecies={inSeasonSpecies} month={month} monthName={MONTH_NAMES_FULL[month]} />
-        </section>
-
-        {/* Top Destinations — interactive map */}
-        <section>
-          <AustraliaMap regions={topRegions} monthName={MONTH_NAMES_FULL[month]} />
         </section>
 
         {/* Nearby regions — personalized for logged-in users with location */}
