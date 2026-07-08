@@ -1,5 +1,13 @@
 import Link from "next/link";
+import type { Metadata } from "next";
 import { ArrowLeft, Store } from "lucide-react";
+
+export const metadata: Metadata = {
+  title: "Why Local Fishing Businesses Matter",
+  description:
+    "How to find and support trustworthy local charter operators, independent tackle shops, and bait suppliers — and why they're the backbone of the fishing community.",
+  alternates: { canonical: "/editorial/local-businesses" },
+};
 
 export default function LocalBusinessesPage() {
   return (

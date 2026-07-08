@@ -5,9 +5,10 @@ import { SpeciesBrowser } from "@/components/discovery/SpeciesBrowser";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "Fish Species Guide | Fish Tripper",
+  title: "Fish Species Guide",
   description:
     "Browse all Australian fish species. Seasonal guides, fishing tactics, and gear recommendations for every species.",
+  alternates: { canonical: "/species" },
 };
 
 export default async function SpeciesIndexPage() {

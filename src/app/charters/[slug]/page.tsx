@@ -1,4 +1,7 @@
-export const dynamic = "force-dynamic";
+// ISR, matching /species/[slug] and /regions/[slug]: pre-rendered at build via
+// generateStaticParams below, refreshed at most once a day. Was previously
+// force-dynamic, which silently disabled generateStaticParams entirely.
+export const revalidate = 86400;
 
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
@@ -9,6 +12,9 @@ import { getExperienceBySlug } from "@/lib/queries/experiences";
 import { db } from "@/db";
 import { species } from "@/db/schema";
 import { EnquiryForm } from "./EnquiryForm";
+import { JsonLd } from "@/components/seo/JsonLd";
+import { breadcrumbSchema } from "@/lib/seo/breadcrumbs";
+import { SITE_URL } from "@/lib/site-config";
 
 const CATEGORY_IMAGE: Record<string, string> = {
   offshore:   "https://images.pexels.com/photos/994605/pexels-photo-994605.jpeg?auto=compress&cs=tinysrgb&w=1200",
@@ -31,7 +37,11 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const { slug } = await params;
   const charter = await getCharterBySlug(slug);
   if (!charter) return {};
-  return { title: `${charter.name} | Fish Tripper`, description: charter.description ?? undefined };
+  return {
+    title: charter.name,
+    description: charter.description ?? undefined,
+    alternates: { canonical: `/charters/${charter.slug}` },
+  };
 }
 
 export default async function CharterPage({ params }: { params: Promise<{ slug: string }> }) {
@@ -53,13 +63,40 @@ export default async function CharterPage({ params }: { params: Promise<{ slug: 
 
   const heroImage = charter.heroImage ?? CATEGORY_IMAGE[experience?.category ?? "offshore"] ?? CATEGORY_IMAGE.offshore;
 
+  const localBusinessSchema = {
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    name: charter.operatorName,
+    description: charter.description ?? undefined,
+    url: `${SITE_URL}/charters/${charter.slug}`,
+    telephone: charter.operatorPhone ?? undefined,
+    email: charter.operatorEmail,
+    address: { "@type": "PostalAddress", addressLocality: charter.homePort },
+    priceRange: charter.priceLabel ?? undefined,
+  };
+
   return (
     <div className="bg-[#040F1C] min-h-screen text-[#F5F0E8]">
+      <JsonLd data={localBusinessSchema} />
+      <JsonLd
+        data={breadcrumbSchema([
+          { name: "Home", path: "/" },
+          { name: "Charters", path: "/charters" },
+          { name: charter.name, path: `/charters/${charter.slug}` },
+        ])}
+      />
       {/* Hero */}
       <div className="relative py-20 px-4 overflow-hidden">
         <div className="absolute inset-0 opacity-25" style={{ backgroundImage: `url(${heroImage})`, backgroundSize: "cover", backgroundPosition: "center" }} />
         <div className="absolute inset-0 bg-gradient-to-b from-[#040F1C]/40 to-[#040F1C]" />
         <div className="relative max-w-4xl mx-auto pt-8">
+          <nav className="text-sm text-white/50 mb-5 flex items-center gap-2">
+            <Link href="/" className="hover:text-white/80 transition-colors">Home</Link>
+            <span>/</span>
+            <Link href="/charters" className="hover:text-white/80 transition-colors">Charters</Link>
+            <span>/</span>
+            <span>{charter.name}</span>
+          </nav>
           <div className="flex items-center gap-2 mb-4">
             <span className="bg-[#0D9488]/20 text-[#0D9488] text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full border border-[#0D9488]/30">
               Guided Experience

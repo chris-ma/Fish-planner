@@ -1,5 +1,13 @@
 import Link from "next/link";
+import type { Metadata } from "next";
 import { ArrowLeft, Heart } from "lucide-react";
+
+export const metadata: Metadata = {
+  title: "Fishing, Friendship & Mental Health",
+  description:
+    "Why time on the water matters for wellbeing — the science of blue mind, fishing as mindfulness, and the social ritual of a trip with mates.",
+  alternates: { canonical: "/editorial/mental-health" },
+};
 
 export default function MentalHealthPage() {
   return (

@@ -1,11 +1,15 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import type { Metadata } from "next";
 import { ArrowLeft } from "lucide-react";
 import { getTripById, getTripParticipants } from "@/lib/queries/trips";
 import { db } from "@/db";
 import { tripBudgetItems } from "@/db/schema";
 import { eq, sql } from "drizzle-orm";
 import { BudgetClient } from "./BudgetClient";
+
+export const dynamic = "force-dynamic";
+export const metadata: Metadata = { robots: { index: false, follow: false } };
 
 async function ensureTable() {
   await db.run(sql`

@@ -1,4 +1,7 @@
-export const dynamic = "force-dynamic";
+// ISR, matching /species/[slug] and /regions/[slug]: pre-rendered at build via
+// generateStaticParams below, refreshed at most once a day. Was previously
+// force-dynamic, which silently disabled generateStaticParams entirely.
+export const revalidate = 86400;
 
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
@@ -9,6 +12,8 @@ import { getExperienceBySlug, getExperiences, getDestinationsForExperienceAllReg
 import type { Region, Destination } from "@/db/schema";
 import { EXPERIENCE_TIPS } from "@/lib/experience-tips";
 import { SPECIES_GEAR } from "@/lib/gear-specs";
+import { JsonLd } from "@/components/seo/JsonLd";
+import { breadcrumbSchema } from "@/lib/seo/breadcrumbs";
 
 const CATEGORY_BADGE: Record<string, string> = {
   offshore:   "bg-blue-500/20 text-blue-300",
@@ -39,7 +44,11 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const { slug } = await params;
   const exp = await getExperienceBySlug(slug);
   if (!exp) return {};
-  return { title: `${exp.name} | Fish Tripper`, description: exp.description ?? undefined };
+  return {
+    title: exp.name,
+    description: exp.description ?? undefined,
+    alternates: { canonical: `/experiences/${exp.slug}` },
+  };
 }
 
 export default async function ExperiencePage({ params }: { params: Promise<{ slug: string }> }) {
@@ -89,6 +98,20 @@ export default async function ExperiencePage({ params }: { params: Promise<{ slu
         />
         <div className="absolute inset-0 bg-gradient-to-b from-[#040F1C]/60 to-[#040F1C]" />
         <div className="relative max-w-4xl mx-auto">
+          <nav className="text-sm text-white/50 mb-5 flex items-center gap-2">
+            <Link href="/" className="hover:text-white/80 transition-colors">Home</Link>
+            <span>/</span>
+            <Link href="/experiences" className="hover:text-white/80 transition-colors">Experiences</Link>
+            <span>/</span>
+            <span>{exp.name}</span>
+          </nav>
+          <JsonLd
+            data={breadcrumbSchema([
+              { name: "Home", path: "/" },
+              { name: "Experiences", path: "/experiences" },
+              { name: exp.name, path: `/experiences/${exp.slug}` },
+            ])}
+          />
           <span className={`text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full mb-4 inline-block ${categoryBadge}`}>
             {exp.category}
           </span>

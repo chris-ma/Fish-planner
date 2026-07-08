@@ -1,8 +1,12 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import type { Metadata } from "next";
 import { ArrowLeft } from "lucide-react";
 import { getTripById, getTripParticipants, getTripChecklist, getTripNotes, getTripTasks } from "@/lib/queries/trips";
 import { GroupClient } from "./GroupClient";
+
+export const dynamic = "force-dynamic";
+export const metadata: Metadata = { robots: { index: false, follow: false } };
 
 export default async function TripGroupPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;

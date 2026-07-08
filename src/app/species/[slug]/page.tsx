@@ -11,6 +11,8 @@ import { FISHING_TIPS } from "@/lib/species-tips";
 import { getSpeciesImage } from "@/lib/images";
 import { SpeciesPageIntent } from "@/components/discovery/SpeciesPageIntent";
 import { SPECIES_EPISODES, PODCAST_SHOW_URL } from "@/lib/podcast-episodes";
+import { JsonLd } from "@/components/seo/JsonLd";
+import { breadcrumbSchema } from "@/lib/seo/breadcrumbs";
 
 export const revalidate = 86400;
 
@@ -55,8 +57,9 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     const sp = await getSpeciesBySlug(slug);
     if (!sp) return {};
     return {
-      title: `${sp.commonName} Fishing | Fish Tripper`,
+      title: `${sp.commonName} Fishing`,
       description: `Best times and places to target ${sp.commonName}. Seasonal calendar, top regions, fishing techniques, and gear guide.`,
+      alternates: { canonical: `/species/${sp.slug}` },
     };
   } catch {
     return {};
@@ -134,8 +137,17 @@ export default async function SpeciesPage({ params }: { params: Promise<{ slug: 
           <nav className="text-sm text-white/50 mb-5 flex items-center gap-2">
             <Link href="/" className="hover:text-white/80 transition-colors">Home</Link>
             <span>/</span>
+            <Link href="/species" className="hover:text-white/80 transition-colors">Species</Link>
+            <span>/</span>
             <span>{sp.commonName}</span>
           </nav>
+          <JsonLd
+            data={breadcrumbSchema([
+              { name: "Home", path: "/" },
+              { name: "Species", path: "/species" },
+              { name: sp.commonName, path: `/species/${sp.slug}` },
+            ])}
+          />
 
           <div className="flex items-center gap-2 mb-3 flex-wrap">
             <span className="inline-flex items-center bg-white/10 rounded-full px-3 py-1 text-white/80 text-sm border border-white/20">

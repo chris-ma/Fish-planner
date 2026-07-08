@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+import type { Metadata } from "next";
 import { CHALLENGES } from "@/lib/challenges";
 import { db } from "@/db";
 import { catchLog } from "@/db/schema";
@@ -8,6 +9,21 @@ import ChallengeDetailClient from "./ChallengeDetailClient";
 import { currentUser } from "@clerk/nextjs/server";
 
 export const dynamic = "force-dynamic";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
+  const { slug } = await params;
+  const challenge = CHALLENGES.find((c) => c.slug === slug);
+  if (!challenge) return {};
+  return {
+    title: challenge.title,
+    description: challenge.description,
+    alternates: { canonical: `/challenges/${challenge.slug}` },
+  };
+}
 
 type CatchRow = typeof catchLog.$inferSelect;
 

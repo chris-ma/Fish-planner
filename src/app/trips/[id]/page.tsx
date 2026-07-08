@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import type { Metadata } from "next";
 import { MapPin, Calendar, Fish, Copy, Package, Users, Smartphone, DollarSign } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -8,6 +9,10 @@ import { getTripWithRegion, getTripBookings, getTripChecklist, getTripParticipan
 import { formatDateRange } from "@/lib/utils/dates";
 import { REGION_OPTIONS } from "@/lib/data/options";
 import { CopyShareLink } from "./CopyShareLink";
+
+// Private, per-user trip data — never cache across requests, never index.
+export const dynamic = "force-dynamic";
+export const metadata: Metadata = { robots: { index: false, follow: false } };
 
 const STATUS_COLORS: Record<string, string> = {
   planning: "bg-slate-100 text-slate-700",

@@ -1,9 +1,15 @@
 export const dynamic = "force-dynamic";
 
+import type { Metadata } from "next";
 import { auth, currentUser } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import { listSpecies } from "@/lib/queries/species";
 import { OnboardingClient } from "./OnboardingClient";
+
+export const metadata: Metadata = {
+  title: "Welcome",
+  robots: { index: false, follow: false },
+};
 
 export default async function OnboardingPage() {
   const { userId } = await auth();

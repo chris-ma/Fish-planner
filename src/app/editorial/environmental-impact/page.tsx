@@ -1,5 +1,13 @@
 import Link from "next/link";
+import type { Metadata } from "next";
 import { ArrowLeft, Leaf } from "lucide-react";
+
+export const metadata: Metadata = {
+  title: "Fishing with a Light Footprint",
+  description:
+    "Catch-and-release technique, bag limits, reef and seagrass protection, marine sanctuary zones, and lead-free tackle — how to fish sustainably.",
+  alternates: { canonical: "/editorial/environmental-impact" },
+};
 
 export default function EnvironmentalImpactPage() {
   return (

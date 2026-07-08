@@ -1,5 +1,6 @@
 export const dynamic = "force-dynamic";
 
+import type { Metadata } from "next";
 import { listSpecies } from "@/lib/queries/species";
 import { listRegions } from "@/lib/queries/regions";
 import { getExperiences, getRegionSpeciesSlugs } from "@/lib/queries/experiences";
@@ -7,6 +8,16 @@ import { getCharters } from "@/lib/queries/charters";
 import { db } from "@/db";
 import { species } from "@/db/schema";
 import { PlanTabs } from "./PlanTabs";
+
+// Not indexed: this page browses the same experiences/species/regions catalogue
+// already published at /experiences, /species and /regions — kept out of search
+// results to avoid duplicate-content dilution, while staying crawlable so Google
+// can see that directive (see src/app/robots.ts).
+export const metadata: Metadata = {
+  title: "Explore",
+  description: "Browse species and destinations for your next fishing trip.",
+  robots: { index: false, follow: true },
+};
 
 export default async function PlanPage() {
   const [allSpecies, allRegions, allExperiences, regionSpeciesRows, allSpeciesForMap, allCharters] = await Promise.all([

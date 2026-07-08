@@ -9,6 +9,8 @@ import { getExperiences } from "@/lib/queries/experiences";
 import { currentMonth, MONTH_NAMES_FULL } from "@/lib/utils/season";
 import { gregVinallYoutubeUrl } from "@/lib/affiliate";
 import { REGION_EPISODES, PODCAST_SHOW_URL } from "@/lib/podcast-episodes";
+import { JsonLd } from "@/components/seo/JsonLd";
+import { breadcrumbSchema } from "@/lib/seo/breadcrumbs";
 
 export const revalidate = 86400;
 
@@ -61,8 +63,9 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     const region = await getRegionBySlug(slug);
     if (!region) return {};
     return {
-      title: `Fishing in ${region.name} | Fish Tripper`,
+      title: `Fishing in ${region.name}`,
       description: `Best times to fish in ${region.name}, ${region.state}. Monthly seasonal calendar, top species, fishing methods and trip planning guide.`,
+      alternates: { canonical: `/regions/${region.slug}` },
     };
   } catch {
     return {};
@@ -145,8 +148,17 @@ export default async function RegionPage({ params }: { params: Promise<{ slug: s
           <nav className="text-sm text-white/50 mb-5 flex items-center gap-2">
             <Link href="/" className="hover:text-white/80 transition-colors">Home</Link>
             <span>/</span>
+            <Link href="/regions" className="hover:text-white/80 transition-colors">Regions</Link>
+            <span>/</span>
             <span>{region.name}</span>
           </nav>
+          <JsonLd
+            data={breadcrumbSchema([
+              { name: "Home", path: "/" },
+              { name: "Regions", path: "/regions" },
+              { name: region.name, path: `/regions/${region.slug}` },
+            ])}
+          />
 
           <div className="inline-flex items-center gap-1.5 bg-white/10 backdrop-blur rounded-full px-3 py-1 text-white/80 text-sm mb-3 border border-white/20">
             <MapPin className="h-3.5 w-3.5" />

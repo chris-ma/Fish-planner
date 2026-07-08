@@ -8,9 +8,10 @@ import { ExperiencesBrowser } from "@/components/discovery/ExperiencesBrowser";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "Fishing Experiences | Fish Tripper",
+  title: "Fishing Experiences",
   description:
     "Explore fishing experiences by region. Find the perfect offshore, reef, estuary, inshore, and freshwater adventures.",
+  alternates: { canonical: "/experiences" },
 };
 
 export default async function ExperiencesPage() {

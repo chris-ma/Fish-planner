@@ -1,3 +1,8 @@
+// Reads searchParams (month override) and fetches live experience data on every
+// request — already implicitly dynamic, made explicit here for clarity.
+export const dynamic = "force-dynamic";
+
+import type { Metadata } from "next";
 import Link from "next/link";
 import { Compass, Fish, Package, Map, Users, ArrowRight, Anchor } from "lucide-react";
 import { VideoParallaxHero } from "@/components/layout/VideoParallaxHero";
@@ -72,6 +77,9 @@ const BREAD_AND_BUTTER: BreadAndButterSpecies[] = [
     whyTrophy: "Also called silver drummer, these surge-zone brawlers can exceed 5kg and unload long, punishing runs off exposed rock platforms. Underrated on the table, unforgiving on light tackle." },
 ];
 
+export const metadata: Metadata = {
+  alternates: { canonical: "/" },
+};
 
 export default async function HomePage({
   searchParams,

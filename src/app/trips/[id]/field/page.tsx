@@ -1,9 +1,13 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import type { Metadata } from "next";
 import { ArrowLeft, Waves, Map, Fish, Users, AlertTriangle, Share2 } from "lucide-react";
 import { getTripWithRegion, getTripParticipants, getTripNotes } from "@/lib/queries/trips";
 import { formatDateRange } from "@/lib/utils/dates";
 import { REGION_TIDE_URL } from "@/lib/utils/tides";
+
+export const dynamic = "force-dynamic";
+export const metadata: Metadata = { robots: { index: false, follow: false } };
 
 type Availability = "going" | "tentative" | "out";
 

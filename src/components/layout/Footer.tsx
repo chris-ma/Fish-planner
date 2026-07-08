@@ -126,8 +126,14 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="border-t border-white/10 pt-6 text-xs text-white/30 text-center">
-          Season data is a general guide only — always check local conditions, regulations, and bag limits before fishing.
+        <div className="border-t border-white/10 pt-6 flex flex-col items-center gap-3 text-xs text-white/30 text-center">
+          <div className="flex items-center gap-4">
+            <Link href="/about" className="hover:text-white/60 transition-colors">About</Link>
+            <Link href="/contact" className="hover:text-white/60 transition-colors">Contact</Link>
+          </div>
+          <p>
+            Season data is a general guide only — always check local conditions, regulations, and bag limits before fishing.
+          </p>
         </div>
       </div>
     </footer>

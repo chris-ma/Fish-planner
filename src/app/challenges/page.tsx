@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { db } from "@/db";
 import { catchLog } from "@/db/schema";
 import { and, eq, isNotNull, isNull, lte } from "drizzle-orm";
@@ -5,6 +6,13 @@ import { CHALLENGES, ChallengeDataSource, ChallengeMetric } from "@/lib/challeng
 import ChallengesIndexClient from "./ChallengesIndexClient";
 
 export const dynamic = "force-dynamic";
+
+export const metadata: Metadata = {
+  title: "Fishing Challenges",
+  description:
+    "Self-imposed challenges for Aussie anglers — no leaderboard pressure, just bragging rights. Log your catch and climb the board.",
+  alternates: { canonical: "/challenges" },
+};
 
 type Leader = { catcherName: string; metric: number; unit: string } | null;
 

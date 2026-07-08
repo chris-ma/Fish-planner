@@ -68,9 +68,9 @@ export function FeaturedFishClient({ month, monthName }: Props) {
         {/* Content */}
         <div className="flex-1 p-6 md:p-8 flex flex-col justify-between">
           <div>
-            <h2 className="text-2xl md:text-3xl font-bold text-[#F5F0E8] mb-1">
+            <h3 className="text-2xl md:text-3xl font-bold text-[#F5F0E8] mb-1">
               {speciesData.commonName}
-            </h2>
+            </h3>
             {speciesData.scientificName && (
               <p className="text-sm text-white/40 italic mb-4">{speciesData.scientificName}</p>
             )}

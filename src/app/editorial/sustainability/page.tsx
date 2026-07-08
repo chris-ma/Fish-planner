@@ -1,5 +1,13 @@
 import Link from "next/link";
+import type { Metadata } from "next";
 import { ArrowLeft, Utensils } from "lucide-react";
+
+export const metadata: Metadata = {
+  title: "Catch, Cook & Sustainability",
+  description:
+    "Which species are good to eat, why minimum sizes matter, proper bleeding and icing technique, and how to responsibly handle invasive carp and redfin.",
+  alternates: { canonical: "/editorial/sustainability" },
+};
 
 export default function SustainabilityPage() {
   return (

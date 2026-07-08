@@ -2,8 +2,9 @@ import type { Metadata } from "next";
 import { ExternalLink, Fish, BookOpen, ShieldCheck, Map } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Fishing Regulations & Resources | Fish Tripper",
+  title: "Fishing Regulations & Resources",
   description: "Official links to state and federal fishing regulations, licensing portals, marine park rules, and bag limit information for all Australian states and territories.",
+  alternates: { canonical: "/resources" },
 };
 
 const RESOURCES = [
