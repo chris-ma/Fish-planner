@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, Fraunces, JetBrains_Mono } from "next/font/google";
+import { Lato, Fraunces, JetBrains_Mono } from "next/font/google";
 import { ClerkProvider } from "@clerk/nextjs";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
@@ -9,11 +9,12 @@ import { JsonLd } from "@/components/seo/JsonLd";
 import { SITE_URL, SITE_NAME, SITE_DESCRIPTION } from "@/lib/site-config";
 
 // Brand type system (brand bible): Fraunces for headlines and moments of
-// feeling, Inter for all running text and interface copy, JetBrains Mono for
+// feeling, Lato for all running text and interface copy, JetBrains Mono for
 // coordinates / timestamps / field-guide data.
-const inter = Inter({
+const lato = Lato({
   subsets: ["latin"],
-  variable: "--font-inter",
+  weight: ["300", "400", "700", "900"],
+  variable: "--font-lato",
   display: "swap",
 });
 
@@ -104,7 +105,7 @@ const clerkAppearance = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   const body = (
-    <html lang="en" className={`${inter.variable} ${fraunces.variable} ${jetbrainsMono.variable}`}>
+    <html lang="en" className={`${lato.variable} ${fraunces.variable} ${jetbrainsMono.variable}`}>
       <body>
         <JsonLd data={ORGANIZATION_JSON_LD} />
         <JsonLd data={WEBSITE_JSON_LD} />

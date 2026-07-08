@@ -123,7 +123,7 @@ export function HomeStoryClient({ regions, challengeEntries }: Props) {
   --quiet:#7A9BAA;
   --rule-d:rgba(234,226,208,0.1);
   --hs-ease:cubic-bezier(0.25,0.1,0.25,1);
-  font-family:var(--font-inter),sans-serif;
+  font-family:var(--font-lato),sans-serif;
   color:var(--sandstone);
   line-height:1.65;
   -webkit-font-smoothing:antialiased;
