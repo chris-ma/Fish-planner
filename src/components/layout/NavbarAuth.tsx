@@ -3,6 +3,10 @@
 import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
 
 export function NavbarAuth() {
+  // layout.tsx deliberately renders without ClerkProvider when no key is set
+  // (keyless mode); Clerk's control components throw in that case.
+  if (!process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY) return null;
+
   return (
     <>
       <SignedOut>

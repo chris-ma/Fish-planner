@@ -52,8 +52,8 @@ export function ExperiencesForYouClient({ experiences }: { experiences: ParsedEx
   return (
     <section>
       <div className="mb-4">
-        <div className="h-1 w-12 bg-[#0D9488] rounded mb-3" />
-        <h2 className="text-2xl font-bold text-[#0D9488]">Experiences you might like</h2>
+        <div className="h-1 w-12 bg-[#C99A3E] rounded mb-3" />
+        <h2 className="text-2xl font-bold text-[#C99A3E]">Experiences you might like</h2>
         <p className="text-sm text-slate-500 mt-1">Based on your favourite fish.</p>
       </div>
       <div className="flex gap-4 overflow-x-auto pb-3 snap-x snap-mandatory">
@@ -77,7 +77,7 @@ export function ExperiencesForYouClient({ experiences }: { experiences: ParsedEx
                   {exp.category}
                 </span>
                 <p className="text-white font-bold text-sm leading-tight mb-1">{exp.name}</p>
-                <p className="text-[#0D9488] text-xs font-semibold group-hover:text-teal-300 transition-colors">
+                <p className="text-[#C99A3E] text-xs font-semibold group-hover:text-[#D9B15E] transition-colors">
                   Plan this trip →
                 </p>
               </div>

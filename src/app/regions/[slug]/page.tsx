@@ -133,15 +133,15 @@ export default async function RegionPage({ params }: { params: Promise<{ slug: s
   }).slice(0, 6);
 
   return (
-    <div className="bg-[#020B14] min-h-screen">
+    <div className="bg-[#0A1C28] min-h-screen">
       {/* Hero Banner */}
-      <section className="relative bg-[#020B14] overflow-hidden">
+      <section className="relative bg-[#0A1C28] overflow-hidden">
         <div
           className="absolute inset-0 bg-cover bg-center opacity-30"
           style={{ backgroundImage: `url('${heroImage}')` }}
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-[#020B14]/60 via-[#020B14]/40 to-[#020B14]" />
-        <div className="absolute bottom-0 left-1/4 w-[400px] h-[400px] bg-teal-600/20 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#0A1C28]/60 via-[#0A1C28]/40 to-[#0A1C28]" />
+        <div className="absolute bottom-0 left-1/4 w-[400px] h-[400px] bg-[#C99A3E]/10 rounded-full blur-3xl pointer-events-none" />
         <div className="absolute top-0 right-1/3 w-80 h-80 bg-blue-600/15 rounded-full blur-3xl pointer-events-none" />
 
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 py-12 pb-8">
@@ -165,14 +165,14 @@ export default async function RegionPage({ params }: { params: Promise<{ slug: s
             {ZONE_LABELS[region.zone] ?? region.zone} · {region.state}
           </div>
 
-          <h1 className="text-4xl font-bold text-[#F5F0E8] mt-3 mb-3">Fishing in {region.name}</h1>
+          <h1 className="text-4xl font-bold text-[#EAE2D0] mt-3 mb-3">Fishing in {region.name}</h1>
 
           {region.description && (
             <p className="text-white/60 max-w-2xl leading-relaxed mb-6">{region.description}</p>
           )}
 
           <Link href="/trips/new">
-            <button className="inline-flex items-center gap-2 bg-[#0D9488] hover:bg-[#0F766E] text-white font-medium px-5 py-2.5 rounded-xl transition-colors">
+            <button className="inline-flex items-center gap-2 bg-[#C99A3E] hover:bg-[#AD8232] text-[#0A1C28] font-medium px-5 py-2.5 rounded-xl transition-colors">
               Plan a Trip Here
               <ArrowRight className="h-4 w-4" />
             </button>
@@ -181,12 +181,12 @@ export default async function RegionPage({ params }: { params: Promise<{ slug: s
       </section>
 
       {/* Stats bar */}
-      <div className="bg-[#040F1C] border-b border-white/5">
+      <div className="bg-[#0F2635] border-b border-white/5">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 overflow-x-auto">
           <div className="flex gap-6 min-w-max">
             <div className="flex items-center gap-2.5">
               <div className="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center shrink-0">
-                <Fish className="h-4 w-4 text-[#0D9488]" />
+                <Fish className="h-4 w-4 text-[#C99A3E]" />
               </div>
               <div>
                 <p className="text-white/40 text-[10px] uppercase tracking-wider font-semibold">Species</p>
@@ -221,8 +221,8 @@ export default async function RegionPage({ params }: { params: Promise<{ slug: s
         {topSpecies.length > 0 && (
           <section>
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-bold text-[#F5F0E8]">Top Target Species</h2>
-              <Link href="/species" className="text-sm text-[#0D9488] hover:text-[#2DD4BF] transition-colors">
+              <h2 className="text-lg font-bold text-[#EAE2D0]">Top Target Species</h2>
+              <Link href="/species" className="text-sm text-[#C99A3E] hover:text-[#D9B15E] transition-colors">
                 All species →
               </Link>
             </div>
@@ -261,8 +261,8 @@ export default async function RegionPage({ params }: { params: Promise<{ slug: s
         {/* Active this month */}
         {peakThisMonth.length > 0 && (
           <section>
-            <h2 className="text-lg font-bold text-[#F5F0E8] mb-3 flex items-center gap-2">
-              <Fish className="h-4 w-4 text-[#0D9488]" />
+            <h2 className="text-lg font-bold text-[#EAE2D0] mb-3 flex items-center gap-2">
+              <Fish className="h-4 w-4 text-[#C99A3E]" />
               Active this month — {MONTH_NAMES_FULL[month]}
             </h2>
             <div className="flex flex-wrap gap-2">
@@ -272,8 +272,8 @@ export default async function RegionPage({ params }: { params: Promise<{ slug: s
                   href={`/species/${sp.speciesSlug}`}
                   className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all hover:scale-105 ${
                     sp.months[month] === "peak"
-                      ? "bg-[#0D9488] text-white"
-                      : "bg-[#0D9488]/30 text-[#2DD4BF] border border-[#0D9488]/40"
+                      ? "bg-[#C99A3E] text-[#0A1C28]"
+                      : "bg-[#C99A3E]/30 text-[#D9B15E] border border-[#C99A3E]/40"
                   }`}
                 >
                   {sp.commonName}
@@ -285,7 +285,7 @@ export default async function RegionPage({ params }: { params: Promise<{ slug: s
 
         {/* Best Time to Visit — month activity grid */}
         <section>
-          <h2 className="text-lg font-bold text-[#F5F0E8] mb-4">Best Time to Visit</h2>
+          <h2 className="text-lg font-bold text-[#EAE2D0] mb-4">Best Time to Visit</h2>
           <div className="grid grid-cols-6 sm:grid-cols-12 gap-2">
             {SHORT_MONTHS.slice(1).map((label, i) => {
               const m = i + 1;
@@ -293,8 +293,8 @@ export default async function RegionPage({ params }: { params: Promise<{ slug: s
               const ratio = activity / maxActivity;
               const isNow = m === month;
               const intensity =
-                ratio >= 0.75 ? "bg-[#0D9488] text-white" :
-                ratio >= 0.45 ? "bg-[#0D9488]/50 text-white" :
+                ratio >= 0.75 ? "bg-[#C99A3E] text-[#0A1C28]" :
+                ratio >= 0.45 ? "bg-[#C99A3E]/50 text-[#0A1C28]" :
                 ratio >= 0.2  ? "bg-white/15 text-white/60" :
                                 "bg-white/5 text-white/30";
               return (
@@ -319,12 +319,12 @@ export default async function RegionPage({ params }: { params: Promise<{ slug: s
 
         {/* Seasonal Calendar */}
         <section>
-          <h2 className="text-lg font-bold text-[#F5F0E8] mb-2">12-Month Seasonal Calendar</h2>
+          <h2 className="text-lg font-bold text-[#EAE2D0] mb-2">12-Month Seasonal Calendar</h2>
           <p className="text-sm text-white/40 mb-5">
             Monthly ratings per species. Click a species to see all regions where it can be targeted.
           </p>
           {calendarData.length > 0 ? (
-            <div className="rounded-2xl overflow-hidden border border-white/10 bg-[#F5F0E8] p-4">
+            <div className="rounded-2xl overflow-hidden border border-white/10 bg-[#EAE2D0] p-4">
               <SeasonalCalendar rows={calendarData} highlightMonth={month} linkRowsTo="species" />
             </div>
           ) : (
@@ -404,8 +404,8 @@ export default async function RegionPage({ params }: { params: Promise<{ slug: s
         {relevantExperiences.length > 0 && (
           <section>
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-bold text-[#F5F0E8]">Fishing Experiences</h2>
-              <Link href="/trips/new" className="text-sm text-[#0D9488] hover:text-[#2DD4BF] transition-colors">
+              <h2 className="text-lg font-bold text-[#EAE2D0]">Fishing Experiences</h2>
+              <Link href="/trips/new" className="text-sm text-[#C99A3E] hover:text-[#D9B15E] transition-colors">
                 Plan a trip →
               </Link>
             </div>
@@ -422,9 +422,9 @@ export default async function RegionPage({ params }: { params: Promise<{ slug: s
                 const targetSlugs: string[] = JSON.parse(exp.targetSpeciesSlugs || "[]");
                 return (
                   <Link key={exp.id} href={`/trips/new?experience=${exp.slug}&region=${region.slug}`}>
-                    <div className="bg-[#040F1C] border border-white/10 rounded-xl p-4 hover:border-[#0D9488]/50 transition-colors cursor-pointer group h-full">
+                    <div className="bg-[#0F2635] border border-white/10 rounded-xl p-4 hover:border-[#C99A3E]/50 transition-colors cursor-pointer group h-full">
                       <div className="flex items-start justify-between gap-2 mb-2">
-                        <p className="font-semibold text-[#F5F0E8] text-sm group-hover:text-[#2DD4BF] transition-colors leading-tight">{exp.name}</p>
+                        <p className="font-semibold text-[#EAE2D0] text-sm group-hover:text-[#D9B15E] transition-colors leading-tight">{exp.name}</p>
                         <span className={`shrink-0 text-[10px] font-bold px-2 py-0.5 rounded-full border uppercase tracking-wide ${colorClass}`}>
                           {exp.category}
                         </span>
@@ -449,13 +449,13 @@ export default async function RegionPage({ params }: { params: Promise<{ slug: s
         )}
 
         {/* CTA */}
-        <section className="bg-[#040F1C] border border-white/10 rounded-3xl p-10 text-center">
-          <h2 className="text-2xl font-bold mb-3 text-[#F5F0E8]">Ready to plan a trip to {region.name}?</h2>
+        <section className="bg-[#0F2635] border border-white/10 rounded-3xl p-10 text-center">
+          <h2 className="text-2xl font-bold mb-3 text-[#EAE2D0]">Ready to plan a trip to {region.name}?</h2>
           <p className="text-white/50 mb-6 max-w-md mx-auto">
             Create a shared workspace, invite your crew, build a gear list, and store all your bookings in one place.
           </p>
           <Link href="/trips/new">
-            <button className="inline-flex items-center gap-2 bg-[#0D9488] hover:bg-[#0F766E] text-white font-medium px-6 py-2.5 rounded-xl transition-colors">
+            <button className="inline-flex items-center gap-2 bg-[#C99A3E] hover:bg-[#AD8232] text-[#0A1C28] font-medium px-6 py-2.5 rounded-xl transition-colors">
               Plan This Trip
               <ArrowRight className="h-4 w-4" />
             </button>

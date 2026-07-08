@@ -25,11 +25,11 @@ const CATEGORY_LABELS: Record<string, string> = {
 };
 
 const CATEGORY_GRADIENTS: Record<string, string> = {
-  pelagic: "from-blue-950 via-[#020B14] to-[#020B14]",
-  reef: "from-cyan-950 via-[#020B14] to-[#020B14]",
-  estuary: "from-teal-950 via-[#020B14] to-[#020B14]",
-  inshore: "from-sky-950 via-[#020B14] to-[#020B14]",
-  freshwater: "from-emerald-950 via-[#020B14] to-[#020B14]",
+  pelagic: "from-blue-950 via-[#0A1C28] to-[#0A1C28]",
+  reef: "from-cyan-950 via-[#0A1C28] to-[#0A1C28]",
+  estuary: "from-teal-950 via-[#0A1C28] to-[#0A1C28]",
+  inshore: "from-sky-950 via-[#0A1C28] to-[#0A1C28]",
+  freshwater: "from-emerald-950 via-[#0A1C28] to-[#0A1C28]",
 };
 
 
@@ -90,7 +90,7 @@ export default async function SpeciesPage({ params }: { params: Promise<{ slug: 
     .filter((r) => r.months[month] === "peak" || r.months[month] === "good")
     .slice(0, 6);
 
-  const heroGradient = CATEGORY_GRADIENTS[sp.category] ?? "from-[#040F1C] via-[#020B14] to-[#020B14]";
+  const heroGradient = CATEGORY_GRADIENTS[sp.category] ?? "from-[#0F2635] via-[#0A1C28] to-[#0A1C28]";
   const heroImage = getSpeciesImage(sp.slug, sp.category, 1200);
 
   // Compute best months from seasonal data
@@ -131,7 +131,7 @@ export default async function SpeciesPage({ params }: { params: Promise<{ slug: 
           className="absolute inset-0 bg-cover bg-center opacity-40"
           style={{ backgroundImage: `url('${heroImage}')` }}
         />
-        <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-[#0D9488] to-[#0F766E] opacity-60" />
+        <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-[#C99A3E] to-[#AD8232] opacity-60" />
 
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 py-12">
           <nav className="text-sm text-white/50 mb-5 flex items-center gap-2">
@@ -158,7 +158,7 @@ export default async function SpeciesPage({ params }: { params: Promise<{ slug: 
             )}
           </div>
 
-          <h1 className="text-4xl font-bold text-[#F5F0E8] mb-3">{sp.commonName} Fishing</h1>
+          <h1 className="text-4xl font-bold text-[#EAE2D0] mb-3">{sp.commonName} Fishing</h1>
 
           {sp.description && (
             <p className="text-white/60 max-w-2xl leading-relaxed mb-5">{sp.description}</p>
@@ -169,7 +169,7 @@ export default async function SpeciesPage({ params }: { params: Promise<{ slug: 
 
           <div className="flex gap-3 flex-wrap">
             <Link href="/trips/new">
-              <button className="inline-flex items-center gap-2 bg-[#0D9488] hover:bg-[#0F766E] text-white font-medium px-5 py-2.5 rounded-xl transition-colors">
+              <button className="inline-flex items-center gap-2 bg-[#C99A3E] hover:bg-[#AD8232] text-[#0A1C28] font-medium px-5 py-2.5 rounded-xl transition-colors">
                 Plan a Trip
                 <ArrowRight className="h-4 w-4" />
               </button>
@@ -185,12 +185,12 @@ export default async function SpeciesPage({ params }: { params: Promise<{ slug: 
       </section>
 
       {/* Quick stats bar */}
-      <div className="bg-[#040F1C] border-b border-white/5">
+      <div className="bg-[#0F2635] border-b border-white/5">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 overflow-x-auto">
           <div className="flex gap-6 min-w-max">
             <div className="flex items-center gap-2.5">
               <div className="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center shrink-0">
-                <Calendar className="h-4 w-4 text-[#0D9488]" />
+                <Calendar className="h-4 w-4 text-[#C99A3E]" />
               </div>
               <div>
                 <p className="text-white/40 text-[10px] uppercase tracking-wider font-semibold">Best Months</p>
@@ -242,7 +242,7 @@ export default async function SpeciesPage({ params }: { params: Promise<{ slug: 
             {/* How to Catch section */}
             {tips && (
               <section>
-                <h2 className="text-xl font-bold text-[#040F1C] mb-3">How to Catch {sp.commonName}</h2>
+                <h2 className="text-xl font-bold text-[#0F2635] mb-3">How to Catch {sp.commonName}</h2>
                 {/* Quick condition chips */}
                 <div className="flex flex-wrap gap-2 mb-4">
                   {tips.timeOfDay && (
@@ -274,7 +274,7 @@ export default async function SpeciesPage({ params }: { params: Promise<{ slug: 
                         className={`rounded-xl p-4 border ${
                           isHotTip
                             ? "bg-amber-50 border-amber-200 sm:col-span-2"
-                            : "bg-[#F5F0E8] border-slate-100 shadow-sm"
+                            : "bg-[#EAE2D0] border-slate-100 shadow-sm"
                         }`}
                       >
                         <div className="flex items-center gap-2 mb-2">
@@ -303,7 +303,7 @@ export default async function SpeciesPage({ params }: { params: Promise<{ slug: 
             {topRegionsThisMonth.length > 0 && (
               <Card>
                 <CardHeader className="border-b border-slate-100 pb-3">
-                  <CardTitle className="text-base text-[#040F1C]">
+                  <CardTitle className="text-base text-[#0F2635]">
                     Best spots this month — {MONTH_NAMES_FULL[month]}
                   </CardTitle>
                 </CardHeader>
@@ -311,7 +311,7 @@ export default async function SpeciesPage({ params }: { params: Promise<{ slug: 
                   <div className="divide-y">
                     {topRegionsThisMonth.map((r) => (
                       <div key={r.regionSlug} className="flex items-center justify-between py-2.5">
-                        <Link href={`/regions/${r.regionSlug}`} className="font-medium text-sm hover:text-[#0D9488] transition-colors">
+                        <Link href={`/regions/${r.regionSlug}`} className="font-medium text-sm hover:text-[#C99A3E] transition-colors">
                           {r.regionName}
                         </Link>
                         <div className="flex items-center gap-2">
@@ -327,7 +327,7 @@ export default async function SpeciesPage({ params }: { params: Promise<{ slug: 
 
             {/* Full calendar */}
             <section>
-              <h2 className="text-xl font-bold text-[#040F1C] mb-4">Best Regions by Month</h2>
+              <h2 className="text-xl font-bold text-[#0F2635] mb-4">Best Regions by Month</h2>
               <p className="text-sm text-muted-foreground mb-5">
                 Seasonal ratings across all Australian regions. Click a region to see the full calendar.
               </p>
@@ -345,12 +345,12 @@ export default async function SpeciesPage({ params }: { params: Promise<{ slug: 
             {techniques.length > 0 && (
               <Card>
                 <CardHeader>
-                  <CardTitle className="text-base text-[#040F1C]">Fishing Techniques</CardTitle>
+                  <CardTitle className="text-base text-[#0F2635]">Fishing Techniques</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-3">
                   {techniques.map((t) => (
                     <div key={t.id}>
-                      <div className="font-medium text-sm text-[#040F1C]">{t.name}</div>
+                      <div className="font-medium text-sm text-[#0F2635]">{t.name}</div>
                       {t.description && (
                         <p className="text-xs text-muted-foreground mt-0.5 leading-relaxed">{t.description}</p>
                       )}
@@ -363,7 +363,7 @@ export default async function SpeciesPage({ params }: { params: Promise<{ slug: 
             {/* When to Target */}
             <Card>
               <CardHeader>
-                <CardTitle className="text-base text-[#040F1C]">When to Target</CardTitle>
+                <CardTitle className="text-base text-[#0F2635]">When to Target</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="space-y-1.5">
@@ -375,12 +375,12 @@ export default async function SpeciesPage({ params }: { params: Promise<{ slug: 
                     if (total === 0) return null;
                     return (
                       <div key={m} className="flex items-center gap-3">
-                        <span className={`text-xs w-8 font-medium ${m === month ? "text-[#0F766E]" : "text-muted-foreground"}`}>
+                        <span className={`text-xs w-8 font-medium ${m === month ? "text-[#AD8232]" : "text-muted-foreground"}`}>
                           {name}
                         </span>
                         <div className="flex-1 bg-slate-100 rounded-full h-2 overflow-hidden">
                           <div
-                            className="h-full bg-[#0D9488] rounded-full"
+                            className="h-full bg-[#C99A3E] rounded-full"
                             style={{ width: `${Math.min(100, (total / Math.max(bestRegions.length, 1)) * 100)}%` }}
                           />
                         </div>
@@ -457,7 +457,7 @@ export default async function SpeciesPage({ params }: { params: Promise<{ slug: 
                   See the recommended tackle, lures, and equipment for this species.
                 </p>
                 <Link href="/gear">
-                  <button className="w-full inline-flex items-center justify-center gap-1.5 bg-[#0D9488] hover:bg-[#0F766E] text-white font-medium text-sm px-4 py-2 rounded-lg transition-colors">
+                  <button className="w-full inline-flex items-center justify-center gap-1.5 bg-[#C99A3E] hover:bg-[#AD8232] text-[#0A1C28] font-medium text-sm px-4 py-2 rounded-lg transition-colors">
                     View Gear Guide <ArrowRight className="h-3 w-3" />
                   </button>
                 </Link>

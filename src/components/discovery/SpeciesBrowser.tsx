@@ -31,7 +31,7 @@ export function SpeciesBrowser({ species }: { species: Species[] }) {
       : species.filter((s) => s.category === activeCategory);
 
   return (
-    <div className="bg-[#F5F0E8]">
+    <div className="bg-[#EAE2D0]">
       {/* Category filter tabs */}
       <div className="px-4 sm:px-6 pt-5 overflow-x-auto">
         <div className="flex gap-2 pb-4 min-w-max">
@@ -41,8 +41,8 @@ export function SpeciesBrowser({ species }: { species: Species[] }) {
               onClick={() => setActiveCategory(cat.value)}
               className={`px-4 py-1.5 rounded-full text-sm font-medium whitespace-nowrap transition-colors border ${
                 activeCategory === cat.value
-                  ? "border-[#0D9488] text-[#0D9488] bg-[#0D9488]/10"
-                  : "border-[#040F1C]/20 text-[#040F1C]/50 hover:border-[#040F1C]/40 hover:text-[#040F1C]/70"
+                  ? "border-[#C99A3E] text-[#C99A3E] bg-[#C99A3E]/10"
+                  : "border-[#0F2635]/20 text-[#0F2635]/50 hover:border-[#0F2635]/40 hover:text-[#0F2635]/70"
               }`}
             >
               {cat.label}

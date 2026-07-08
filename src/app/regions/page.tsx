@@ -14,11 +14,11 @@ export const metadata: Metadata = {
 export default async function RegionsIndexPage() {
   const allRegions = await listRegions();
   return (
-    <div className="pt-14 bg-[#F5F0E8] min-h-screen">
-      <div className="relative bg-[#020B14] py-12 px-4 overflow-hidden">
-        <div className="absolute bottom-0 left-1/4 w-96 h-64 bg-teal-600/15 rounded-full blur-3xl pointer-events-none" />
+    <div className="bg-[#EAE2D0] min-h-screen">
+      <div className="relative bg-[#0A1C28] pt-24 pb-12 px-4 overflow-hidden">
+        <div className="absolute bottom-0 left-1/4 w-96 h-64 bg-[#C99A3E]/10 rounded-full blur-3xl pointer-events-none" />
         <div className="max-w-7xl mx-auto relative z-10">
-          <h1 className="text-4xl md:text-5xl font-bold text-[#F5F0E8] mb-2">Fishing Regions</h1>
+          <h1 className="text-4xl md:text-5xl font-bold text-[#EAE2D0] mb-2">Fishing Regions</h1>
           <p className="text-white/60 max-w-xl">
             Browse every region we cover — seasonal windows, top species, and trip planning guides.
           </p>

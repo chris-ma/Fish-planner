@@ -24,7 +24,7 @@ export async function sendCharterEnquiryToOperator(
     subject: `New Enquiry: ${charter.name} — ${enquiry.guestName}`,
     html: `
       <div style="font-family:sans-serif;max-width:600px;margin:0 auto;padding:24px">
-        <h2 style="color:#0D9488;margin-bottom:4px">New Charter Enquiry</h2>
+        <h2 style="color:#C99A3E;margin-bottom:4px">New Charter Enquiry</h2>
         <p style="color:#555;margin-top:0">via Fish Tripper</p>
         <hr style="border:1px solid #eee;margin:16px 0"/>
 
@@ -69,7 +69,7 @@ export async function sendCharterEnquiryConfirmation(
     subject: `Enquiry received — ${charter.name}`,
     html: `
       <div style="font-family:sans-serif;max-width:600px;margin:0 auto;padding:24px">
-        <h2 style="color:#0D9488;margin-bottom:4px">Enquiry Received</h2>
+        <h2 style="color:#C99A3E;margin-bottom:4px">Enquiry Received</h2>
         <p style="color:#555;margin-top:0">Hi ${enquiry.guestName}, your enquiry has been sent to ${charter.operatorName}.</p>
         <hr style="border:1px solid #eee;margin:16px 0"/>
 

@@ -27,8 +27,8 @@ export function SpeciesCarousel({ species, monthName }: SpeciesCarouselProps) {
   return (
     <div>
       <div className="mb-4">
-        <div className="h-1 w-12 bg-[#0D9488] rounded mb-3" />
-        <h2 className="text-3xl font-bold text-[#040F1C]">On the bite in {monthName}</h2>
+        <div className="h-1 w-12 bg-[#C99A3E] rounded mb-3" />
+        <h2 className="text-3xl font-bold text-[#0F2635]">On the bite in {monthName}</h2>
         <p className="text-sm text-slate-500 mt-1 max-w-2xl">
           Species at peak or good season this month — click to explore.
         </p>
@@ -36,9 +36,9 @@ export function SpeciesCarousel({ species, monthName }: SpeciesCarouselProps) {
 
       <div className="relative overflow-hidden group">
         {/* Left fade */}
-        <div className="pointer-events-none absolute left-0 top-0 bottom-0 w-12 z-10 bg-gradient-to-r from-[#F5F0E8] to-transparent" />
+        <div className="pointer-events-none absolute left-0 top-0 bottom-0 w-12 z-10 bg-gradient-to-r from-[#EAE2D0] to-transparent" />
         {/* Right fade */}
-        <div className="pointer-events-none absolute right-0 top-0 bottom-0 w-12 z-10 bg-gradient-to-l from-[#F5F0E8] to-transparent" />
+        <div className="pointer-events-none absolute right-0 top-0 bottom-0 w-12 z-10 bg-gradient-to-l from-[#EAE2D0] to-transparent" />
 
         <div
           className="flex gap-3"

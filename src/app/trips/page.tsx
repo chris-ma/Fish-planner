@@ -36,16 +36,16 @@ export default async function TripsIndexPage() {
     .orderBy(trips.createdAt);
 
   return (
-    <div className="pt-14 bg-[#F5F0E8] min-h-screen">
-      <div className="relative bg-[#020B14] py-12 px-4 overflow-hidden">
-        <div className="absolute bottom-0 left-1/4 w-96 h-64 bg-teal-600/15 rounded-full blur-3xl pointer-events-none" />
+    <div className="bg-[#EAE2D0] min-h-screen">
+      <div className="relative bg-[#0A1C28] pt-24 pb-12 px-4 overflow-hidden">
+        <div className="absolute bottom-0 left-1/4 w-96 h-64 bg-[#C99A3E]/10 rounded-full blur-3xl pointer-events-none" />
         <div className="max-w-5xl mx-auto relative z-10 flex items-end justify-between gap-4 flex-wrap">
           <div>
-            <h1 className="text-4xl md:text-5xl font-bold text-[#F5F0E8] mb-2">My Trips</h1>
+            <h1 className="text-4xl md:text-5xl font-bold text-[#EAE2D0] mb-2">My Trips</h1>
             <p className="text-white/60 max-w-xl">Every trip you've planned, in one place.</p>
           </div>
           <Link href="/trips/new">
-            <button className="inline-flex items-center gap-2 bg-[#0D9488] hover:bg-[#0F766E] text-white font-semibold px-5 py-2.5 rounded-xl transition-colors text-sm">
+            <button className="inline-flex items-center gap-2 bg-[#C99A3E] hover:bg-[#AD8232] text-[#0A1C28] font-semibold px-5 py-2.5 rounded-xl transition-colors text-sm">
               <Plus className="h-4 w-4" /> New Trip
             </button>
           </Link>
@@ -57,7 +57,7 @@ export default async function TripsIndexPage() {
           <div className="flex flex-col items-center justify-center py-20 text-center">
             <p className="text-slate-500 mb-6">You haven't planned a trip yet.</p>
             <Link href="/trips/new">
-              <button className="inline-flex items-center gap-2 bg-[#0D9488] hover:bg-[#0F766E] text-white font-semibold px-6 py-3 rounded-xl transition-colors text-sm">
+              <button className="inline-flex items-center gap-2 bg-[#C99A3E] hover:bg-[#AD8232] text-[#0A1C28] font-semibold px-6 py-3 rounded-xl transition-colors text-sm">
                 Build a Trip Plan <ArrowRight className="h-4 w-4" />
               </button>
             </Link>
@@ -71,7 +71,7 @@ export default async function TripsIndexPage() {
                 className="flex items-center justify-between gap-4 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm hover:shadow-md transition-shadow"
               >
                 <div>
-                  <p className="font-bold text-[#040F1C] mb-1">{trip.title}</p>
+                  <p className="font-bold text-[#0F2635] mb-1">{trip.title}</p>
                   <div className="flex flex-wrap items-center gap-3 text-xs text-slate-500">
                     {region && (
                       <span className="flex items-center gap-1">

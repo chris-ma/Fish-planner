@@ -2,27 +2,30 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Brand bible tokens: Deep Ocean #0A1C28, Sandstone #EAE2D0, Golden Hour
+   #C99A3E (single accent, used sparingly), River Green #5F7A5C, Slate #767B7D,
+   paper #F6F3EA. */
 @layer base {
   :root {
-    --background: 37 33% 93%;
-    --foreground: 210 80% 8%;
-    --card: 37 33% 93%;
-    --card-foreground: 210 80% 8%;
+    --background: 45 38% 94%;        /* paper #F6F3EA */
+    --foreground: 200 60% 10%;       /* deep ocean ink */
+    --card: 45 38% 94%;
+    --card-foreground: 200 60% 10%;
     --popover: 0 0% 100%;
-    --popover-foreground: 210 80% 8%;
-    --primary: 174 84% 31%;
-    --primary-foreground: 0 0% 100%;
-    --secondary: 174 100% 96%;
-    --secondary-foreground: 174 89% 20%;
-    --muted: 210 40% 96%;
-    --muted-foreground: 210 20% 46%;
-    --accent: 50 100% 52%;
-    --accent-foreground: 35 100% 10%;
+    --popover-foreground: 200 60% 10%;
+    --primary: 38 56% 52%;           /* golden hour #C99A3E */
+    --primary-foreground: 203 60% 10%;
+    --secondary: 42 39% 87%;         /* sandstone #EAE2D0 */
+    --secondary-foreground: 200 60% 10%;
+    --muted: 42 30% 90%;
+    --muted-foreground: 200 6% 42%;  /* slate */
+    --accent: 38 56% 52%;
+    --accent-foreground: 203 60% 10%;
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
-    --border: 210 30% 88%;
-    --input: 210 30% 88%;
-    --ring: 174 84% 31%;
+    --border: 42 20% 82%;
+    --input: 42 20% 82%;
+    --ring: 38 56% 52%;
     --radius: 0.75rem;
   }
 }
@@ -34,7 +37,8 @@
     font-family: var(--font-inter), system-ui, sans-serif;
   }
   h1, h2, h3, h4 {
-    font-family: var(--font-bebas), system-ui, sans-serif;
-    letter-spacing: 0.03em;
+    font-family: var(--font-fraunces), Georgia, serif;
+    font-weight: 600;
+    letter-spacing: -0.02em;
   }
 }

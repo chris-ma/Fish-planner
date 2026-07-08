@@ -140,7 +140,7 @@ function ExperienceCard({
             )}
 
             {/* CTA */}
-            <p className="text-[#0D9488] text-sm font-medium mt-3">Plan this trip →</p>
+            <p className="text-[#C99A3E] text-sm font-medium mt-3">Plan this trip →</p>
           </div>
         </div>
       </div>
@@ -176,18 +176,18 @@ export function ExperiencesBrowser({ experiences, regions, regionSpeciesMap, cha
   }`;
 
   return (
-    <div className="min-h-screen bg-[#F5F0E8]">
+    <div className="min-h-screen bg-[#EAE2D0]">
       {/* ── Guided Experiences ── */}
       {charters.length > 0 && (
-        <div className="bg-[#F0EBE1] px-4 sm:px-6 py-8 border-b border-black/10">
+        <div className="bg-[#DCD0B6] px-4 sm:px-6 py-8 border-b border-black/10">
           <div className="max-w-7xl mx-auto">
-            <div className="h-1 w-12 bg-[#0D9488] rounded mb-3" />
+            <div className="h-1 w-12 bg-[#C99A3E] rounded mb-3" />
             <div className="flex items-end justify-between mb-5">
               <div>
-                <h2 className="text-2xl font-bold text-[#0D9488]">Guided Experiences</h2>
+                <h2 className="text-2xl font-bold text-[#C99A3E]">Guided Experiences</h2>
                 <p className="text-black/40 text-sm mt-1">Guided trips with expert local operators</p>
               </div>
-              <Link href="/charters" className="text-[#0D9488] text-sm hover:underline hidden sm:block">
+              <Link href="/charters" className="text-[#C99A3E] text-sm hover:underline hidden sm:block">
                 View all →
               </Link>
             </div>
@@ -203,14 +203,14 @@ export function ExperiencesBrowser({ experiences, regions, regionSpeciesMap, cha
       {/* Filter bar */}
       <div className="px-4 sm:px-6 py-5 border-b border-black/10">
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row sm:items-center gap-3">
-          <label htmlFor="region-filter" className="text-sm font-semibold text-[#040F1C] shrink-0">
+          <label htmlFor="region-filter" className="text-sm font-semibold text-[#0F2635] shrink-0">
             Filter by region
           </label>
           <select
             id="region-filter"
             value={selectedRegionId ?? ""}
             onChange={(e) => setSelectedRegionId(e.target.value || null)}
-            className="w-full sm:w-72 px-3 py-2 rounded-lg border border-black/15 bg-white text-[#040F1C] text-sm focus:outline-none focus:ring-2 focus:ring-[#0D9488]"
+            className="w-full sm:w-72 px-3 py-2 rounded-lg border border-black/15 bg-white text-[#0F2635] text-sm focus:outline-none focus:ring-2 focus:ring-[#C99A3E]"
           >
             <option value="">All regions</option>
             {Object.entries(zoneMap).map(([zone, zoneRegions]) => (

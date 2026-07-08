@@ -14,11 +14,11 @@ export const metadata: Metadata = {
 export default async function ChartersIndexPage() {
   const allCharters = await getCharters();
   return (
-    <div className="pt-14 bg-[#040F1C] min-h-screen">
+    <div className="pt-14 bg-[#0F2635] min-h-screen">
       <div className="relative py-12 px-4 overflow-hidden">
-        <div className="absolute bottom-0 left-1/4 w-96 h-64 bg-teal-600/15 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute bottom-0 left-1/4 w-96 h-64 bg-[#C99A3E]/10 rounded-full blur-3xl pointer-events-none" />
         <div className="max-w-7xl mx-auto relative z-10">
-          <h1 className="text-4xl md:text-5xl font-bold text-[#F5F0E8] mb-2">Guided Fishing Charters</h1>
+          <h1 className="text-4xl md:text-5xl font-bold text-[#EAE2D0] mb-2">Guided Fishing Charters</h1>
           <p className="text-white/60 max-w-xl">
             Book with expert local operators — every charter we work with, in one place.
           </p>

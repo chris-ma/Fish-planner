@@ -83,7 +83,7 @@ export function RegionCard({ region, seasonScore }: RegionCardProps) {
         </div>
 
         {/* Info area */}
-        <div className="bg-[#F5F0E8] flex-1 p-3 flex flex-col gap-2">
+        <div className="bg-[#EAE2D0] flex-1 p-3 flex flex-col gap-2">
           <div className="flex items-center gap-2 flex-wrap">
             <span className="text-xs px-2.5 py-0.5 rounded-full bg-sky-50 text-sky-700 font-medium">
               {zoneLabel}

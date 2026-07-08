@@ -44,23 +44,27 @@ const config: Config = {
           foreground: "hsl(var(--card-foreground))",
         },
         navy: {
-          950: "#020B14",
-          900: "#040F1C",
-          800: "#071B30",
-          700: "#0D2D5E",
+          950: "#0A1C28",
+          900: "#0F2635",
+          800: "#143244",
+          700: "#1C3E52",
         },
         ocean: {
-          600: "#0F766E",
-          500: "#0D9488",
-          400: "#2DD4BF",
-          50: "#F0FDFA",
+          600: "#AD8232",
+          500: "#C99A3E",
+          400: "#D9B15E",
+          50: "#FBF6EA",
         },
         gold: {
-          500: "#FFD60A",
-          400: "#FFE033",
+          500: "#C99A3E",
+          400: "#D9B15E",
+        },
+        river: {
+          600: "#4C6449",
+          500: "#5F7A5C",
         },
         offwhite: {
-          DEFAULT: "#F5F0E8",
+          DEFAULT: "#EAE2D0",
         },
       },
       borderRadius: {

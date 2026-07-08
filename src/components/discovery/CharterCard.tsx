@@ -21,21 +21,21 @@ export function CharterCard({ charter }: { charter: Charter }) {
 
   return (
     <Link href={`/charters/${charter.slug}`}>
-      <div className="relative rounded-2xl overflow-hidden border border-white/10 hover:border-[#0D9488]/50 shadow-md hover:shadow-xl transition-all duration-300 hover:scale-[1.02] cursor-pointer h-64">
+      <div className="relative rounded-2xl overflow-hidden border border-white/10 hover:border-[#C99A3E]/50 shadow-md hover:shadow-xl transition-all duration-300 hover:scale-[1.02] cursor-pointer h-64">
         {/* Background */}
         <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `url('${bg}')` }} />
         <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-black/20" />
 
         {/* Featured badge */}
         {charter.featured && (
-          <div className="absolute top-3 right-3 bg-[#0D9488] text-white text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">
+          <div className="absolute top-3 right-3 bg-[#C99A3E] text-[#0A1C28] text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">
             Featured
           </div>
         )}
 
         {/* Content */}
         <div className="absolute inset-0 flex flex-col justify-end p-4">
-          <p className="text-[#0D9488] text-[11px] font-semibold uppercase tracking-widest mb-1">
+          <p className="text-[#C99A3E] text-[11px] font-semibold uppercase tracking-widest mb-1">
             {charter.operatorName}
           </p>
           <h3 className="text-white font-bold text-base leading-tight mb-3">{charter.name}</h3>
@@ -47,7 +47,7 @@ export function CharterCard({ charter }: { charter: Charter }) {
           </div>
 
           <div className="flex items-center justify-between">
-            <span className="text-[#0D9488] font-semibold text-sm">{charter.priceLabel ?? "Enquire for pricing"}</span>
+            <span className="text-[#C99A3E] font-semibold text-sm">{charter.priceLabel ?? "Enquire for pricing"}</span>
             <span className="text-white/60 text-xs flex items-center gap-1">Enquire <ArrowRight className="h-3 w-3" /></span>
           </div>
         </div>

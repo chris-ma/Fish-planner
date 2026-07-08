@@ -16,7 +16,7 @@ export function BottomNav() {
   const pathname = usePathname();
 
   return (
-    <nav className="md:hidden fixed bottom-0 left-0 right-0 z-[1100] bg-[#020B14] border-t border-white/10">
+    <nav className="md:hidden fixed bottom-0 left-0 right-0 z-[1100] bg-[#0A1C28] border-t border-white/10">
       <div className="flex items-stretch h-16">
         {/* Left tabs */}
         {NAV_ITEMS.slice(0, 2).map(({ href, label, Icon }) => {
@@ -29,7 +29,7 @@ export function BottomNav() {
               className={cn(
                 "flex-1 flex flex-col items-center justify-center gap-1 text-[10px] font-medium transition-colors",
                 isActive
-                  ? "text-[#0D9488]"
+                  ? "text-[#C99A3E]"
                   : "text-white/50 hover:text-white/80"
               )}
             >
@@ -44,14 +44,14 @@ export function BottomNav() {
           href="/trips/new"
           className="flex-1 flex flex-col items-center justify-center gap-1 -mt-5"
         >
-          <div className="w-12 h-12 rounded-full bg-[#0D9488] flex items-center justify-center shadow-lg shadow-[#0D9488]/40">
+          <div className="w-12 h-12 rounded-full bg-[#C99A3E] flex items-center justify-center shadow-lg shadow-[#C99A3E]/40">
             <Plus className="h-6 w-6 text-white" />
           </div>
           <span
             className={cn(
               "text-[10px] font-medium mt-0.5",
               pathname.startsWith("/trips/new")
-                ? "text-[#0D9488]"
+                ? "text-[#C99A3E]"
                 : "text-white/50"
             )}
           >
@@ -69,7 +69,7 @@ export function BottomNav() {
               className={cn(
                 "flex-1 flex flex-col items-center justify-center gap-1 text-[10px] font-medium transition-colors",
                 isActive
-                  ? "text-[#0D9488]"
+                  ? "text-[#C99A3E]"
                   : "text-white/50 hover:text-white/80"
               )}
             >

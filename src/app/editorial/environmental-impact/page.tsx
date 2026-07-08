@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 
 export default function EnvironmentalImpactPage() {
   return (
-    <div className="min-h-screen bg-[#020B14]">
+    <div className="min-h-screen bg-[#0A1C28]">
       <div className="max-w-3xl mx-auto px-4 py-12">
         <Link
           href="/"
@@ -28,7 +28,7 @@ export default function EnvironmentalImpactPage() {
           <span className="text-emerald-400 text-sm font-semibold uppercase tracking-wider">Community</span>
         </div>
 
-        <h1 className="text-4xl font-bold text-[#F5F0E8] mb-4 leading-tight">
+        <h1 className="text-4xl font-bold text-[#EAE2D0] mb-4 leading-tight">
           Fishing with a light footprint
         </h1>
         <p className="text-white/60 text-lg mb-12 leading-relaxed">
@@ -38,7 +38,7 @@ export default function EnvironmentalImpactPage() {
         <div className="space-y-12 text-white/75 leading-relaxed">
 
           <section>
-            <h2 className="text-xl font-bold text-[#F5F0E8] mb-4">Catch and release done right</h2>
+            <h2 className="text-xl font-bold text-[#EAE2D0] mb-4">Catch and release done right</h2>
             <p className="mb-3">
               Releasing a fish properly takes about twenty seconds — done poorly it can take days off its life. Keep the fish in the water as much as possible. Wet your hands before handling. Remove the hook with needle-nose pliers or a dehooker without squeezing the body. If you must lift, support the belly and keep it horizontal. Never hold a fish vertically by the jaw unless you intend to keep it.
             </p>
@@ -48,7 +48,7 @@ export default function EnvironmentalImpactPage() {
           </section>
 
           <section>
-            <h2 className="text-xl font-bold text-[#F5F0E8] mb-4">Bag limits are a floor, not a target</h2>
+            <h2 className="text-xl font-bold text-[#EAE2D0] mb-4">Bag limits are a floor, not a target</h2>
             <p className="mb-3">
               Legal bag limits are set to prevent collapse — they aren't a challenge to hit. On a good day you might reach your limit of bream in an hour. Ask yourself whether you actually need that many fish. A bag of four feeds a family; twelve fills a freezer that you'll forget about.
             </p>
@@ -58,7 +58,7 @@ export default function EnvironmentalImpactPage() {
           </section>
 
           <section>
-            <h2 className="text-xl font-bold text-[#F5F0E8] mb-4">Reef and seagrass damage</h2>
+            <h2 className="text-xl font-bold text-[#EAE2D0] mb-4">Reef and seagrass damage</h2>
             <p className="mb-3">
               Anchoring on reef is one of the most destructive things a recreational boat can do. Coral that took decades to grow can be destroyed in minutes by a dragging anchor. If you're fishing in reef country, use a GPS anchor (Spot-Lock), drift-fish, or find a sandy patch nearby.
             </p>
@@ -68,7 +68,7 @@ export default function EnvironmentalImpactPage() {
           </section>
 
           <section>
-            <h2 className="text-xl font-bold text-[#F5F0E8] mb-4">Marine parks and sanctuary zones</h2>
+            <h2 className="text-xl font-bold text-[#EAE2D0] mb-4">Marine parks and sanctuary zones</h2>
             <p className="mb-3">
               Australia has an extensive network of marine protected areas. Green zones (sanctuary zones) are no-take — no fishing, no collecting, no spearfishing. These aren't obstacles; they're the healthy populations that replenish the areas you're allowed to fish.
             </p>
@@ -78,7 +78,7 @@ export default function EnvironmentalImpactPage() {
           </section>
 
           <section>
-            <h2 className="text-xl font-bold text-[#F5F0E8] mb-4">Litter and microplastics</h2>
+            <h2 className="text-xl font-bold text-[#EAE2D0] mb-4">Litter and microplastics</h2>
             <p className="mb-3">
               Lost fishing line kills birds and entangles marine life for years. Cut line should go in your pocket, then in the bin at the ramp. Most boat ramps and fishing spots now have monofilament recycling bins — use them.
             </p>
@@ -88,7 +88,7 @@ export default function EnvironmentalImpactPage() {
           </section>
 
           <section>
-            <h2 className="text-xl font-bold text-[#F5F0E8] mb-4">Lead weights</h2>
+            <h2 className="text-xl font-bold text-[#EAE2D0] mb-4">Lead weights</h2>
             <p>
               Lead sinkers and jig heads are toxic to waterways. Bismuth, tin, and tungsten alternatives are available at most tackle shops. They're more expensive but they don't leach into the sediment. If you fish in freshwater regularly — especially highland lakes — making the switch matters more than you'd think.
             </p>

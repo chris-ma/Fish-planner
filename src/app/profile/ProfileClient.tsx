@@ -55,7 +55,7 @@ const ROD_TYPES = ["Spinning", "Baitcaster", "Fly", "Overhead"];
 function SavedBadge({ saved }: { saved: boolean }) {
   if (!saved) return null;
   return (
-    <span className="flex items-center gap-1 text-xs text-[#0D9488] font-semibold">
+    <span className="flex items-center gap-1 text-xs text-[#C99A3E] font-semibold">
       <Check className="h-3 w-3" /> Saved
     </span>
   );
@@ -83,8 +83,8 @@ function ProfileAvatar({ avatarUrl, clerkImageUrl, displayName }: { avatarUrl: s
 
   if (showInitials || !src) {
     return (
-      <div className="w-20 h-20 rounded-full bg-[#0D9488]/20 flex items-center justify-center border-2 border-[#0D9488]/30 shrink-0">
-        <span className="text-2xl font-bold text-[#0D9488]">{initials}</span>
+      <div className="w-20 h-20 rounded-full bg-[#C99A3E]/20 flex items-center justify-center border-2 border-[#C99A3E]/30 shrink-0">
+        <span className="text-2xl font-bold text-[#C99A3E]">{initials}</span>
       </div>
     );
   }
@@ -93,7 +93,7 @@ function ProfileAvatar({ avatarUrl, clerkImageUrl, displayName }: { avatarUrl: s
     <img
       src={src}
       alt={displayName}
-      className="w-20 h-20 rounded-full object-cover border-2 border-[#0D9488]/30 shrink-0"
+      className="w-20 h-20 rounded-full object-cover border-2 border-[#C99A3E]/30 shrink-0"
       onError={handleError}
     />
   );
@@ -273,7 +273,7 @@ export function ProfileClient({
   }
 
   return (
-    <div className="min-h-screen bg-[#F5F0E8]">
+    <div className="min-h-screen bg-[#EAE2D0]">
       <div className="max-w-2xl mx-auto px-4 py-10">
         <Link href="/" className="inline-flex items-center gap-1.5 text-sm text-slate-500 hover:text-slate-700 mb-8">
           <ChevronLeft className="h-4 w-4" />
@@ -288,7 +288,7 @@ export function ProfileClient({
             displayName={nickname || fullName}
           />
           <div>
-            <h1 className="text-2xl font-bold text-[#040F1C]">{nickname || fullName}</h1>
+            <h1 className="text-2xl font-bold text-[#0F2635]">{nickname || fullName}</h1>
             <p className="text-slate-500 text-sm mt-0.5">{email}</p>
           </div>
         </div>
@@ -300,7 +300,7 @@ export function ProfileClient({
             <User className="h-4 w-4 text-slate-400 shrink-0" />
             <div className="flex-1 min-w-0">
               <p className="text-[10px] font-semibold text-slate-400 uppercase tracking-wide mb-0.5">Name</p>
-              <p className="text-sm text-[#040F1C] font-medium truncate">{fullName}</p>
+              <p className="text-sm text-[#0F2635] font-medium truncate">{fullName}</p>
             </div>
           </div>
 
@@ -309,7 +309,7 @@ export function ProfileClient({
             <Mail className="h-4 w-4 text-slate-400 shrink-0" />
             <div className="flex-1 min-w-0">
               <p className="text-[10px] font-semibold text-slate-400 uppercase tracking-wide mb-0.5">Email</p>
-              <p className="text-sm text-[#040F1C] font-medium truncate">{email}</p>
+              <p className="text-sm text-[#0F2635] font-medium truncate">{email}</p>
             </div>
           </div>
 
@@ -325,13 +325,13 @@ export function ProfileClient({
                 value={nickname}
                 onChange={(e) => setNickname(e.target.value)}
                 placeholder="e.g. Mick"
-                className="w-full text-sm bg-slate-50 border border-slate-200 rounded-lg px-3 py-1.5 text-[#040F1C] focus:outline-none focus:border-[#0D9488] focus:ring-1 focus:ring-[#0D9488]"
+                className="w-full text-sm bg-slate-50 border border-slate-200 rounded-lg px-3 py-1.5 text-[#0F2635] focus:outline-none focus:border-[#C99A3E] focus:ring-1 focus:ring-[#C99A3E]"
               />
               <p className="text-[10px] text-slate-400 mt-1">Used as your name in challenges and bucket list</p>
               <button
                 onClick={saveNickname}
                 disabled={nicknameSaving || !nickname.trim()}
-                className="mt-2 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#0D9488] text-white text-xs font-semibold hover:bg-[#0F766E] transition-colors disabled:opacity-60"
+                className="mt-2 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#C99A3E] text-[#0A1C28] text-xs font-semibold hover:bg-[#AD8232] transition-colors disabled:opacity-60"
               >
                 {nicknameSaving ? "Saving…" : "Save"}
               </button>
@@ -350,17 +350,17 @@ export function ProfileClient({
                 value={avatarUrl}
                 onChange={(e) => setAvatarUrl(e.target.value)}
                 placeholder="https://… (paste an image URL)"
-                className="w-full text-sm bg-slate-50 border border-slate-200 rounded-lg px-3 py-1.5 text-[#040F1C] focus:outline-none focus:border-[#0D9488] focus:ring-1 focus:ring-[#0D9488]"
+                className="w-full text-sm bg-slate-50 border border-slate-200 rounded-lg px-3 py-1.5 text-[#0F2635] focus:outline-none focus:border-[#C99A3E] focus:ring-1 focus:ring-[#C99A3E]"
               />
               <div className="flex items-center justify-between mt-2">
                 <button
                   onClick={saveAvatar}
                   disabled={avatarSaving}
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#0D9488] text-white text-xs font-semibold hover:bg-[#0F766E] transition-colors disabled:opacity-60"
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#C99A3E] text-[#0A1C28] text-xs font-semibold hover:bg-[#AD8232] transition-colors disabled:opacity-60"
                 >
                   {avatarSaving ? "Saving…" : "Save"}
                 </button>
-                <a href="/profile/manage" className="text-[10px] text-[#0D9488] font-semibold hover:underline">
+                <a href="/profile/manage" className="text-[10px] text-[#C99A3E] font-semibold hover:underline">
                   Or upload via account settings →
                 </a>
               </div>
@@ -385,7 +385,7 @@ export function ProfileClient({
                   onBlur={() => setTimeout(() => setShowSuggestions(false), 150)}
                   placeholder={detectingIP ? "Detecting your location…" : "Search suburb, town or city"}
                   disabled={detectingIP}
-                  className="w-full text-sm bg-slate-50 border border-slate-200 rounded-lg px-3 py-1.5 pr-8 text-[#040F1C] focus:outline-none focus:border-[#0D9488] focus:ring-1 focus:ring-[#0D9488] disabled:opacity-50"
+                  className="w-full text-sm bg-slate-50 border border-slate-200 rounded-lg px-3 py-1.5 pr-8 text-[#0F2635] focus:outline-none focus:border-[#C99A3E] focus:ring-1 focus:ring-[#C99A3E] disabled:opacity-50"
                 />
                 {detectingIP && (
                   <Loader2 className="absolute right-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-slate-400 animate-spin" />
@@ -401,9 +401,9 @@ export function ProfileClient({
                       <button
                         key={i}
                         onMouseDown={() => selectSuggestion(s)}
-                        className="w-full text-left px-3 py-2 text-sm text-[#040F1C] hover:bg-slate-50 flex items-center gap-2 border-b border-slate-100 last:border-0"
+                        className="w-full text-left px-3 py-2 text-sm text-[#0F2635] hover:bg-slate-50 flex items-center gap-2 border-b border-slate-100 last:border-0"
                       >
-                        <MapPin className="h-3 w-3 text-[#0D9488] shrink-0" />
+                        <MapPin className="h-3 w-3 text-[#C99A3E] shrink-0" />
                         <span className="truncate">
                           {[s.name, s.admin1, s.country].filter(Boolean).join(", ")}
                         </span>
@@ -418,14 +418,14 @@ export function ProfileClient({
                 <button
                   onClick={detectLocation}
                   disabled={detectingIP}
-                  className="flex items-center gap-1 text-[10px] text-[#0D9488] font-semibold hover:underline disabled:opacity-40"
+                  className="flex items-center gap-1 text-[10px] text-[#C99A3E] font-semibold hover:underline disabled:opacity-40"
                 >
                   <Navigation className="h-3 w-3" />
                   Detect my location
                 </button>
                 {locationCoords && (
                   <span className="text-[10px] text-slate-400 flex items-center gap-1">
-                    <Check className="h-3 w-3 text-[#0D9488]" /> Geocoded
+                    <Check className="h-3 w-3 text-[#C99A3E]" /> Geocoded
                   </span>
                 )}
               </div>
@@ -433,7 +433,7 @@ export function ProfileClient({
               <button
                 onClick={saveLocation}
                 disabled={locationSaving || !locationInput.trim()}
-                className="mt-2 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#0D9488] text-white text-xs font-semibold hover:bg-[#0F766E] transition-colors disabled:opacity-60"
+                className="mt-2 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#C99A3E] text-[#0A1C28] text-xs font-semibold hover:bg-[#AD8232] transition-colors disabled:opacity-60"
               >
                 {locationSaving ? "Saving…" : "Save"}
               </button>
@@ -450,7 +450,7 @@ export function ProfileClient({
                   <SavedBadge saved={fishSaved} />
                   <button
                     onClick={() => { setShowFishPicker((v) => !v); setFishSearch(""); }}
-                    className="text-[#0D9488] text-xs font-semibold hover:underline"
+                    className="text-[#C99A3E] text-xs font-semibold hover:underline"
                   >
                     {showFishPicker ? "Cancel" : currentDreamFishSpecies ? "Change" : "Set"}
                   </button>
@@ -464,7 +464,7 @@ export function ProfileClient({
                     style={{ backgroundImage: `url(${getSpeciesImage(currentDreamFishSpecies.slug, currentDreamFishSpecies.category, 600)})` }}
                   />
                   <div>
-                    <p className="text-sm font-semibold text-[#040F1C]">{currentDreamFishSpecies.commonName}</p>
+                    <p className="text-sm font-semibold text-[#0F2635]">{currentDreamFishSpecies.commonName}</p>
                     {currentDreamFishSpecies.scientificName && (
                       <p className="text-xs text-slate-400 italic">{currentDreamFishSpecies.scientificName}</p>
                     )}
@@ -485,7 +485,7 @@ export function ProfileClient({
                       onChange={(e) => setFishSearch(e.target.value)}
                       placeholder="Search species…"
                       autoFocus
-                      className="w-full pl-8 pr-3 py-1.5 text-sm bg-slate-50 border border-slate-200 rounded-lg text-[#040F1C] focus:outline-none focus:border-[#0D9488]"
+                      className="w-full pl-8 pr-3 py-1.5 text-sm bg-slate-50 border border-slate-200 rounded-lg text-[#0F2635] focus:outline-none focus:border-[#C99A3E]"
                     />
                   </div>
                   <div className="grid grid-cols-3 gap-2 max-h-52 overflow-y-auto">
@@ -494,7 +494,7 @@ export function ProfileClient({
                         key={s.slug}
                         onClick={() => saveDreamFish(s.slug)}
                         className={`relative rounded-xl overflow-hidden aspect-square transition-all ${
-                          dreamFish === s.slug ? "ring-2 ring-[#0D9488]" : ""
+                          dreamFish === s.slug ? "ring-2 ring-[#C99A3E]" : ""
                         }`}
                       >
                         <div
@@ -522,7 +522,7 @@ export function ProfileClient({
           >
             <Package className="h-4 w-4 text-slate-400 shrink-0" />
             <div className="flex-1 text-left">
-              <p className="text-sm font-semibold text-[#040F1C]">My Setup</p>
+              <p className="text-sm font-semibold text-[#0F2635]">My Setup</p>
               <p className="text-xs text-slate-400 mt-0.5">
                 {parsedSetup?.rodType
                   ? `${parsedSetup.rodType} · ${parsedSetup.reel || "no reel"}`
@@ -544,7 +544,7 @@ export function ProfileClient({
               {!editSetup ? (
                 <div className="pt-4">
                   {parsedSetup && (parsedSetup.rodType || parsedSetup.reel) ? (
-                    <div className="space-y-2 text-sm text-[#040F1C] mb-4">
+                    <div className="space-y-2 text-sm text-[#0F2635] mb-4">
                       {parsedSetup.rodType && (
                         <div className="flex gap-2">
                           <span className="text-slate-400 w-20 shrink-0">Rod</span>
@@ -587,7 +587,7 @@ export function ProfileClient({
                   )}
                   <button
                     onClick={() => setEditSetup(true)}
-                    className="inline-flex items-center gap-1.5 text-sm text-[#0D9488] font-semibold hover:underline"
+                    className="inline-flex items-center gap-1.5 text-sm text-[#C99A3E] font-semibold hover:underline"
                   >
                     <Pencil className="h-3.5 w-3.5" />
                     {parsedSetup?.rodType ? "Edit setup" : "Add setup"}
@@ -604,8 +604,8 @@ export function ProfileClient({
                           onClick={() => setRodType(rt === rodType ? "" : rt)}
                           className={`py-1.5 px-3 rounded-lg text-sm font-medium border transition-colors ${
                             rodType === rt
-                              ? "bg-[#0D9488] border-[#0D9488] text-white"
-                              : "bg-slate-50 border-slate-200 text-[#040F1C] hover:border-slate-400"
+                              ? "bg-[#C99A3E] border-[#C99A3E] text-[#0A1C28]"
+                              : "bg-slate-50 border-slate-200 text-[#0F2635] hover:border-slate-400"
                           }`}
                         >
                           {rt}
@@ -620,7 +620,7 @@ export function ProfileClient({
                       value={reel}
                       onChange={(e) => setReel(e.target.value)}
                       placeholder="e.g. Shimano Sustain 4000"
-                      className="w-full text-sm bg-slate-50 border border-slate-200 rounded-lg px-3 py-1.5 text-[#040F1C] focus:outline-none focus:border-[#0D9488]"
+                      className="w-full text-sm bg-slate-50 border border-slate-200 rounded-lg px-3 py-1.5 text-[#0F2635] focus:outline-none focus:border-[#C99A3E]"
                     />
                   </div>
 
@@ -631,7 +631,7 @@ export function ProfileClient({
                         value={lineWeight}
                         onChange={(e) => setLineWeight(e.target.value)}
                         placeholder="e.g. 10lb braid"
-                        className="w-full text-sm bg-slate-50 border border-slate-200 rounded-lg px-3 py-1.5 text-[#040F1C] focus:outline-none focus:border-[#0D9488]"
+                        className="w-full text-sm bg-slate-50 border border-slate-200 rounded-lg px-3 py-1.5 text-[#0F2635] focus:outline-none focus:border-[#C99A3E]"
                       />
                     </div>
                     <div>
@@ -640,7 +640,7 @@ export function ProfileClient({
                         value={leader}
                         onChange={(e) => setLeader(e.target.value)}
                         placeholder="e.g. 8lb fluoro"
-                        className="w-full text-sm bg-slate-50 border border-slate-200 rounded-lg px-3 py-1.5 text-[#040F1C] focus:outline-none focus:border-[#0D9488]"
+                        className="w-full text-sm bg-slate-50 border border-slate-200 rounded-lg px-3 py-1.5 text-[#0F2635] focus:outline-none focus:border-[#C99A3E]"
                       />
                     </div>
                   </div>
@@ -654,8 +654,8 @@ export function ProfileClient({
                           onClick={() => toggleTechnique(t)}
                           className={`px-3 py-1 rounded-full text-xs border transition-colors ${
                             techniques.includes(t)
-                              ? "bg-[#0D9488] border-[#0D9488] text-white"
-                              : "bg-slate-50 border-slate-200 text-[#040F1C] hover:border-slate-400"
+                              ? "bg-[#C99A3E] border-[#C99A3E] text-[#0A1C28]"
+                              : "bg-slate-50 border-slate-200 text-[#0F2635] hover:border-slate-400"
                           }`}
                         >
                           {t}
@@ -671,7 +671,7 @@ export function ProfileClient({
                       onChange={(e) => setSetupNotes(e.target.value)}
                       placeholder="Anything else about your rig…"
                       rows={2}
-                      className="w-full text-sm bg-slate-50 border border-slate-200 rounded-lg px-3 py-1.5 text-[#040F1C] focus:outline-none focus:border-[#0D9488] resize-none"
+                      className="w-full text-sm bg-slate-50 border border-slate-200 rounded-lg px-3 py-1.5 text-[#0F2635] focus:outline-none focus:border-[#C99A3E] resize-none"
                     />
                   </div>
 
@@ -685,7 +685,7 @@ export function ProfileClient({
                     <button
                       onClick={saveSetup}
                       disabled={setupSaving}
-                      className="flex items-center gap-1.5 px-4 py-2 rounded-lg bg-[#0D9488] text-white text-sm font-semibold hover:bg-[#0F766E] transition-colors disabled:opacity-60"
+                      className="flex items-center gap-1.5 px-4 py-2 rounded-lg bg-[#C99A3E] text-[#0A1C28] text-sm font-semibold hover:bg-[#AD8232] transition-colors disabled:opacity-60"
                     >
                       {setupSaving ? "Saving…" : "Save setup"}
                     </button>
@@ -701,10 +701,10 @@ export function ProfileClient({
           <div className="flex items-center gap-4 px-5 py-4">
             <Settings className="h-4 w-4 text-slate-400 shrink-0" />
             <div className="flex-1">
-              <p className="text-sm font-semibold text-[#040F1C]">Account settings</p>
+              <p className="text-sm font-semibold text-[#0F2635]">Account settings</p>
               <p className="text-xs text-slate-400 mt-0.5">Change your name, email, password and connected accounts.</p>
             </div>
-            <a href="/profile/manage" className="text-[#0D9488] text-xs font-semibold hover:underline shrink-0">
+            <a href="/profile/manage" className="text-[#C99A3E] text-xs font-semibold hover:underline shrink-0">
               Manage →
             </a>
           </div>
@@ -714,13 +714,13 @@ export function ProfileClient({
         <div className="grid grid-cols-2 gap-3">
           <Link
             href="/bucket-list"
-            className="bg-white rounded-xl border border-slate-200 px-4 py-3 text-sm font-semibold text-[#040F1C] hover:border-[#0D9488] transition-colors"
+            className="bg-white rounded-xl border border-slate-200 px-4 py-3 text-sm font-semibold text-[#0F2635] hover:border-[#C99A3E] transition-colors"
           >
             My Bucket List
           </Link>
           <Link
             href="/trips"
-            className="bg-white rounded-xl border border-slate-200 px-4 py-3 text-sm font-semibold text-[#040F1C] hover:border-[#0D9488] transition-colors"
+            className="bg-white rounded-xl border border-slate-200 px-4 py-3 text-sm font-semibold text-[#0F2635] hover:border-[#C99A3E] transition-colors"
           >
             My Trips
           </Link>

@@ -97,17 +97,17 @@ export function OnboardingClient({ species }: OnboardingClientProps) {
   }
 
   return (
-    <div className="min-h-screen bg-[#020B14] text-[#F5F0E8] flex flex-col">
+    <div className="min-h-screen bg-[#0A1C28] text-[#EAE2D0] flex flex-col">
       {/* Header */}
       <div className="px-4 py-6 border-b border-white/10">
         <div className="max-w-xl mx-auto flex items-center justify-between">
-          <span className="font-bold text-lg tracking-tight text-[#0D9488]">Fish Tripper</span>
+          <span className="font-bold text-lg tracking-tight text-[#C99A3E]">Fish Tripper</span>
           <div className="flex gap-2">
             {[1, 2, 3].map((s) => (
               <div
                 key={s}
                 className={`h-1.5 w-8 rounded-full transition-colors ${
-                  s <= step ? "bg-[#0D9488]" : "bg-white/20"
+                  s <= step ? "bg-[#C99A3E]" : "bg-white/20"
                 }`}
               />
             ))}
@@ -121,11 +121,11 @@ export function OnboardingClient({ species }: OnboardingClientProps) {
           {step === 1 && (
             <div>
               <div className="flex items-center gap-3 mb-2">
-                <MapPin className="h-6 w-6 text-[#0D9488]" />
-                <p className="text-xs font-semibold text-[#0D9488] uppercase tracking-wider">Step 1 of 3</p>
+                <MapPin className="h-6 w-6 text-[#C99A3E]" />
+                <p className="text-xs font-semibold text-[#C99A3E] uppercase tracking-wider">Step 1 of 3</p>
               </div>
               <h1 className="text-3xl font-bold mb-2">Where do you fish?</h1>
-              <p className="text-[#F5F0E8]/60 mb-8">
+              <p className="text-[#EAE2D0]/60 mb-8">
                 We'll show you what's biting near you and tailor the home page to your local waters.
               </p>
 
@@ -139,21 +139,21 @@ export function OnboardingClient({ species }: OnboardingClientProps) {
                   }}
                   onKeyDown={(e) => e.key === "Enter" && geocodeLocation()}
                   placeholder="e.g. Sydney, NSW"
-                  className="flex-1 bg-[#040F1C] border border-white/20 rounded-xl px-4 py-3 text-[#F5F0E8] placeholder-white/30 focus:outline-none focus:border-[#0D9488]"
+                  className="flex-1 bg-[#0F2635] border border-white/20 rounded-xl px-4 py-3 text-[#EAE2D0] placeholder-white/30 focus:outline-none focus:border-[#C99A3E]"
                 />
                 <button
                   onClick={geocodeLocation}
                   disabled={geocoding || !location.trim()}
-                  className="px-4 py-3 bg-[#0D9488] hover:bg-[#0F766E] rounded-xl font-semibold text-sm transition-colors disabled:opacity-40 flex items-center gap-2"
+                  className="px-4 py-3 bg-[#C99A3E] hover:bg-[#AD8232] rounded-xl font-semibold text-sm transition-colors disabled:opacity-40 flex items-center gap-2"
                 >
                   {geocoding ? <Loader2 className="h-4 w-4 animate-spin" /> : "Find"}
                 </button>
               </div>
 
               {locationLabel && (
-                <div className="flex items-center gap-2 bg-[#0D9488]/15 border border-[#0D9488]/40 rounded-lg px-3 py-2 mb-4">
-                  <Check className="h-4 w-4 text-[#0D9488] shrink-0" />
-                  <span className="text-sm text-[#F5F0E8]/80">{locationLabel}</span>
+                <div className="flex items-center gap-2 bg-[#C99A3E]/15 border border-[#C99A3E]/40 rounded-lg px-3 py-2 mb-4">
+                  <Check className="h-4 w-4 text-[#C99A3E] shrink-0" />
+                  <span className="text-sm text-[#EAE2D0]/80">{locationLabel}</span>
                 </div>
               )}
               {geocodeError && (
@@ -170,7 +170,7 @@ export function OnboardingClient({ species }: OnboardingClientProps) {
                 <button
                   onClick={() => setStep(2)}
                   disabled={!location.trim()}
-                  className="flex items-center gap-2 px-6 py-3 bg-[#0D9488] hover:bg-[#0F766E] rounded-xl font-semibold transition-colors disabled:opacity-40"
+                  className="flex items-center gap-2 px-6 py-3 bg-[#C99A3E] hover:bg-[#AD8232] rounded-xl font-semibold transition-colors disabled:opacity-40"
                 >
                   Next <ChevronRight className="h-4 w-4" />
                 </button>
@@ -182,11 +182,11 @@ export function OnboardingClient({ species }: OnboardingClientProps) {
           {step === 2 && (
             <div>
               <div className="flex items-center gap-3 mb-2">
-                <Fish className="h-6 w-6 text-[#0D9488]" />
-                <p className="text-xs font-semibold text-[#0D9488] uppercase tracking-wider">Step 2 of 3</p>
+                <Fish className="h-6 w-6 text-[#C99A3E]" />
+                <p className="text-xs font-semibold text-[#C99A3E] uppercase tracking-wider">Step 2 of 3</p>
               </div>
               <h1 className="text-3xl font-bold mb-2">Your dream fish</h1>
-              <p className="text-[#F5F0E8]/60 mb-6">
+              <p className="text-[#EAE2D0]/60 mb-6">
                 Pick the one species you'd love to catch. We'll feature it on your home page.
               </p>
 
@@ -196,7 +196,7 @@ export function OnboardingClient({ species }: OnboardingClientProps) {
                   value={speciesSearch}
                   onChange={(e) => setSpeciesSearch(e.target.value)}
                   placeholder="Search species…"
-                  className="w-full bg-[#040F1C] border border-white/20 rounded-xl pl-10 pr-4 py-3 text-[#F5F0E8] placeholder-white/30 focus:outline-none focus:border-[#0D9488]"
+                  className="w-full bg-[#0F2635] border border-white/20 rounded-xl pl-10 pr-4 py-3 text-[#EAE2D0] placeholder-white/30 focus:outline-none focus:border-[#C99A3E]"
                 />
               </div>
 
@@ -206,7 +206,7 @@ export function OnboardingClient({ species }: OnboardingClientProps) {
                     key={s.slug}
                     onClick={() => setDreamFish(s.slug)}
                     className={`relative rounded-xl overflow-hidden aspect-[3/4] transition-all ${
-                      dreamFish === s.slug ? "ring-2 ring-[#0D9488] ring-offset-2 ring-offset-[#020B14]" : ""
+                      dreamFish === s.slug ? "ring-2 ring-[#C99A3E] ring-offset-2 ring-offset-[#0A1C28]" : ""
                     }`}
                   >
                     <div
@@ -215,7 +215,7 @@ export function OnboardingClient({ species }: OnboardingClientProps) {
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
                     {dreamFish === s.slug && (
-                      <div className="absolute top-2 right-2 bg-[#0D9488] rounded-full p-0.5">
+                      <div className="absolute top-2 right-2 bg-[#C99A3E] rounded-full p-0.5">
                         <Check className="h-3 w-3 text-white" />
                       </div>
                     )}
@@ -235,7 +235,7 @@ export function OnboardingClient({ species }: OnboardingClientProps) {
                 </button>
                 <button
                   onClick={() => setStep(3)}
-                  className="flex items-center gap-2 px-6 py-3 bg-[#0D9488] hover:bg-[#0F766E] rounded-xl font-semibold transition-colors"
+                  className="flex items-center gap-2 px-6 py-3 bg-[#C99A3E] hover:bg-[#AD8232] rounded-xl font-semibold transition-colors"
                 >
                   Next <ChevronRight className="h-4 w-4" />
                 </button>
@@ -247,11 +247,11 @@ export function OnboardingClient({ species }: OnboardingClientProps) {
           {step === 3 && (
             <div>
               <div className="flex items-center gap-3 mb-2">
-                <Package className="h-6 w-6 text-[#0D9488]" />
-                <p className="text-xs font-semibold text-[#0D9488] uppercase tracking-wider">Step 3 of 3</p>
+                <Package className="h-6 w-6 text-[#C99A3E]" />
+                <p className="text-xs font-semibold text-[#C99A3E] uppercase tracking-wider">Step 3 of 3</p>
               </div>
               <h1 className="text-3xl font-bold mb-2">My setup</h1>
-              <p className="text-[#F5F0E8]/60 mb-6">
+              <p className="text-[#EAE2D0]/60 mb-6">
                 Optional — your gear defaults will pre-populate new trip checklists.
               </p>
 
@@ -267,8 +267,8 @@ export function OnboardingClient({ species }: OnboardingClientProps) {
                         onClick={() => setRodType(rt === rodType ? "" : rt)}
                         className={`py-2 px-3 rounded-lg text-sm font-medium border transition-colors ${
                           rodType === rt
-                            ? "bg-[#0D9488] border-[#0D9488] text-white"
-                            : "bg-[#040F1C] border-white/20 text-white/70 hover:border-white/40"
+                            ? "bg-[#C99A3E] border-[#C99A3E] text-white"
+                            : "bg-[#0F2635] border-white/20 text-white/70 hover:border-white/40"
                         }`}
                       >
                         {rt}
@@ -285,7 +285,7 @@ export function OnboardingClient({ species }: OnboardingClientProps) {
                     value={reel}
                     onChange={(e) => setReel(e.target.value)}
                     placeholder="e.g. Shimano Sustain 4000"
-                    className="w-full bg-[#040F1C] border border-white/20 rounded-xl px-4 py-3 text-[#F5F0E8] placeholder-white/30 focus:outline-none focus:border-[#0D9488]"
+                    className="w-full bg-[#0F2635] border border-white/20 rounded-xl px-4 py-3 text-[#EAE2D0] placeholder-white/30 focus:outline-none focus:border-[#C99A3E]"
                   />
                 </div>
 
@@ -298,7 +298,7 @@ export function OnboardingClient({ species }: OnboardingClientProps) {
                       value={lineWeight}
                       onChange={(e) => setLineWeight(e.target.value)}
                       placeholder="e.g. 10lb braid"
-                      className="w-full bg-[#040F1C] border border-white/20 rounded-xl px-4 py-3 text-[#F5F0E8] placeholder-white/30 focus:outline-none focus:border-[#0D9488]"
+                      className="w-full bg-[#0F2635] border border-white/20 rounded-xl px-4 py-3 text-[#EAE2D0] placeholder-white/30 focus:outline-none focus:border-[#C99A3E]"
                     />
                   </div>
                   <div>
@@ -309,7 +309,7 @@ export function OnboardingClient({ species }: OnboardingClientProps) {
                       value={leader}
                       onChange={(e) => setLeader(e.target.value)}
                       placeholder="e.g. 8lb fluoro"
-                      className="w-full bg-[#040F1C] border border-white/20 rounded-xl px-4 py-3 text-[#F5F0E8] placeholder-white/30 focus:outline-none focus:border-[#0D9488]"
+                      className="w-full bg-[#0F2635] border border-white/20 rounded-xl px-4 py-3 text-[#EAE2D0] placeholder-white/30 focus:outline-none focus:border-[#C99A3E]"
                     />
                   </div>
                 </div>
@@ -325,8 +325,8 @@ export function OnboardingClient({ species }: OnboardingClientProps) {
                         onClick={() => toggleTechnique(t)}
                         className={`px-3 py-1.5 rounded-full text-sm border transition-colors ${
                           techniques.includes(t)
-                            ? "bg-[#0D9488] border-[#0D9488] text-white"
-                            : "bg-[#040F1C] border-white/20 text-white/70 hover:border-white/40"
+                            ? "bg-[#C99A3E] border-[#C99A3E] text-white"
+                            : "bg-[#0F2635] border-white/20 text-white/70 hover:border-white/40"
                         }`}
                       >
                         {t}
@@ -344,7 +344,7 @@ export function OnboardingClient({ species }: OnboardingClientProps) {
                     onChange={(e) => setSetupNotes(e.target.value)}
                     placeholder="Anything else about your go-to rig…"
                     rows={2}
-                    className="w-full bg-[#040F1C] border border-white/20 rounded-xl px-4 py-3 text-[#F5F0E8] placeholder-white/30 focus:outline-none focus:border-[#0D9488] resize-none"
+                    className="w-full bg-[#0F2635] border border-white/20 rounded-xl px-4 py-3 text-[#EAE2D0] placeholder-white/30 focus:outline-none focus:border-[#C99A3E] resize-none"
                   />
                 </div>
               </div>
@@ -367,7 +367,7 @@ export function OnboardingClient({ species }: OnboardingClientProps) {
                   <button
                     onClick={() => completeOnboarding(false)}
                     disabled={saving}
-                    className="flex items-center gap-2 px-6 py-3 bg-[#0D9488] hover:bg-[#0F766E] rounded-xl font-semibold transition-colors disabled:opacity-40"
+                    className="flex items-center gap-2 px-6 py-3 bg-[#C99A3E] hover:bg-[#AD8232] rounded-xl font-semibold transition-colors disabled:opacity-40"
                   >
                     {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Check className="h-4 w-4" />}
                     {saving ? "Saving…" : "Done"}

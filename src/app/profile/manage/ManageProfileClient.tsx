@@ -6,7 +6,7 @@ import { ChevronLeft } from "lucide-react";
 
 export function ManageProfileClient() {
   return (
-    <div className="min-h-screen bg-[#F5F0E8] py-10">
+    <div className="min-h-screen bg-[#EAE2D0] py-10">
       <div className="max-w-3xl mx-auto px-4">
         <Link
           href="/profile"

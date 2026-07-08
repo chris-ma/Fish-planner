@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 
 export default function ContactPage() {
   return (
-    <div className="min-h-screen bg-[#020B14]">
+    <div className="min-h-screen bg-[#0A1C28]">
       <div className="max-w-3xl mx-auto px-4 py-12">
         <Link
           href="/"
@@ -21,13 +21,13 @@ export default function ContactPage() {
         </Link>
 
         <div className="flex items-center gap-3 mb-4">
-          <div className="w-10 h-10 rounded-xl bg-[#0D9488]/20 flex items-center justify-center">
-            <MessageCircle className="h-5 w-5 text-[#0D9488]" />
+          <div className="w-10 h-10 rounded-xl bg-[#C99A3E]/20 flex items-center justify-center">
+            <MessageCircle className="h-5 w-5 text-[#C99A3E]" />
           </div>
-          <span className="text-[#0D9488] text-sm font-semibold uppercase tracking-wider">Contact</span>
+          <span className="text-[#C99A3E] text-sm font-semibold uppercase tracking-wider">Contact</span>
         </div>
 
-        <h1 className="text-4xl font-bold text-[#F5F0E8] mb-4 leading-tight">Get in touch</h1>
+        <h1 className="text-4xl font-bold text-[#EAE2D0] mb-4 leading-tight">Get in touch</h1>
         <p className="text-white/60 text-lg mb-12 leading-relaxed">
           Questions, feedback, bug reports, or want to list your charter business — we'd like to hear from you.
         </p>
@@ -37,11 +37,11 @@ export default function ContactPage() {
             href="mailto:hello@fishtripper.app"
             className="flex items-center gap-4 rounded-2xl border border-white/10 bg-white/5 p-5 hover:bg-white/10 transition-colors"
           >
-            <div className="w-10 h-10 rounded-xl bg-[#0D9488]/15 flex items-center justify-center shrink-0">
-              <Mail className="h-5 w-5 text-[#0D9488]" />
+            <div className="w-10 h-10 rounded-xl bg-[#C99A3E]/15 flex items-center justify-center shrink-0">
+              <Mail className="h-5 w-5 text-[#C99A3E]" />
             </div>
             <div>
-              <p className="font-semibold text-[#F5F0E8]">General enquiries</p>
+              <p className="font-semibold text-[#EAE2D0]">General enquiries</p>
               <p className="text-white/50 text-sm">hello@fishtripper.app</p>
             </div>
           </a>
@@ -50,11 +50,11 @@ export default function ContactPage() {
             href="mailto:charters@fishtripper.app"
             className="flex items-center gap-4 rounded-2xl border border-white/10 bg-white/5 p-5 hover:bg-white/10 transition-colors"
           >
-            <div className="w-10 h-10 rounded-xl bg-[#0D9488]/15 flex items-center justify-center shrink-0">
-              <Mail className="h-5 w-5 text-[#0D9488]" />
+            <div className="w-10 h-10 rounded-xl bg-[#C99A3E]/15 flex items-center justify-center shrink-0">
+              <Mail className="h-5 w-5 text-[#C99A3E]" />
             </div>
             <div>
-              <p className="font-semibold text-[#F5F0E8]">Charter operator partnerships</p>
+              <p className="font-semibold text-[#EAE2D0]">Charter operator partnerships</p>
               <p className="text-white/50 text-sm">charters@fishtripper.app</p>
             </div>
           </a>

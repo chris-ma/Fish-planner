@@ -155,12 +155,12 @@ export function GearClient() {
   return (
     <div>
       {/* Hero */}
-      <div className="relative bg-[#020B14] py-12 px-4 overflow-hidden">
-        <div className="absolute bottom-0 left-1/4 w-96 h-64 bg-teal-600/15 rounded-full blur-3xl pointer-events-none" />
+      <div className="relative bg-[#0A1C28] py-12 px-4 overflow-hidden">
+        <div className="absolute bottom-0 left-1/4 w-96 h-64 bg-[#C99A3E]/10 rounded-full blur-3xl pointer-events-none" />
         <div className="absolute top-0 right-1/4 w-64 h-48 bg-blue-600/10 rounded-full blur-3xl pointer-events-none" />
         <div className="max-w-5xl mx-auto relative z-10">
-          <p className="text-[#FFD60A] text-sm font-semibold mb-2 tracking-wide uppercase">Gear Guide</p>
-          <h1 className="text-4xl md:text-5xl font-bold text-[#F5F0E8] mb-3">What to Pack</h1>
+          <p className="text-[#C99A3E] text-sm font-semibold mb-2 tracking-wide uppercase">Gear Guide</p>
+          <h1 className="text-4xl md:text-5xl font-bold text-[#EAE2D0] mb-3">What to Pack</h1>
           <p className="text-white/60 max-w-xl">
             Select a species to see exact rod, reel, line, lure and safety specs. Filter by trip type to refine the list.
           </p>
@@ -180,8 +180,8 @@ export function GearClient() {
                 className={cn(
                   "px-3 py-1.5 rounded-full text-sm border font-medium transition-all",
                   tripType === t
-                    ? "bg-[#020B14] text-white border-[#020B14]"
-                    : "bg-[#F5F0E8] text-slate-600 border-slate-200 hover:border-slate-400"
+                    ? "bg-[#0A1C28] text-white border-[#0A1C28]"
+                    : "bg-[#EAE2D0] text-slate-600 border-slate-200 hover:border-slate-400"
                 )}
               >
                 {TRIP_TYPE_LABELS[t]}
@@ -220,7 +220,7 @@ export function GearClient() {
               return (
                 <div
                   key={sp.slug}
-                  className="border border-slate-200 rounded-2xl overflow-hidden bg-[#F5F0E8] shadow-sm hover:shadow-md transition-shadow"
+                  className="border border-slate-200 rounded-2xl overflow-hidden bg-[#EAE2D0] shadow-sm hover:shadow-md transition-shadow"
                 >
                   {/* Card header */}
                   <button
@@ -277,7 +277,7 @@ export function GearClient() {
                       {/* Fishing Gear */}
                       <AccordionSection
                         title="Fishing Gear"
-                        icon={<Fish className="h-4 w-4 text-[#0D9488]" />}
+                        icon={<Fish className="h-4 w-4 text-[#C99A3E]" />}
                         defaultOpen
                       >
                         <table className="w-full text-sm">
@@ -376,12 +376,12 @@ export function GearClient() {
                                 if (e.key === "Escape") { setAddingFor(null); setNewGearText(""); }
                               }}
                               placeholder="e.g. Custom jig 150g"
-                              className="flex-1 text-sm px-3 py-1.5 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0D9488]"
+                              className="flex-1 text-sm px-3 py-1.5 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#C99A3E]"
                             />
                             <button
                               type="button"
                               onClick={() => addCustomItem(sp.slug)}
-                              className="px-3 py-1.5 bg-[#0D9488] text-white rounded-lg text-sm font-medium hover:bg-[#0F766E]"
+                              className="px-3 py-1.5 bg-[#C99A3E] text-[#0A1C28] rounded-lg text-sm font-medium hover:bg-[#AD8232]"
                             >
                               Add
                             </button>
@@ -397,7 +397,7 @@ export function GearClient() {
                           <button
                             type="button"
                             onClick={() => setAddingFor(sp.slug)}
-                            className="flex items-center gap-1.5 text-sm text-[#0D9488] hover:text-[#0F766E] font-medium"
+                            className="flex items-center gap-1.5 text-sm text-[#C99A3E] hover:text-[#AD8232] font-medium"
                           >
                             <Plus className="h-4 w-4" />
                             Add gear item

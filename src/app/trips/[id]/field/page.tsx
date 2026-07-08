@@ -38,7 +38,7 @@ export default async function TripFieldPage({ params }: { params: Promise<{ id: 
     : null;
 
   return (
-    <div className="min-h-screen bg-[#020B14] text-[#F5F0E8] print:bg-white print:text-black">
+    <div className="min-h-screen bg-[#0A1C28] text-[#EAE2D0] print:bg-white print:text-black">
       {/* Top bar */}
       <div className="flex items-center justify-between px-4 py-3 border-b border-white/10 print:hidden">
         <Link
@@ -54,7 +54,7 @@ export default async function TripFieldPage({ params }: { params: Promise<{ id: 
       <div className="max-w-xl mx-auto px-4 py-6 space-y-8">
         {/* Trip identity */}
         <div>
-          <h1 className="text-2xl font-bold text-[#F5F0E8] leading-tight">{trip.title}</h1>
+          <h1 className="text-2xl font-bold text-[#EAE2D0] leading-tight">{trip.title}</h1>
           <p className="text-white/50 text-sm mt-1">
             {region?.name && `${region.name} · `}
             {formatDateRange(trip.startDate, trip.endDate)}
@@ -93,7 +93,7 @@ export default async function TripFieldPage({ params }: { params: Promise<{ id: 
                 const avail = (p.availability ?? "going") as Availability;
                 return (
                   <div key={p.id} className="flex items-center justify-between">
-                    <span className="text-sm font-medium text-[#F5F0E8]">{p.name}</span>
+                    <span className="text-sm font-medium text-[#EAE2D0]">{p.name}</span>
                     <span className={`text-xs capitalize ${AVAIL_COLORS[avail]}`}>{avail}</span>
                   </div>
                 );
@@ -115,7 +115,7 @@ export default async function TripFieldPage({ params }: { params: Promise<{ id: 
               >
                 <Waves className="h-5 w-5 text-teal-400 shrink-0" />
                 <div>
-                  <div className="text-sm font-semibold text-[#F5F0E8]">Tide Chart</div>
+                  <div className="text-sm font-semibold text-[#EAE2D0]">Tide Chart</div>
                   <div className="text-xs text-white/40">BoM tide predictor</div>
                 </div>
               </a>
@@ -129,7 +129,7 @@ export default async function TripFieldPage({ params }: { params: Promise<{ id: 
               >
                 <Map className="h-5 w-5 text-blue-400 shrink-0" />
                 <div>
-                  <div className="text-sm font-semibold text-[#F5F0E8]">Maps</div>
+                  <div className="text-sm font-semibold text-[#EAE2D0]">Maps</div>
                   <div className="text-xs text-white/40">Google Maps</div>
                 </div>
               </a>
@@ -148,7 +148,7 @@ export default async function TripFieldPage({ params }: { params: Promise<{ id: 
               {pinnedNotes.map((note) => (
                 <div key={note.id} className="rounded-xl bg-amber-900/20 border border-amber-700/40 p-4">
                   <p className="text-xs text-amber-400 font-semibold mb-1.5">{note.authorName}</p>
-                  <p className="text-sm text-[#F5F0E8] leading-relaxed whitespace-pre-wrap">{note.content}</p>
+                  <p className="text-sm text-[#EAE2D0] leading-relaxed whitespace-pre-wrap">{note.content}</p>
                 </div>
               ))}
             </div>

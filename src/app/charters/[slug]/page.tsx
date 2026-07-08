@@ -76,7 +76,7 @@ export default async function CharterPage({ params }: { params: Promise<{ slug: 
   };
 
   return (
-    <div className="bg-[#040F1C] min-h-screen text-[#F5F0E8]">
+    <div className="bg-[#0F2635] min-h-screen text-[#EAE2D0]">
       <JsonLd data={localBusinessSchema} />
       <JsonLd
         data={breadcrumbSchema([
@@ -88,7 +88,7 @@ export default async function CharterPage({ params }: { params: Promise<{ slug: 
       {/* Hero */}
       <div className="relative py-20 px-4 overflow-hidden">
         <div className="absolute inset-0 opacity-25" style={{ backgroundImage: `url(${heroImage})`, backgroundSize: "cover", backgroundPosition: "center" }} />
-        <div className="absolute inset-0 bg-gradient-to-b from-[#040F1C]/40 to-[#040F1C]" />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#0F2635]/40 to-[#0F2635]" />
         <div className="relative max-w-4xl mx-auto pt-8">
           <nav className="text-sm text-white/50 mb-5 flex items-center gap-2">
             <Link href="/" className="hover:text-white/80 transition-colors">Home</Link>
@@ -98,7 +98,7 @@ export default async function CharterPage({ params }: { params: Promise<{ slug: 
             <span>{charter.name}</span>
           </nav>
           <div className="flex items-center gap-2 mb-4">
-            <span className="bg-[#0D9488]/20 text-[#0D9488] text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full border border-[#0D9488]/30">
+            <span className="bg-[#C99A3E]/20 text-[#C99A3E] text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full border border-[#C99A3E]/30">
               Guided Experience
             </span>
             {charter.featured && (
@@ -108,14 +108,14 @@ export default async function CharterPage({ params }: { params: Promise<{ slug: 
             )}
           </div>
           <h1 className="text-4xl md:text-5xl font-bold mb-2 leading-tight">{charter.name}</h1>
-          <p className="text-[#0D9488] text-lg font-semibold mb-4">{charter.operatorName}</p>
+          <p className="text-[#C99A3E] text-lg font-semibold mb-4">{charter.operatorName}</p>
           <p className="text-white/70 text-lg max-w-2xl mb-6">{charter.description}</p>
 
           {/* Quick stats */}
           <div className="flex flex-wrap gap-4 text-sm text-white/70">
-            <span className="flex items-center gap-1.5"><MapPin className="h-4 w-4 text-[#0D9488]" />{charter.homePort}</span>
-            <span className="flex items-center gap-1.5"><Users className="h-4 w-4 text-[#0D9488]" />Up to {charter.maxGuests} anglers</span>
-            <span className="flex items-center gap-1.5"><Clock className="h-4 w-4 text-[#0D9488]" />{charter.durationDays === 1 ? "Day trip" : `${charter.durationDays} days`}</span>
+            <span className="flex items-center gap-1.5"><MapPin className="h-4 w-4 text-[#C99A3E]" />{charter.homePort}</span>
+            <span className="flex items-center gap-1.5"><Users className="h-4 w-4 text-[#C99A3E]" />Up to {charter.maxGuests} anglers</span>
+            <span className="flex items-center gap-1.5"><Clock className="h-4 w-4 text-[#C99A3E]" />{charter.durationDays === 1 ? "Day trip" : `${charter.durationDays} days`}</span>
             {charter.priceLabel && <span className="text-white font-semibold">{charter.priceLabel}</span>}
           </div>
         </div>
@@ -125,11 +125,11 @@ export default async function CharterPage({ params }: { params: Promise<{ slug: 
         {/* Operator info */}
         <section className="grid sm:grid-cols-2 gap-4">
           <div className="bg-white/5 rounded-2xl p-5 border border-white/10">
-            <div className="h-1 w-8 bg-[#0D9488] rounded mb-3" />
+            <div className="h-1 w-8 bg-[#C99A3E] rounded mb-3" />
             <h2 className="text-lg font-bold mb-4">The Vessel</h2>
             <dl className="space-y-2 text-sm">
               {charter.boatName && (
-                <div className="flex gap-2"><dt className="text-white/40 w-24 shrink-0">Boat</dt><dd className="flex items-center gap-1.5"><Anchor className="h-3.5 w-3.5 text-[#0D9488]" />{charter.boatName}</dd></div>
+                <div className="flex gap-2"><dt className="text-white/40 w-24 shrink-0">Boat</dt><dd className="flex items-center gap-1.5"><Anchor className="h-3.5 w-3.5 text-[#C99A3E]" />{charter.boatName}</dd></div>
               )}
               {charter.boatType && (
                 <div className="flex gap-2"><dt className="text-white/40 w-24 shrink-0">Type</dt><dd>{charter.boatType}</dd></div>
@@ -141,17 +141,17 @@ export default async function CharterPage({ params }: { params: Promise<{ slug: 
           </div>
 
           <div className="bg-white/5 rounded-2xl p-5 border border-white/10">
-            <div className="h-1 w-8 bg-[#0D9488] rounded mb-3" />
+            <div className="h-1 w-8 bg-[#C99A3E] rounded mb-3" />
             <h2 className="text-lg font-bold mb-4">Contact</h2>
             <p className="text-white/80 font-semibold mb-3">{charter.operatorName}</p>
             <div className="space-y-2 text-sm">
               {charter.operatorPhone && (
-                <a href={`tel:${charter.operatorPhone}`} className="flex items-center gap-2 text-white/70 hover:text-[#0D9488] transition-colors">
-                  <Phone className="h-4 w-4 text-[#0D9488]" />{charter.operatorPhone}
+                <a href={`tel:${charter.operatorPhone}`} className="flex items-center gap-2 text-white/70 hover:text-[#C99A3E] transition-colors">
+                  <Phone className="h-4 w-4 text-[#C99A3E]" />{charter.operatorPhone}
                 </a>
               )}
-              <a href={`mailto:${charter.operatorEmail}`} className="flex items-center gap-2 text-white/70 hover:text-[#0D9488] transition-colors">
-                <Mail className="h-4 w-4 text-[#0D9488]" />{charter.operatorEmail}
+              <a href={`mailto:${charter.operatorEmail}`} className="flex items-center gap-2 text-white/70 hover:text-[#C99A3E] transition-colors">
+                <Mail className="h-4 w-4 text-[#C99A3E]" />{charter.operatorEmail}
               </a>
             </div>
           </div>
@@ -160,8 +160,8 @@ export default async function CharterPage({ params }: { params: Promise<{ slug: 
         {/* Target species */}
         {speciesSlugs.length > 0 && (
           <section>
-            <div className="h-1 w-12 bg-[#0D9488] rounded mb-3" />
-            <h2 className="text-2xl font-bold text-[#0D9488] mb-6">Target Species</h2>
+            <div className="h-1 w-12 bg-[#C99A3E] rounded mb-3" />
+            <h2 className="text-2xl font-bold text-[#C99A3E] mb-6">Target Species</h2>
             <div className="flex flex-wrap gap-3">
               {speciesSlugs.map((s) => (
                 <Link key={s} href={`/species/${s}`}>
@@ -176,8 +176,8 @@ export default async function CharterPage({ params }: { params: Promise<{ slug: 
 
         {/* Enquiry form */}
         <section>
-          <div className="h-1 w-12 bg-[#0D9488] rounded mb-3" />
-          <h2 className="text-2xl font-bold text-[#0D9488] mb-2">Book This Guided Experience</h2>
+          <div className="h-1 w-12 bg-[#C99A3E] rounded mb-3" />
+          <h2 className="text-2xl font-bold text-[#C99A3E] mb-2">Book This Guided Experience</h2>
           <p className="text-white/60 mb-8">
             Send an enquiry directly to {charter.operatorName}. They will confirm availability and provide full trip details.
           </p>

@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, Bebas_Neue } from "next/font/google";
+import { Inter, Fraunces, JetBrains_Mono } from "next/font/google";
 import { ClerkProvider } from "@clerk/nextjs";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
@@ -8,17 +8,28 @@ import { AppChrome } from "@/components/layout/AppChrome";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { SITE_URL, SITE_NAME, SITE_DESCRIPTION } from "@/lib/site-config";
 
+// Brand type system (brand bible): Fraunces for headlines and moments of
+// feeling, Inter for all running text and interface copy, JetBrains Mono for
+// coordinates / timestamps / field-guide data.
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-inter",
   display: "swap",
 });
 
-const bebasNeue = Bebas_Neue({
+const fraunces = Fraunces({
   subsets: ["latin"],
-  variable: "--font-bebas",
+  variable: "--font-fraunces",
   display: "swap",
-  weight: "400",
+  weight: ["400", "500", "600", "700"],
+  style: ["normal", "italic"],
+});
+
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ["latin"],
+  variable: "--font-jbmono",
+  display: "swap",
+  weight: ["400", "500"],
 });
 
 export const metadata: Metadata = {
@@ -45,7 +56,7 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  themeColor: "#020B14",
+  themeColor: "#0A1C28",
 };
 
 const ORGANIZATION_JSON_LD = {
@@ -65,27 +76,27 @@ const WEBSITE_JSON_LD = {
 
 const clerkAppearance = {
   variables: {
-    colorPrimary: "#0D9488",
-    colorBackground: "#040F1C",
-    colorText: "#F5F0E8",
-    colorTextSecondary: "rgba(245,240,232,0.55)",
-    colorInputBackground: "#071B30",
-    colorInputText: "#F5F0E8",
-    colorNeutral: "#F5F0E8",
+    colorPrimary: "#C99A3E",
+    colorBackground: "#0F2635",
+    colorText: "#EAE2D0",
+    colorTextSecondary: "rgba(234,226,208,0.55)",
+    colorInputBackground: "#143244",
+    colorInputText: "#EAE2D0",
+    colorNeutral: "#EAE2D0",
     borderRadius: "0.75rem",
   },
   elements: {
-    card: "bg-[#040F1C] shadow-2xl !border !border-white/10",
-    headerTitle: "!text-[#F5F0E8]",
+    card: "bg-[#0F2635] shadow-2xl !border !border-white/10",
+    headerTitle: "!text-[#EAE2D0]",
     headerSubtitle: "!text-white/55",
-    socialButtonsBlockButton: "!border !border-white/15 !text-[#F5F0E8] hover:!bg-white/5",
-    socialButtonsBlockButtonText: "!text-[#F5F0E8]",
+    socialButtonsBlockButton: "!border !border-white/15 !text-[#EAE2D0] hover:!bg-white/5",
+    socialButtonsBlockButtonText: "!text-[#EAE2D0]",
     formFieldLabel: "!text-white/70",
-    formFieldInput: "!bg-[#071B30] !border-white/20 !text-[#F5F0E8] focus:!border-[#0D9488]",
-    formButtonPrimary: "!bg-[#0D9488] hover:!bg-[#0F766E] !text-white",
-    footerActionLink: "!text-[#0D9488] hover:!text-teal-400",
-    identityPreviewText: "!text-[#F5F0E8]",
-    identityPreviewEditButtonIcon: "!text-[#0D9488]",
+    formFieldInput: "!bg-[#143244] !border-white/20 !text-[#EAE2D0] focus:!border-[#C99A3E]",
+    formButtonPrimary: "!bg-[#C99A3E] hover:!bg-[#AD8232] !text-white",
+    footerActionLink: "!text-[#C99A3E] hover:!text-[#D9B15E]",
+    identityPreviewText: "!text-[#EAE2D0]",
+    identityPreviewEditButtonIcon: "!text-[#C99A3E]",
     dividerLine: "!bg-white/10",
     dividerText: "!text-white/40",
   },
@@ -93,7 +104,7 @@ const clerkAppearance = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   const body = (
-    <html lang="en" className={`${inter.variable} ${bebasNeue.variable}`}>
+    <html lang="en" className={`${inter.variable} ${fraunces.variable} ${jetbrainsMono.variable}`}>
       <body>
         <JsonLd data={ORGANIZATION_JSON_LD} />
         <JsonLd data={WEBSITE_JSON_LD} />

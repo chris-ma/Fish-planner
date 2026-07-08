@@ -208,9 +208,9 @@ export function BucketListClient({ species }: BucketListClientProps) {
   // ── Name prompt ────────────────────────────────────────────────────────────
   if (catcherName === null) {
     return (
-      <div className="min-h-screen bg-[#020B14] flex flex-col items-center justify-center px-6 pb-24">
+      <div className="min-h-screen bg-[#0A1C28] flex flex-col items-center justify-center px-6 pb-24">
         <div className="w-full max-w-sm">
-          <h1 className="text-3xl font-bold text-[#F5F0E8] mb-2 text-center">Bucket List</h1>
+          <h1 className="text-3xl font-bold text-[#EAE2D0] mb-2 text-center">Bucket List</h1>
           <p className="text-white/50 text-sm text-center mb-8">
             Track every species you&apos;ve caught. Enter your name to get started.
           </p>
@@ -236,12 +236,12 @@ export function BucketListClient({ species }: BucketListClientProps) {
 
   // ── Main grid ──────────────────────────────────────────────────────────────
   return (
-    <div className="min-h-screen bg-[#020B14] pb-24">
+    <div className="min-h-screen bg-[#0A1C28] pb-24">
       {/* Header */}
       <div className="px-4 pt-8 pb-4">
         <div className="flex items-center justify-between max-w-4xl mx-auto">
           <div>
-            <h1 className="text-2xl font-bold text-[#F5F0E8]">Bucket List</h1>
+            <h1 className="text-2xl font-bold text-[#EAE2D0]">Bucket List</h1>
             <p className="text-white/40 text-xs mt-0.5">
               {caughtSlugs.size} / {species.length} caught
             </p>
@@ -258,7 +258,7 @@ export function BucketListClient({ species }: BucketListClientProps) {
         <div className="max-w-4xl mx-auto mt-3">
           <div className="h-1.5 bg-white/10 rounded-full overflow-hidden">
             <div
-              className="h-full bg-[#0D9488] rounded-full transition-all duration-500"
+              className="h-full bg-[#C99A3E] rounded-full transition-all duration-500"
               style={{ width: `${species.length > 0 ? (caughtSlugs.size / species.length) * 100 : 0}%` }}
             />
           </div>
@@ -273,7 +273,7 @@ export function BucketListClient({ species }: BucketListClientProps) {
               className={cn(
                 "px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap transition-colors shrink-0",
                 activeCategory === cat.id
-                  ? "bg-[#0D9488] text-white"
+                  ? "bg-[#C99A3E] text-white"
                   : "bg-white/10 text-white/60 hover:bg-white/20"
               )}
             >
@@ -312,7 +312,7 @@ export function BucketListClient({ species }: BucketListClientProps) {
 
                 {/* Caught badge */}
                 {caught && (
-                  <div className="absolute top-1.5 right-1.5 w-5 h-5 rounded-full bg-[#0D9488] flex items-center justify-center">
+                  <div className="absolute top-1.5 right-1.5 w-5 h-5 rounded-full bg-[#C99A3E] flex items-center justify-center">
                     <Check className="h-3 w-3 text-white" />
                   </div>
                 )}
@@ -505,7 +505,7 @@ export function BucketListClient({ species }: BucketListClientProps) {
                         </div>
                         {c.notes && <p className="text-xs text-slate-500 mt-0.5 leading-snug">{c.notes}</p>}
                         {c.photoUrl && (
-                          <a href={c.photoUrl} target="_blank" rel="noopener noreferrer" className="text-xs text-[#0F766E] hover:underline">
+                          <a href={c.photoUrl} target="_blank" rel="noopener noreferrer" className="text-xs text-[#AD8232] hover:underline">
                             View photo ↗
                           </a>
                         )}

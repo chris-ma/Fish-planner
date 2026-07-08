@@ -53,8 +53,8 @@ export function EnquiryForm({ charterSlug, operatorName, operatorPhone, maxGuest
 
   if (sent) {
     return (
-      <div className="bg-[#0D9488]/10 border border-[#0D9488]/30 rounded-2xl p-8 text-center">
-        <CheckCircle className="h-10 w-10 text-[#0D9488] mx-auto mb-4" />
+      <div className="bg-[#C99A3E]/10 border border-[#C99A3E]/30 rounded-2xl p-8 text-center">
+        <CheckCircle className="h-10 w-10 text-[#C99A3E] mx-auto mb-4" />
         <h3 className="text-xl font-bold text-white mb-2">Enquiry sent!</h3>
         <p className="text-white/70 mb-4">
           {operatorName} has been notified and will be in touch shortly. Check your email for a confirmation.
@@ -62,14 +62,14 @@ export function EnquiryForm({ charterSlug, operatorName, operatorPhone, maxGuest
         {operatorPhone && (
           <p className="text-white/50 text-sm">
             You can also reach them directly at{" "}
-            <a href={`tel:${operatorPhone}`} className="text-[#0D9488] hover:underline">{operatorPhone}</a>
+            <a href={`tel:${operatorPhone}`} className="text-[#C99A3E] hover:underline">{operatorPhone}</a>
           </p>
         )}
       </div>
     );
   }
 
-  const inputCls = "w-full bg-white/5 border border-white/15 rounded-xl px-4 py-3 text-white placeholder-white/30 text-sm focus:outline-none focus:ring-2 focus:ring-[#0D9488] focus:border-transparent";
+  const inputCls = "w-full bg-white/5 border border-white/15 rounded-xl px-4 py-3 text-white placeholder-white/30 text-sm focus:outline-none focus:ring-2 focus:ring-[#C99A3E] focus:border-transparent";
   const labelCls = "block text-white/60 text-xs font-semibold uppercase tracking-wider mb-1.5";
 
   return (
@@ -138,7 +138,7 @@ export function EnquiryForm({ charterSlug, operatorName, operatorPhone, maxGuest
       <button
         type="submit"
         disabled={loading}
-        className="w-full bg-[#0D9488] hover:bg-[#0F766E] disabled:opacity-50 text-white font-semibold py-4 rounded-xl transition-colors text-base"
+        className="w-full bg-[#C99A3E] hover:bg-[#AD8232] disabled:opacity-50 text-[#0A1C28] font-semibold py-4 rounded-xl transition-colors text-base"
       >
         {loading ? "Sending…" : "Send Enquiry"}
       </button>

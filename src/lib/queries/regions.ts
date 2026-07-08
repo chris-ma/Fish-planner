@@ -193,6 +193,47 @@ async function seedDestinationsAndExperiences() {
   }
 }
 
+export interface RegionWithStats {
+  region: typeof regions.$inferSelect;
+  speciesTracked: number;
+  pct: number;
+  label: string;
+}
+
+// Top regions for a month with honest, display-ready season stats:
+// pct = share of the maximum possible bite score (every tracked species at "peak").
+export async function getTopRegionsWithStats(month: number, limit = 3): Promise<RegionWithStats[]> {
+  const windows = await db
+    .select({ regionId: seasonWindows.regionId, rating: seasonWindows.rating })
+    .from(seasonWindows)
+    .where(eq(seasonWindows.month, month));
+
+  const scoreMap = new Map<string, { score: number; count: number }>();
+  for (const w of windows) {
+    const entry = scoreMap.get(w.regionId) ?? { score: 0, count: 0 };
+    entry.score += ratingScore(w.rating as Rating);
+    entry.count += 1;
+    scoreMap.set(w.regionId, entry);
+  }
+
+  const topIds = Array.from(scoreMap.entries())
+    .sort((a, b) => b[1].score - a[1].score)
+    .slice(0, limit)
+    .map(([id]) => id);
+
+  if (topIds.length === 0) return [];
+
+  const rows = await db.select().from(regions).where(inArray(regions.id, topIds));
+  rows.sort((a, b) => (scoreMap.get(b.id)?.score ?? 0) - (scoreMap.get(a.id)?.score ?? 0));
+
+  return rows.map((region) => {
+    const { score, count } = scoreMap.get(region.id) ?? { score: 0, count: 0 };
+    const pct = count > 0 ? Math.round((score / (count * 4)) * 100) : 0;
+    const label = pct >= 85 ? "Excellent" : pct >= 70 ? "Very Good" : pct >= 55 ? "Good" : "Fair";
+    return { region, speciesTracked: count, pct, label };
+  });
+}
+
 export async function getTopRegionsForMonth(month: number, limit = 6) {
   const windows = await db
     .select({

@@ -37,7 +37,7 @@ export default function AustraliaMapInner({ regions }: { regions: Region[] }) {
       zoom={4}
       minZoom={3}
       maxZoom={8}
-      style={{ height: "100%", width: "100%", background: "#020B14" }}
+      style={{ height: "100%", width: "100%", background: "#0A1C28" }}
       zoomControl={false}
       scrollWheelZoom={false}
     >
@@ -56,7 +56,7 @@ export default function AustraliaMapInner({ regions }: { regions: Region[] }) {
           center={[region.latitude!, region.longitude!] as LatLngExpression}
           radius={10}
           pathOptions={{
-            fillColor: "#0D9488",
+            fillColor: "#C99A3E",
             fillOpacity: 0.9,
             color: "#14b8a6",
             weight: 2,
