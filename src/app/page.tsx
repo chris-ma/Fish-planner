@@ -5,8 +5,7 @@ import { IntentSearch } from "@/components/discovery/IntentSearch";
 import { FeaturedFishClient } from "@/components/home/FeaturedFishClient";
 import { NearbyRegionsClient } from "@/components/home/NearbyRegionsClient";
 import { ExperiencesForYouClient } from "@/components/home/ExperiencesForYouClient";
-import { OnTheBiteClient } from "@/components/home/OnTheBiteClient";
-import { getInSeasonSpecies } from "@/lib/queries/species";
+import { FeatureRow } from "@/components/home/FeatureRow";
 import { getExperiences } from "@/lib/queries/experiences";
 import { db } from "@/db";
 import { species } from "@/db/schema";
@@ -47,15 +46,30 @@ const TRIP_FEATURES = [
   },
 ];
 
-const BREAD_AND_BUTTER = [
-  { slug: "bream",               commonName: "Bream",            category: "estuary" },
-  { slug: "flathead",            commonName: "Flathead",         category: "estuary" },
-  { slug: "whiting",             commonName: "Whiting",          category: "estuary" },
-  { slug: "king-george-whiting", commonName: "KG Whiting",       category: "inshore" },
-  { slug: "australian-bass",     commonName: "Australian Bass",  category: "freshwater" },
-  { slug: "tailor",              commonName: "Tailor",           category: "inshore" },
-  { slug: "mulloway",            commonName: "Mulloway",         category: "estuary" },
-  { slug: "black-drummer",       commonName: "Black Drummer",    category: "inshore" },
+interface BreadAndButterSpecies {
+  slug: string;
+  commonName: string;
+  category: string;
+  whyTrophy: string;
+}
+
+const BREAD_AND_BUTTER: BreadAndButterSpecies[] = [
+  { slug: "bream", commonName: "Bream", category: "estuary",
+    whyTrophy: "Bream inspect a lure for five seconds before deciding it's a fraud. Yellowfin are the most-caught sportfish in the country — black bream rarely leave their home water, and knowing that water is the only edge you'll get." },
+  { slug: "flathead", commonName: "Flathead", category: "estuary",
+    whyTrophy: "Ambush predators buried in sand and weed, flathead reward soft plastics worked slow and low. The 3 Meter Flatty challenge exists because one big dusky can outfight fish twice its class." },
+  { slug: "whiting", commonName: "Whiting", category: "estuary",
+    whyTrophy: "Sand whiting won't forgive sloppy bait presentation — light leader, worms or prawns, and a drift over the right sand flat. Small mouths, hard fight, better eating." },
+  { slug: "king-george-whiting", commonName: "KG Whiting", category: "inshore",
+    whyTrophy: "South Australia's premier table fish. KGs school tight on sandy flats and demand a delicate touch with tube worms or squid strips — peak season runs October to January, and miss it, you're waiting a year." },
+  { slug: "australian-bass", commonName: "Australian Bass", category: "freshwater",
+    whyTrophy: "Coastal river royalty. Bass spawn in the salt then push back upstream to smash surface lures at dawn — spring and autumn topwater strikes are as good as freshwater fishing gets." },
+  { slug: "tailor", commonName: "Tailor", category: "inshore",
+    whyTrophy: "Tailor arrive in frenzied schools and hit metal slugs like they're being timed. Autumn-winter migrations turn beaches and river mouths into a blitz — fast hands, sharp hooks, no second chances." },
+  { slug: "mulloway", commonName: "Mulloway", category: "estuary",
+    whyTrophy: "The holy grail of NSW estuary fishing. Big mulloway haunt deep holes and bridge pylons and mostly show themselves after dark — live bait, patience, and a healthy respect for what's about to happen." },
+  { slug: "black-drummer", commonName: "Black Drummer", category: "inshore",
+    whyTrophy: "Also called silver drummer, these surge-zone brawlers can exceed 5kg and unload long, punishing runs off exposed rock platforms. Underrated on the table, unforgiving on light tackle." },
 ];
 
 
@@ -67,8 +81,7 @@ export default async function HomePage({
   const params = await searchParams;
   const month = params.month ? parseInt(params.month) : currentMonth();
 
-  const [inSeasonSpecies, allExperiences, allSpeciesForMap] = await Promise.all([
-    getInSeasonSpecies(month, 16),
+  const [allExperiences, allSpeciesForMap] = await Promise.all([
     getExperiences(),
     db.select({ slug: species.slug, commonName: species.commonName }).from(species),
   ]);
@@ -173,11 +186,6 @@ export default async function HomePage({
           </div>
         </section>
 
-        {/* Seasonal species carousel — personalised to nearby region if available */}
-        <section className="pt-8 md:pt-0">
-          <OnTheBiteClient fallbackSpecies={inSeasonSpecies} month={month} monthName={MONTH_NAMES_FULL[month]} />
-        </section>
-
         {/* Nearby regions — personalized for logged-in users with location */}
         <NearbyRegionsClient month={month} />
 
@@ -193,31 +201,18 @@ export default async function HomePage({
               Start your bucket list →
             </Link>
           </p>
-          <div className="flex gap-3 overflow-x-auto snap-x snap-mandatory pb-2 md:grid md:grid-cols-3 lg:grid-cols-5 md:overflow-visible">
-            {BREAD_AND_BUTTER.map(({ slug, commonName, category }) => {
-              const imgUrl = getSpeciesImage(slug, category, 600);
-              return (
-                <Link
-                  key={slug}
-                  href="/bucket-list"
-                  className="relative rounded-xl overflow-hidden aspect-[3/4] w-36 shrink-0 snap-start md:w-auto group block"
-                >
-                  <div
-                    className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-105"
-                    style={{ backgroundImage: `url(${imgUrl})` }}
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-                  <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                    <span className="bg-[#0D9488] text-white text-[10px] font-semibold px-2.5 py-1 rounded-full">
-                      Add to list →
-                    </span>
-                  </div>
-                  <div className="absolute bottom-0 left-0 right-0 p-2.5">
-                    <p className="text-white text-xs font-semibold line-clamp-2">{commonName}</p>
-                  </div>
-                </Link>
-              );
-            })}
+          <div className="space-y-3">
+            {BREAD_AND_BUTTER.map(({ slug, commonName, category, whyTrophy }) => (
+              <FeatureRow
+                key={slug}
+                href="/bucket-list"
+                image={getSpeciesImage(slug, category, 600)}
+                imageAlt={commonName}
+                title={commonName}
+                body={whyTrophy}
+                cta="Add to list →"
+              />
+            ))}
           </div>
         </section>
 
@@ -230,27 +225,17 @@ export default async function HomePage({
           <p className="text-sm text-slate-500 mb-6 max-w-2xl">
             Self-imposed rules. No leaderboard, just bragging rights.
           </p>
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+          <div className="space-y-3">
             {CHALLENGES.map(({ slug, title, description, image }) => (
-              <Link
+              <FeatureRow
                 key={slug}
                 href={`/challenges/${slug}`}
-                className="relative rounded-2xl overflow-hidden aspect-[4/5] group block"
-              >
-                <div
-                  className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-105"
-                  style={{ backgroundImage: `url(${image})` }}
-                />
-                <div className="absolute top-0 left-0 right-0 h-1 bg-[#0D9488]" />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent" />
-                <div className="absolute bottom-0 left-0 right-0 p-3 md:p-4 z-10">
-                  <p className="font-bold text-white text-sm mb-1 leading-tight">{title}</p>
-                  <p className="text-white/65 text-[11px] leading-relaxed line-clamp-3">{description}</p>
-                  <span className="mt-2 inline-block text-[#0D9488] text-[10px] font-semibold group-hover:text-teal-300 transition-colors">
-                    View rankings →
-                  </span>
-                </div>
-              </Link>
+                image={image}
+                imageAlt={title}
+                title={title}
+                body={description}
+                cta="View rankings →"
+              />
             ))}
           </div>
           <div className="mt-4 text-right">

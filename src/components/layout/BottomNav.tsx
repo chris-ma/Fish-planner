@@ -2,13 +2,13 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Compass, Map, Trophy, Plus, Star } from "lucide-react";
+import { Compass, Map, Sparkles, Plus, Star } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
 
 const NAV_ITEMS = [
   { href: "/", label: "Home", Icon: Compass },
+  { href: "/experiences", label: "Experiences", Icon: Sparkles },
   { href: "/plan", label: "Plan", Icon: Map },
-  { href: "/challenges", label: "Compete", Icon: Trophy },
   { href: "/bucket-list", label: "Bucket List", Icon: Star },
 ];
 
