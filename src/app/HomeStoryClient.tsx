@@ -266,9 +266,6 @@ export function HomeStoryClient({ regions, challengeEntries }: Props) {
 
     let ticking = false;
     let lastActiveIdx = -1;
-    let lastScrollY = scrollY;
-    let lastScrollT = performance.now();
-    let velTimeout: ReturnType<typeof setTimeout> | undefined;
 
     function update() {
       ticking = false;
@@ -287,15 +284,6 @@ export function HomeStoryClient({ regions, challengeEntries }: Props) {
         if (bleed && activeIdx !== lastActiveIdx) {
           bleed.style.backgroundColor = bleedColors[activeIdx] ?? bleedColors[0];
         }
-
-        const now = performance.now();
-        const dt = Math.max(now - lastScrollT, 1);
-        const vel = Math.abs(scrollY - lastScrollY) / dt;
-        lastScrollY = scrollY; lastScrollT = now;
-        const velBlur = Math.min(vel * 12, 5);
-        root!.style.setProperty("--hs-vel", String(velBlur));
-        if (velTimeout) clearTimeout(velTimeout);
-        velTimeout = setTimeout(() => root!.style.setProperty("--hs-vel", "0"), 150);
 
         if (ch1Photo && ch1El) {
           const p = prog(ch1El);
@@ -371,19 +359,14 @@ export function HomeStoryClient({ regions, challengeEntries }: Props) {
       });
     }
 
-    // ── Particle system — dawn motes on CH1, rising embers on CH7 ──
+    // ── Particle system — dawn motes on CH1 ──
     if (motionEnabled) {
       const stopMotes = makeParticles(
         root.querySelector<HTMLCanvasElement>("#hs-motes"), ch1El, 22,
         ["#FFC423", "#FFD666", "#F2EDE2"],
         { vMin: 0.06, vMax: 0.16, rMin: 0.6, rMax: 1.8, driftMax: 0.12 }
       );
-      const stopEmbers = makeParticles(
-        root.querySelector<HTMLCanvasElement>("#hs-embers"), ch7El, 44,
-        ["#f5c86a", "#e05a2b"],
-        { vMin: 0.25, vMax: 0.95, rMin: 0.8, rMax: 2.8, driftMax: 0.5 }
-      );
-      cleanupFns.push(stopMotes, stopEmbers);
+      cleanupFns.push(stopMotes);
     }
 
     // ── CH2 — expandable "Peak season" fact card ──
@@ -535,7 +518,6 @@ export function HomeStoryClient({ regions, challengeEntries }: Props) {
   --quiet:#7A9BAA;
   --rule-d:rgba(234,226,208,0.1);
   --hs-ease:cubic-bezier(0.25,0.1,0.25,1);
-  --hs-vel:0;
   font-family:var(--font-sora),sans-serif;
   color:var(--sandstone);
   line-height:1.65;
@@ -576,11 +558,6 @@ export function HomeStoryClient({ regions, challengeEntries }: Props) {
 .home-story .hs-sound-toggle .hs-sound-dot{width:6px;height:6px;border-radius:50%;background:var(--quiet); transition:background .2s;}
 .home-story .hs-sound-toggle.on{color:var(--gold); border-color:rgba(255,196,35,0.35);}
 .home-story .hs-sound-toggle.on .hs-sound-dot{background:var(--gold);}
-
-.home-story .chapter-inner{
-  filter:blur(calc(var(--hs-vel,0)*1px));
-  transform:skewY(calc(var(--hs-vel,0)*0.15deg));
-}
 
 /* ── SKIP + PROGRESS CHROME ── */
 .home-story .skip-link{
@@ -664,7 +641,6 @@ export function HomeStoryClient({ regions, challengeEntries }: Props) {
 .home-story .reveal.d4{transition-delay:.32s;}
 
 /* ── CH1 — TROPHY ── */
-.home-story #ch1{background:radial-gradient(ellipse 90% 60% at 70% 100%, rgba(15,38,53,0.55) 0%, transparent 65%);}
 .home-story .trophy-meta{
   display:flex; gap:28px; flex-wrap:wrap;
   font-family:var(--font-sora),sans-serif;
@@ -800,7 +776,6 @@ export function HomeStoryClient({ regions, challengeEntries }: Props) {
 .home-story .countdown-lbl{font-family:var(--font-sora),sans-serif;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--quiet);}
 
 /* ── CH7 — CHAPTER 2 ── */
-.home-story #ch7{background:var(--ocean);}
 .home-story .ch7-q{
   position:relative;
   font-family:var(--font-fraunces),serif;
@@ -820,7 +795,6 @@ export function HomeStoryClient({ regions, challengeEntries }: Props) {
 
 /* ── CH8 — THE ASK ── */
 .home-story #ch8{
-  background:radial-gradient(ellipse 70% 60% at 50% 40%, rgba(201,154,62,0.06) 0%, transparent 65%);
   text-align:center; justify-content:center; align-items:center;
 }
 @media (max-width:767px){ .home-story #ch8{padding-bottom:160px;} }
@@ -850,7 +824,13 @@ export function HomeStoryClient({ regions, challengeEntries }: Props) {
 @keyframes hs-burst{ to { transform:translate(calc(-50% + var(--bx)), calc(-50% + var(--by))); opacity:0; } }
 
 /* ── FULL-BLEED CINEMATIC CHAPTER BACKGROUNDS (CH1–CH8) ── */
-.home-story .chapter-bg-video{position:absolute; inset:0; z-index:0; overflow:hidden;}
+/* Fades to transparent at top/bottom so adjacent chapters blend into the
+   shared page background instead of cutting hard at the section boundary. */
+.home-story .chapter-bg-video{
+  position:absolute; inset:0; z-index:0; overflow:hidden;
+  -webkit-mask-image:linear-gradient(180deg, transparent 0%, black 24%, black 76%, transparent 100%);
+  mask-image:linear-gradient(180deg, transparent 0%, black 24%, black 76%, transparent 100%);
+}
 .home-story .chapter-bg-video .hs-video{
   position:absolute; inset:0; width:100%; height:100%;
   object-fit:cover; transform:scale(1.06);
@@ -870,7 +850,6 @@ export function HomeStoryClient({ regions, challengeEntries }: Props) {
 }
 .home-story .chapter-video-bg > .chapter-inner{position:relative; z-index:1;}
 .home-story .hs-motes{position:absolute; inset:0; z-index:3; pointer-events:none; width:100%; height:100%;}
-.home-story .hs-embers{position:absolute; inset:0; z-index:3; pointer-events:none; width:100%; height:100%;}
 
 .home-story .hs-bg-caption{
   position:absolute; left:24px; right:24px; bottom:76px; z-index:1;
@@ -946,7 +925,6 @@ export function HomeStoryClient({ regions, challengeEntries }: Props) {
   .home-story .map-pin circle:first-child{animation:none;}
   .home-story .ch2-lineart{animation:none;}
   .home-story .ch7-glow{animation:none;}
-  .home-story .chapter-inner{filter:none!important; transform:none!important;}
   .home-story .tech-step{opacity:1;transform:none;}
   .home-story .hs-cursor, .home-story .hs-bleed{display:none;}
 }
@@ -1140,7 +1118,6 @@ export function HomeStoryClient({ regions, challengeEntries }: Props) {
       {/* CH7 — CHAPTER 2 */}
       <section className="chapter chapter-video-bg" id="ch7">
         <ChapterBgVideo slug="bg-after-fire" alt="Fire going after the trip, the story already getting bigger" />
-        <canvas className="hs-embers" id="hs-embers" aria-hidden="true" />
         <div className="chapter-inner">
           <div className="ch-num reveal">CHAPTER SEVEN</div>
           <p className="ch7-q reveal d1">
