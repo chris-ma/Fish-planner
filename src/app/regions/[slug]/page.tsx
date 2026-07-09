@@ -43,7 +43,7 @@ const SHORT_MONTHS = ["","Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","
 const CATEGORY_BADGE_COLORS: Record<string, string> = {
   pelagic: "bg-blue-600",
   reef: "bg-orange-600",
-  estuary: "bg-teal-600",
+  estuary: "bg-[#2E5E4E]",
   inshore: "bg-sky-600",
   freshwater: "bg-emerald-600",
 };
@@ -133,15 +133,15 @@ export default async function RegionPage({ params }: { params: Promise<{ slug: s
   }).slice(0, 6);
 
   return (
-    <div className="bg-[#0A1C28] min-h-screen">
+    <div className="bg-[#0B1D2A] min-h-screen">
       {/* Hero Banner */}
-      <section className="relative bg-[#0A1C28] overflow-hidden">
+      <section className="relative bg-[#0B1D2A] overflow-hidden">
         <div
           className="absolute inset-0 bg-cover bg-center opacity-30"
           style={{ backgroundImage: `url('${heroImage}')` }}
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-[#0A1C28]/60 via-[#0A1C28]/40 to-[#0A1C28]" />
-        <div className="absolute bottom-0 left-1/4 w-[400px] h-[400px] bg-[#C99A3E]/10 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#0B1D2A]/60 via-[#0B1D2A]/40 to-[#0B1D2A]" />
+        <div className="absolute bottom-0 left-1/4 w-[400px] h-[400px] bg-[#FFC423]/10 rounded-full blur-3xl pointer-events-none" />
         <div className="absolute top-0 right-1/3 w-80 h-80 bg-blue-600/15 rounded-full blur-3xl pointer-events-none" />
 
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 py-12 pb-8">
@@ -165,14 +165,14 @@ export default async function RegionPage({ params }: { params: Promise<{ slug: s
             {ZONE_LABELS[region.zone] ?? region.zone} · {region.state}
           </div>
 
-          <h1 className="text-4xl font-bold text-[#EAE2D0] mt-3 mb-3">Fishing in {region.name}</h1>
+          <h1 className="text-4xl font-bold text-[#F2EDE2] mt-3 mb-3">Fishing in {region.name}</h1>
 
           {region.description && (
             <p className="text-white/60 max-w-2xl leading-relaxed mb-6">{region.description}</p>
           )}
 
           <Link href="/trips/new">
-            <button className="inline-flex items-center gap-2 bg-[#C99A3E] hover:bg-[#AD8232] text-[#0A1C28] font-medium px-5 py-2.5 rounded-xl transition-colors">
+            <button className="inline-flex items-center gap-2 bg-[#FFC423] hover:bg-[#D9A61C] text-[#0B1D2A] font-medium px-5 py-2.5 rounded-xl transition-colors">
               Plan a Trip Here
               <ArrowRight className="h-4 w-4" />
             </button>
@@ -186,7 +186,7 @@ export default async function RegionPage({ params }: { params: Promise<{ slug: s
           <div className="flex gap-6 min-w-max">
             <div className="flex items-center gap-2.5">
               <div className="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center shrink-0">
-                <Fish className="h-4 w-4 text-[#C99A3E]" />
+                <Fish className="h-4 w-4 text-[#FFC423]" />
               </div>
               <div>
                 <p className="text-white/40 text-[10px] uppercase tracking-wider font-semibold">Species</p>
@@ -221,8 +221,8 @@ export default async function RegionPage({ params }: { params: Promise<{ slug: s
         {topSpecies.length > 0 && (
           <section>
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-bold text-[#EAE2D0]">Top Target Species</h2>
-              <Link href="/species" className="text-sm text-[#C99A3E] hover:text-[#D9B15E] transition-colors">
+              <h2 className="text-lg font-bold text-[#F2EDE2]">Top Target Species</h2>
+              <Link href="/species" className="text-sm text-[#FFC423] hover:text-[#FFD666] transition-colors">
                 All species →
               </Link>
             </div>
@@ -261,8 +261,8 @@ export default async function RegionPage({ params }: { params: Promise<{ slug: s
         {/* Active this month */}
         {peakThisMonth.length > 0 && (
           <section>
-            <h2 className="text-lg font-bold text-[#EAE2D0] mb-3 flex items-center gap-2">
-              <Fish className="h-4 w-4 text-[#C99A3E]" />
+            <h2 className="text-lg font-bold text-[#F2EDE2] mb-3 flex items-center gap-2">
+              <Fish className="h-4 w-4 text-[#FFC423]" />
               Active this month — {MONTH_NAMES_FULL[month]}
             </h2>
             <div className="flex flex-wrap gap-2">
@@ -272,8 +272,8 @@ export default async function RegionPage({ params }: { params: Promise<{ slug: s
                   href={`/species/${sp.speciesSlug}`}
                   className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all hover:scale-105 ${
                     sp.months[month] === "peak"
-                      ? "bg-[#C99A3E] text-[#0A1C28]"
-                      : "bg-[#C99A3E]/30 text-[#D9B15E] border border-[#C99A3E]/40"
+                      ? "bg-[#FFC423] text-[#0B1D2A]"
+                      : "bg-[#FFC423]/30 text-[#FFD666] border border-[#FFC423]/40"
                   }`}
                 >
                   {sp.commonName}
@@ -285,7 +285,7 @@ export default async function RegionPage({ params }: { params: Promise<{ slug: s
 
         {/* Best Time to Visit — month activity grid */}
         <section>
-          <h2 className="text-lg font-bold text-[#EAE2D0] mb-4">Best Time to Visit</h2>
+          <h2 className="text-lg font-bold text-[#F2EDE2] mb-4">Best Time to Visit</h2>
           <div className="grid grid-cols-6 sm:grid-cols-12 gap-2">
             {SHORT_MONTHS.slice(1).map((label, i) => {
               const m = i + 1;
@@ -293,8 +293,8 @@ export default async function RegionPage({ params }: { params: Promise<{ slug: s
               const ratio = activity / maxActivity;
               const isNow = m === month;
               const intensity =
-                ratio >= 0.75 ? "bg-[#C99A3E] text-[#0A1C28]" :
-                ratio >= 0.45 ? "bg-[#C99A3E]/50 text-[#0A1C28]" :
+                ratio >= 0.75 ? "bg-[#FFC423] text-[#0B1D2A]" :
+                ratio >= 0.45 ? "bg-[#FFC423]/50 text-[#0B1D2A]" :
                 ratio >= 0.2  ? "bg-white/15 text-white/60" :
                                 "bg-white/5 text-white/30";
               return (
@@ -319,12 +319,12 @@ export default async function RegionPage({ params }: { params: Promise<{ slug: s
 
         {/* Seasonal Calendar */}
         <section>
-          <h2 className="text-lg font-bold text-[#EAE2D0] mb-2">12-Month Seasonal Calendar</h2>
+          <h2 className="text-lg font-bold text-[#F2EDE2] mb-2">12-Month Seasonal Calendar</h2>
           <p className="text-sm text-white/40 mb-5">
             Monthly ratings per species. Click a species to see all regions where it can be targeted.
           </p>
           {calendarData.length > 0 ? (
-            <div className="rounded-2xl overflow-hidden border border-white/10 bg-[#EAE2D0] p-4">
+            <div className="rounded-2xl overflow-hidden border border-white/10 bg-[#F2EDE2] p-4">
               <SeasonalCalendar rows={calendarData} highlightMonth={month} linkRowsTo="species" />
             </div>
           ) : (
@@ -404,8 +404,8 @@ export default async function RegionPage({ params }: { params: Promise<{ slug: s
         {relevantExperiences.length > 0 && (
           <section>
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-bold text-[#EAE2D0]">Fishing Experiences</h2>
-              <Link href="/trips/new" className="text-sm text-[#C99A3E] hover:text-[#D9B15E] transition-colors">
+              <h2 className="text-lg font-bold text-[#F2EDE2]">Fishing Experiences</h2>
+              <Link href="/trips/new" className="text-sm text-[#FFC423] hover:text-[#FFD666] transition-colors">
                 Plan a trip →
               </Link>
             </div>
@@ -414,7 +414,7 @@ export default async function RegionPage({ params }: { params: Promise<{ slug: s
                 const CATEGORY_COLORS: Record<string, string> = {
                   offshore: "bg-blue-900/50 text-blue-300 border-blue-800/50",
                   reef: "bg-orange-900/50 text-orange-300 border-orange-800/50",
-                  estuary: "bg-teal-900/50 text-teal-300 border-teal-800/50",
+                  estuary: "bg-[#2E5E4E]/50 text-[#8FC7AE] border-[#2E5E4E]/80",
                   inshore: "bg-sky-900/50 text-sky-300 border-sky-800/50",
                   freshwater: "bg-emerald-900/50 text-emerald-300 border-emerald-800/50",
                 };
@@ -422,9 +422,9 @@ export default async function RegionPage({ params }: { params: Promise<{ slug: s
                 const targetSlugs: string[] = JSON.parse(exp.targetSpeciesSlugs || "[]");
                 return (
                   <Link key={exp.id} href={`/trips/new?experience=${exp.slug}&region=${region.slug}`}>
-                    <div className="bg-[#0F2635] border border-white/10 rounded-xl p-4 hover:border-[#C99A3E]/50 transition-colors cursor-pointer group h-full">
+                    <div className="bg-[#0F2635] border border-white/10 rounded-xl p-4 hover:border-[#FFC423]/50 transition-colors cursor-pointer group h-full">
                       <div className="flex items-start justify-between gap-2 mb-2">
-                        <p className="font-semibold text-[#EAE2D0] text-sm group-hover:text-[#D9B15E] transition-colors leading-tight">{exp.name}</p>
+                        <p className="font-semibold text-[#F2EDE2] text-sm group-hover:text-[#FFD666] transition-colors leading-tight">{exp.name}</p>
                         <span className={`shrink-0 text-[10px] font-bold px-2 py-0.5 rounded-full border uppercase tracking-wide ${colorClass}`}>
                           {exp.category}
                         </span>
@@ -450,12 +450,12 @@ export default async function RegionPage({ params }: { params: Promise<{ slug: s
 
         {/* CTA */}
         <section className="bg-[#0F2635] border border-white/10 rounded-3xl p-10 text-center">
-          <h2 className="text-2xl font-bold mb-3 text-[#EAE2D0]">Ready to plan a trip to {region.name}?</h2>
+          <h2 className="text-2xl font-bold mb-3 text-[#F2EDE2]">Ready to plan a trip to {region.name}?</h2>
           <p className="text-white/50 mb-6 max-w-md mx-auto">
             Create a shared workspace, invite your crew, build a gear list, and store all your bookings in one place.
           </p>
           <Link href="/trips/new">
-            <button className="inline-flex items-center gap-2 bg-[#C99A3E] hover:bg-[#AD8232] text-[#0A1C28] font-medium px-6 py-2.5 rounded-xl transition-colors">
+            <button className="inline-flex items-center gap-2 bg-[#FFC423] hover:bg-[#D9A61C] text-[#0B1D2A] font-medium px-6 py-2.5 rounded-xl transition-colors">
               Plan This Trip
               <ArrowRight className="h-4 w-4" />
             </button>

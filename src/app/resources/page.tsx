@@ -165,11 +165,11 @@ export default function ResourcesPage() {
   return (
     <div>
       {/* Hero */}
-      <div className="relative bg-[#0A1C28] py-12 px-4 overflow-hidden">
-        <div className="absolute bottom-0 left-1/4 w-96 h-64 bg-[#C99A3E]/10 rounded-full blur-3xl pointer-events-none" />
+      <div className="relative bg-[#0B1D2A] py-12 px-4 overflow-hidden">
+        <div className="absolute bottom-0 left-1/4 w-96 h-64 bg-[#FFC423]/10 rounded-full blur-3xl pointer-events-none" />
         <div className="max-w-4xl mx-auto relative z-10">
-          <p className="text-[#C99A3E] text-sm font-semibold mb-2 tracking-wide uppercase">Regulations</p>
-          <h1 className="text-4xl md:text-5xl font-bold text-[#EAE2D0] mb-3">Fishing Resources</h1>
+          <p className="text-[#FFC423] text-sm font-semibold mb-2 tracking-wide uppercase">Regulations</p>
+          <h1 className="text-4xl md:text-5xl font-bold text-[#F2EDE2] mb-3">Fishing Resources</h1>
           <p className="text-white/60 max-w-xl leading-relaxed">
             Bag limits, size limits, and licensing requirements vary by state and change seasonally. Always check with your local fisheries authority before heading out.
           </p>
@@ -191,7 +191,7 @@ export default function ResourcesPage() {
               </div>
 
               {/* Links */}
-              <div className="divide-y bg-[#EAE2D0]">
+              <div className="divide-y bg-[#F2EDE2]">
                 {state.links.map((link) => (
                   <a
                     key={link.url}
@@ -200,9 +200,9 @@ export default function ResourcesPage() {
                     rel="noopener noreferrer"
                     className="flex items-start gap-3 px-5 py-4 hover:bg-slate-50 transition-colors group"
                   >
-                    <ExternalLink className="h-4 w-4 text-slate-400 shrink-0 mt-0.5 group-hover:text-[#C99A3E] transition-colors" />
+                    <ExternalLink className="h-4 w-4 text-slate-400 shrink-0 mt-0.5 group-hover:text-[#FFC423] transition-colors" />
                     <div>
-                      <p className="text-sm font-medium text-slate-900 group-hover:text-[#C99A3E] transition-colors">
+                      <p className="text-sm font-medium text-slate-900 group-hover:text-[#FFC423] transition-colors">
                         {link.label}
                       </p>
                       <p className="text-xs text-slate-500 mt-0.5 leading-relaxed">{link.desc}</p>
@@ -216,9 +216,9 @@ export default function ResourcesPage() {
 
         {/* National resources */}
         <div>
-          <div className="h-1 w-12 bg-[#C99A3E] rounded mb-3" />
-          <h2 className="text-xl font-bold text-[#C99A3E] mb-4">National & Federal Resources</h2>
-          <div className="divide-y border rounded-2xl bg-[#EAE2D0]">
+          <div className="h-1 w-12 bg-[#FFC423] rounded mb-3" />
+          <h2 className="text-xl font-bold text-[#FFC423] mb-4">National & Federal Resources</h2>
+          <div className="divide-y border rounded-2xl bg-[#F2EDE2]">
             {NATIONAL.map((item) => {
               const Icon = item.icon;
               return (
@@ -229,12 +229,12 @@ export default function ResourcesPage() {
                   rel="noopener noreferrer"
                   className="flex items-start gap-4 px-5 py-4 hover:bg-slate-50 transition-colors group"
                 >
-                  <div className="w-8 h-8 rounded-lg bg-slate-100 flex items-center justify-center shrink-0 group-hover:bg-[#C99A3E]/10 transition-colors">
-                    <Icon className="h-4 w-4 text-slate-500 group-hover:text-[#C99A3E] transition-colors" />
+                  <div className="w-8 h-8 rounded-lg bg-slate-100 flex items-center justify-center shrink-0 group-hover:bg-[#FFC423]/10 transition-colors">
+                    <Icon className="h-4 w-4 text-slate-500 group-hover:text-[#FFC423] transition-colors" />
                   </div>
                   <div className="flex-1">
                     <div className="flex items-center gap-1.5">
-                      <p className="text-sm font-medium text-slate-900 group-hover:text-[#C99A3E] transition-colors">
+                      <p className="text-sm font-medium text-slate-900 group-hover:text-[#FFC423] transition-colors">
                         {item.label}
                       </p>
                       <ExternalLink className="h-3 w-3 text-slate-400 shrink-0" />

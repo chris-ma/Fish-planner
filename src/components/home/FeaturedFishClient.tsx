@@ -19,7 +19,7 @@ interface SpeciesData {
 
 const RATING_STYLES: Record<string, string> = {
   peak: "bg-emerald-500/20 text-emerald-400 border-emerald-500/40",
-  good: "bg-[#C99A3E]/20 text-[#C99A3E] border-[#C99A3E]/40",
+  good: "bg-[#FFC423]/20 text-[#FFC423] border-[#FFC423]/40",
   fair: "bg-sky-500/20 text-sky-400 border-sky-500/40",
   poor: "bg-white/10 text-white/40 border-white/20",
 };
@@ -54,8 +54,8 @@ export function FeaturedFishClient({ month, monthName }: Props) {
   return (
     <section className="px-4 py-12 max-w-7xl mx-auto">
       <div className="mb-4">
-        <div className="h-1 w-12 bg-[#C99A3E] rounded mb-3" />
-        <h2 className="text-2xl font-bold text-[#C99A3E] mb-4">Featured Fish</h2>
+        <div className="h-1 w-12 bg-[#FFC423] rounded mb-3" />
+        <h2 className="text-2xl font-bold text-[#FFC423] mb-4">Featured Fish</h2>
       </div>
 
       <div className="rounded-2xl overflow-hidden bg-[#0F2635] border border-white/10 flex flex-col md:flex-row">
@@ -68,14 +68,14 @@ export function FeaturedFishClient({ month, monthName }: Props) {
         {/* Content */}
         <div className="flex-1 p-6 md:p-8 flex flex-col justify-between">
           <div>
-            <h3 className="text-2xl md:text-3xl font-bold text-[#EAE2D0] mb-1">
+            <h3 className="text-2xl md:text-3xl font-bold text-[#F2EDE2] mb-1">
               {speciesData.commonName}
             </h3>
             {speciesData.scientificName && (
               <p className="text-sm text-white/40 italic mb-4">{speciesData.scientificName}</p>
             )}
             {speciesData.description && (
-              <p className="text-[#EAE2D0]/70 text-sm leading-relaxed mb-6 line-clamp-3">
+              <p className="text-[#F2EDE2]/70 text-sm leading-relaxed mb-6 line-clamp-3">
                 {speciesData.description}
               </p>
             )}
@@ -105,7 +105,7 @@ export function FeaturedFishClient({ month, monthName }: Props) {
 
           <Link
             href={`/species/${speciesData.slug}`}
-            className="inline-flex items-center gap-2 text-[#C99A3E] text-sm font-semibold hover:text-[#D9B15E] transition-colors"
+            className="inline-flex items-center gap-2 text-[#FFC423] text-sm font-semibold hover:text-[#FFD666] transition-colors"
           >
             View full profile <ArrowRight className="h-4 w-4" />
           </Link>

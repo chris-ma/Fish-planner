@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 
 export default function LocalBusinessesPage() {
   return (
-    <div className="min-h-screen bg-[#0A1C28]">
+    <div className="min-h-screen bg-[#0B1D2A]">
       <div className="max-w-3xl mx-auto px-4 py-12">
         <Link
           href="/"
@@ -28,7 +28,7 @@ export default function LocalBusinessesPage() {
           <span className="text-amber-400 text-sm font-semibold uppercase tracking-wider">Community</span>
         </div>
 
-        <h1 className="text-4xl font-bold text-[#EAE2D0] mb-4 leading-tight">
+        <h1 className="text-4xl font-bold text-[#F2EDE2] mb-4 leading-tight">
           Why local businesses matter
         </h1>
         <p className="text-white/60 text-lg mb-12 leading-relaxed">
@@ -38,7 +38,7 @@ export default function LocalBusinessesPage() {
         <div className="space-y-12 text-white/75 leading-relaxed">
 
           <section>
-            <h2 className="text-xl font-bold text-[#EAE2D0] mb-4">Book a local charter</h2>
+            <h2 className="text-xl font-bold text-[#F2EDE2] mb-4">Book a local charter</h2>
             <p className="mb-3">
               A licensed charter operator knows their patch better than any article you'll read. They know where the fish were yesterday, what the current is doing at the reef, and which bait is working this week. That knowledge is worth more than any sounder or fishing app.
             </p>
@@ -48,7 +48,7 @@ export default function LocalBusinessesPage() {
           </section>
 
           <section>
-            <h2 className="text-xl font-bold text-[#EAE2D0] mb-4">Finding the right guide</h2>
+            <h2 className="text-xl font-bold text-[#F2EDE2] mb-4">Finding the right guide</h2>
             <p className="mb-3">
               Word of mouth beats Google reviews in the fishing world. Ask in local Facebook fishing groups, at the tackle shop counter, or at the boat ramp. The regulars will point you to the operators who run honest trips.
             </p>
@@ -58,7 +58,7 @@ export default function LocalBusinessesPage() {
           </section>
 
           <section>
-            <h2 className="text-xl font-bold text-[#EAE2D0] mb-4">The independent tackle shop</h2>
+            <h2 className="text-xl font-bold text-[#F2EDE2] mb-4">The independent tackle shop</h2>
             <p className="mb-3">
               Chain stores have their place for bulk consumables. But the independent tackle shop is where you learn. The person behind the counter fishes the same water you're heading to. They'll tell you what's working, what isn't, and why — something no algorithm can replicate.
             </p>
@@ -68,7 +68,7 @@ export default function LocalBusinessesPage() {
           </section>
 
           <section>
-            <h2 className="text-xl font-bold text-[#EAE2D0] mb-4">Respecting charter guides</h2>
+            <h2 className="text-xl font-bold text-[#F2EDE2] mb-4">Respecting charter guides</h2>
             <p className="mb-3">
               A charter is not just a service. The guide is responsible for your safety, their vessel, and the reputation of their business. Follow their instructions on the water — especially around safety equipment, fish handling, and fishing technique. If they ask you to put down the rod, put it down.
             </p>
@@ -78,7 +78,7 @@ export default function LocalBusinessesPage() {
           </section>
 
           <section>
-            <h2 className="text-xl font-bold text-[#EAE2D0] mb-4">The bait shop and the ramp operator</h2>
+            <h2 className="text-xl font-bold text-[#F2EDE2] mb-4">The bait shop and the ramp operator</h2>
             <p className="mb-3">
               The person running the bait shop at 4am, the ramp operator collecting launch fees, the caravan park right by the estuary — these businesses exist because of fishing. When they're gone, the infrastructure around the sport starts to hollow out.
             </p>
@@ -88,7 +88,7 @@ export default function LocalBusinessesPage() {
           </section>
 
           <section>
-            <h2 className="text-xl font-bold text-[#EAE2D0] mb-4">Leave a review that helps</h2>
+            <h2 className="text-xl font-bold text-[#F2EDE2] mb-4">Leave a review that helps</h2>
             <p>
               A good review for a charter or tackle shop is worth more than any paid ad. Be specific: what you caught, how the guide handled the day, whether the gear was well-maintained. Bad reviews happen — if something went genuinely wrong, say so honestly but fairly. The best operators in this industry have built their reputation on trust, not on gaming search results.
             </p>

@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 
 export default function SustainabilityPage() {
   return (
-    <div className="min-h-screen bg-[#0A1C28]">
+    <div className="min-h-screen bg-[#0B1D2A]">
       <div className="max-w-3xl mx-auto px-4 py-12">
         <Link
           href="/"
@@ -28,7 +28,7 @@ export default function SustainabilityPage() {
           <span className="text-green-400 text-sm font-semibold uppercase tracking-wider">Community</span>
         </div>
 
-        <h1 className="text-4xl font-bold text-[#EAE2D0] mb-4 leading-tight">
+        <h1 className="text-4xl font-bold text-[#F2EDE2] mb-4 leading-tight">
           Catch, cook & sustainability
         </h1>
         <p className="text-white/60 text-lg mb-12 leading-relaxed">
@@ -38,7 +38,7 @@ export default function SustainabilityPage() {
         <div className="space-y-12 text-white/75 leading-relaxed">
 
           <section>
-            <h2 className="text-xl font-bold text-[#EAE2D0] mb-4">Which species are good to eat?</h2>
+            <h2 className="text-xl font-bold text-[#F2EDE2] mb-4">Which species are good to eat?</h2>
             <p className="mb-3">
               Most Australian recreational target species are excellent eating when handled correctly. Flathead, bream, whiting, snapper, coral trout, and barramundi are all superb table fish. Mulloway (jewfish) is underrated. Tailor is best eaten the same day.
             </p>
@@ -51,7 +51,7 @@ export default function SustainabilityPage() {
           </section>
 
           <section>
-            <h2 className="text-xl font-bold text-[#EAE2D0] mb-4">Minimum sizes — why they matter</h2>
+            <h2 className="text-xl font-bold text-[#F2EDE2] mb-4">Minimum sizes — why they matter</h2>
             <p className="mb-3">
               Minimum legal sizes are set to ensure fish have spawned at least once before they're taken. A bream below 25cm hasn't yet contributed to the next generation. Returning undersized fish is not just a legal requirement — it's the most effective single thing you can do to maintain healthy populations.
             </p>
@@ -61,7 +61,7 @@ export default function SustainabilityPage() {
           </section>
 
           <section>
-            <h2 className="text-xl font-bold text-[#EAE2D0] mb-4">Bleeding and icing: quality starts at the water</h2>
+            <h2 className="text-xl font-bold text-[#F2EDE2] mb-4">Bleeding and icing: quality starts at the water</h2>
             <p className="mb-3">
               A poorly handled fish that's been flopping in a live well for two hours is worth half the eating quality of a fish that was bled immediately and put straight onto ice. The process is simple: spike or cut the gills (a brain spike kills the fish instantly and humanely), let it bleed into the water for thirty seconds, then pack into an ice slurry — not just ice, but ice and water in roughly equal amounts so the fish is surrounded by cold, not just sitting on it.
             </p>
@@ -71,7 +71,7 @@ export default function SustainabilityPage() {
           </section>
 
           <section>
-            <h2 className="text-xl font-bold text-[#EAE2D0] mb-4">Invasive species: carp and redfin</h2>
+            <h2 className="text-xl font-bold text-[#F2EDE2] mb-4">Invasive species: carp and redfin</h2>
             <p className="mb-3">
               European carp are one of the most destructive invasive species in Australian freshwater. They root through the bottom, cloud the water, and collapse the aquatic plant systems that native fish depend on. In most states, it is illegal to return a carp to the water once caught — they must be killed and disposed of on land.
             </p>
@@ -84,7 +84,7 @@ export default function SustainabilityPage() {
           </section>
 
           <section>
-            <h2 className="text-xl font-bold text-[#EAE2D0] mb-4">Seasonal closures and spawning</h2>
+            <h2 className="text-xl font-bold text-[#F2EDE2] mb-4">Seasonal closures and spawning</h2>
             <p className="mb-3">
               Many species have seasonal closures or size restrictions that coincide with spawning periods. Murray cod are protected during their spawning season (September to November in most states). Barramundi have seasonal closures in northern fisheries. Snapper in some south-eastern zones have annual closures.
             </p>
@@ -94,7 +94,7 @@ export default function SustainabilityPage() {
           </section>
 
           <section>
-            <h2 className="text-xl font-bold text-[#EAE2D0] mb-4">Camp cooking and the fish on the fire</h2>
+            <h2 className="text-xl font-bold text-[#F2EDE2] mb-4">Camp cooking and the fish on the fire</h2>
             <p>
               Eating fish you've caught, cooked over a camp fire or on a gas stove on the back of the boat, is one of the most satisfying things you can do in this sport. Keep it simple: barramundi fillets with butter, salt, and lime on a camp fire grill. Whiting whole-bodied in the coals. Flathead fish tacos with cabbage slaw and lime crema on a tailgate. The fish has never been fresher. Nothing compares.
             </p>

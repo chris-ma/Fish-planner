@@ -16,7 +16,7 @@ export const metadata: Metadata = { robots: { index: false, follow: false } };
 
 const STATUS_COLORS: Record<string, string> = {
   planning: "bg-slate-100 text-slate-700",
-  confirmed: "bg-blue-100 text-blue-700",
+  confirmed: "bg-[#2E5E4E]/10 text-[#2E5E4E]",
   active: "bg-emerald-100 text-emerald-700",
   completed: "bg-purple-100 text-purple-700",
   cancelled: "bg-red-100 text-red-700",
@@ -69,8 +69,8 @@ export default async function TripOverviewPage({ params }: { params: Promise<{ i
   return (
     <div>
       {/* Ocean hero header */}
-      <div className="relative bg-[#0A1C28] py-10 px-4 overflow-hidden">
-        <div className="absolute bottom-0 right-1/4 w-96 h-64 bg-[#C99A3E]/10 rounded-full blur-3xl pointer-events-none" />
+      <div className="relative bg-[#0B1D2A] py-10 px-4 overflow-hidden">
+        <div className="absolute bottom-0 right-1/4 w-96 h-64 bg-[#FFC423]/10 rounded-full blur-3xl pointer-events-none" />
         <div className="max-w-4xl mx-auto relative z-10">
           <div className="flex items-start justify-between gap-4 flex-wrap">
             <div>
@@ -87,7 +87,7 @@ export default async function TripOverviewPage({ params }: { params: Promise<{ i
                   </span>
                 )}
               </div>
-              <h1 className="text-3xl font-bold text-[#EAE2D0] mb-1">{trip.title}</h1>
+              <h1 className="text-3xl font-bold text-[#F2EDE2] mb-1">{trip.title}</h1>
               <p className="text-white/50 text-sm flex items-center gap-1.5">
                 <Calendar className="h-3.5 w-3.5" />
                 {formatDateRange(trip.startDate, trip.endDate)}
@@ -106,12 +106,12 @@ export default async function TripOverviewPage({ params }: { params: Promise<{ i
       {targetSpecies.length > 0 && (
         <div className="mb-6">
           <div className="flex items-center gap-2 mb-3 text-sm font-medium text-[#0F2635]">
-            <Fish className="h-4 w-4 text-[#C99A3E]" />
+            <Fish className="h-4 w-4 text-[#FFC423]" />
             Target species
           </div>
           <div className="flex flex-wrap gap-2">
             {targetSpecies.map((name) => (
-              <span key={name} className="px-3 py-1 rounded-full text-sm bg-teal-50 text-[#AD8232] border border-teal-200">{name}</span>
+              <span key={name} className="px-3 py-1 rounded-full text-sm bg-[#FFC423]/10 text-[#D9A61C] border border-[#FFC423]/25">{name}</span>
             ))}
           </div>
         </div>
@@ -122,10 +122,10 @@ export default async function TripOverviewPage({ params }: { params: Promise<{ i
         <div className="mb-6">
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center gap-2 text-sm font-medium text-[#0F2635]">
-              <Calendar className="h-4 w-4 text-[#C99A3E]" />
+              <Calendar className="h-4 w-4 text-[#FFC423]" />
               Trip Schedule
             </div>
-            <Link href="/trips/new" className="text-xs text-[#AD8232] hover:underline">
+            <Link href="/trips/new" className="text-xs text-[#D9A61C] hover:underline">
               Edit
             </Link>
           </div>
@@ -135,7 +135,7 @@ export default async function TripOverviewPage({ params }: { params: Promise<{ i
               if (Array.isArray(dayValue) && dayValue.length > 0 && "startTime" in (dayValue[0] ?? {})) {
                 const events = [...(dayValue as ScheduleEvent[])].sort((a, b) => a.startTime.localeCompare(b.startTime));
                 return (
-                  <div key={day} className="bg-[#EAE2D0] rounded-xl p-3">
+                  <div key={day} className="bg-[#F2EDE2] rounded-xl p-3">
                     <div className="flex items-center justify-between mb-2">
                       <p className="text-xs font-semibold text-slate-500">
                         {new Date(day + "T12:00:00").toLocaleDateString("en-AU", { weekday: "short", day: "numeric", month: "short" })}
@@ -151,7 +151,7 @@ export default async function TripOverviewPage({ params }: { params: Promise<{ i
                         <span className="text-slate-400 text-xs shrink-0 font-mono">{evt.startTime}–{evt.endTime}</span>
                         <span className="text-[#0F2635] text-xs">
                           {evt.activity}
-                          {evt.species.length > 0 && <span className="text-teal-700"> — {evt.species.join(", ")}</span>}
+                          {evt.species.length > 0 && <span className="text-[#2E5E4E]"> — {evt.species.join(", ")}</span>}
                         </span>
                       </div>
                     ))}
@@ -168,7 +168,7 @@ export default async function TripOverviewPage({ params }: { params: Promise<{ i
               });
               if (!hasEntries) return null;
               return (
-                <div key={day} className="bg-[#EAE2D0] rounded-xl p-3">
+                <div key={day} className="bg-[#F2EDE2] rounded-xl p-3">
                   <div className="flex items-center justify-between mb-2">
                     <p className="text-xs font-semibold text-slate-500">
                       {new Date(day + "T12:00:00").toLocaleDateString("en-AU", { weekday: "short", day: "numeric", month: "short" })}
@@ -210,8 +210,8 @@ export default async function TripOverviewPage({ params }: { params: Promise<{ i
           <Card className="hover:shadow-lg transition-all duration-200 cursor-pointer border-0 shadow-sm rounded-2xl">
             <CardContent className="p-5">
               <div className="flex items-center gap-3 mb-2">
-                <div className="w-10 h-10 bg-teal-500/10 rounded-xl flex items-center justify-center">
-                  <Package className="h-5 w-5 text-[#C99A3E]" />
+                <div className="w-10 h-10 bg-[#FFC423]/10 rounded-xl flex items-center justify-center">
+                  <Package className="h-5 w-5 text-[#FFC423]" />
                 </div>
                 <h3 className="font-semibold text-[#0F2635]">Gear List</h3>
               </div>
@@ -271,13 +271,13 @@ export default async function TripOverviewPage({ params }: { params: Promise<{ i
         </Link>
 
         <Link href={`/trips/${id}/field`}>
-          <Card className="hover:shadow-lg transition-all duration-200 cursor-pointer border-0 shadow-sm rounded-2xl bg-[#0A1C28]">
+          <Card className="hover:shadow-lg transition-all duration-200 cursor-pointer border-0 shadow-sm rounded-2xl bg-[#0B1D2A]">
             <CardContent className="p-5">
               <div className="flex items-center gap-3 mb-2">
-                <div className="w-10 h-10 bg-teal-500/20 rounded-xl flex items-center justify-center">
-                  <Smartphone className="h-5 w-5 text-teal-400" />
+                <div className="w-10 h-10 bg-[#2E5E4E]/20 rounded-xl flex items-center justify-center">
+                  <Smartphone className="h-5 w-5 text-[#6FA88F]" />
                 </div>
-                <h3 className="font-semibold text-[#EAE2D0]">Field Mode</h3>
+                <h3 className="font-semibold text-[#F2EDE2]">Field Mode</h3>
               </div>
               <p className="text-sm text-white/50">Tides, maps &amp; crew on your phone</p>
             </CardContent>
@@ -312,7 +312,7 @@ export default async function TripOverviewPage({ params }: { params: Promise<{ i
               ))}
             </div>
             {bookings.length > 3 && (
-              <Link href={`/trips/${id}/bookings`} className="text-sm text-[#AD8232] hover:underline block mt-2">
+              <Link href={`/trips/${id}/bookings`} className="text-sm text-[#D9A61C] hover:underline block mt-2">
                 View all {bookings.length} bookings
               </Link>
             )}

@@ -116,14 +116,14 @@ export function HomeStoryClient({ regions, challengeEntries }: Props) {
     <div className="home-story" ref={rootRef}>
       <style dangerouslySetInnerHTML={{ __html: `
 .home-story{
-  --ocean:#0A1C28; --ocean-2:#0F2635; --slate:#1C2E35;
-  --gold:#C99A3E; --gold-d:#AD8232;
-  --sandstone:#EAE2D0; --paper:#F6F3EA;
+  --ocean:#0B1D2A; --ocean-2:#0F2635; --slate:#1C2E35;
+  --gold:#FFC423; --gold-d:#D9A61C;
+  --sandstone:#F2EDE2; --paper:#F6F3EA;
   --river:#5F7A5C;
   --quiet:#7A9BAA;
   --rule-d:rgba(234,226,208,0.1);
   --hs-ease:cubic-bezier(0.25,0.1,0.25,1);
-  font-family:var(--font-lato),sans-serif;
+  font-family:var(--font-sora),sans-serif;
   color:var(--sandstone);
   line-height:1.65;
   -webkit-font-smoothing:antialiased;
@@ -133,7 +133,7 @@ export function HomeStoryClient({ regions, challengeEntries }: Props) {
     radial-gradient(ellipse 70% 50% at 85% 30%, rgba(15,38,53,0.55) 0%, transparent 60%),
     radial-gradient(ellipse 60% 40% at 20% 60%, rgba(201,154,62,0.04) 0%, transparent 55%),
     radial-gradient(ellipse 80% 55% at 90% 85%, rgba(15,38,53,0.5) 0%, transparent 60%),
-    linear-gradient(180deg, #0A1C28 0%, #081620 40%, #0A1C28 70%, #091822 100%);
+    linear-gradient(180deg, #0B1D2A 0%, #081620 40%, #0B1D2A 70%, #091822 100%);
 }
 .home-story a{color:inherit;text-decoration:none;}
 .home-story .hs-serif{font-family:var(--font-fraunces),serif;}
@@ -144,7 +144,7 @@ export function HomeStoryClient({ regions, challengeEntries }: Props) {
   background:rgba(10,28,40,0.85);backdrop-filter:blur(6px);
   border:1px solid var(--rule-d);
   color:var(--gold);
-  font-family:var(--font-jbmono),monospace;
+  font-family:var(--font-sora),sans-serif;
   font-size:11px;letter-spacing:1px;text-transform:uppercase;
   padding:9px 16px;border-radius:100px;
   transition:border-color .2s;
@@ -166,7 +166,7 @@ export function HomeStoryClient({ regions, challengeEntries }: Props) {
 .home-story .hs-ch-dot::after{
   content:attr(data-label);
   position:absolute; right:20px; top:50%; transform:translateY(-50%);
-  font-family:var(--font-jbmono),monospace;
+  font-family:var(--font-sora),sans-serif;
   font-size:10px; letter-spacing:1px; text-transform:uppercase;
   color:var(--quiet); white-space:nowrap;
   opacity:0; pointer-events:none; transition:opacity .2s;
@@ -190,7 +190,7 @@ export function HomeStoryClient({ regions, challengeEntries }: Props) {
 .home-story .chapter-inner{max-width:900px;margin:0 auto;width:100%;}
 
 .home-story .ch-num{
-  font-family:var(--font-jbmono),monospace;
+  font-family:var(--font-sora),sans-serif;
   font-size:12px; color:var(--gold); letter-spacing:3px;
   margin-bottom:18px; display:flex;align-items:center;gap:10px;
 }
@@ -202,6 +202,7 @@ export function HomeStoryClient({ regions, challengeEntries }: Props) {
   font-size:clamp(32px,6vw,64px);
   line-height:1.05; letter-spacing:-1.5px; margin-bottom:20px;
 }
+.home-story h1.ch-title{font-weight:900;}
 .home-story .ch-title em{font-style:italic;font-weight:400;color:var(--gold);}
 
 .home-story .ch-body{
@@ -223,7 +224,7 @@ export function HomeStoryClient({ regions, challengeEntries }: Props) {
 .home-story #ch1{background:radial-gradient(ellipse 90% 60% at 70% 100%, rgba(15,38,53,0.55) 0%, transparent 65%);}
 .home-story .trophy-meta{
   display:flex; gap:28px; flex-wrap:wrap;
-  font-family:var(--font-jbmono),monospace;
+  font-family:var(--font-sora),sans-serif;
   font-size:12px; color:var(--quiet); letter-spacing:0.5px;
   border-top:1px solid var(--rule-d); padding-top:20px; margin-top:12px;
 }
@@ -231,7 +232,7 @@ export function HomeStoryClient({ regions, challengeEntries }: Props) {
 .home-story .scroll-cue{
   position:absolute; bottom:36px; left:24px;
   display:flex; align-items:center; gap:10px;
-  font-family:var(--font-jbmono),monospace; font-size:10px;
+  font-family:var(--font-sora),sans-serif; font-size:10px;
   letter-spacing:2px; text-transform:uppercase; color:var(--quiet);
 }
 @media (min-width:768px){ .home-story .scroll-cue{left:48px;} }
@@ -245,7 +246,7 @@ export function HomeStoryClient({ regions, challengeEntries }: Props) {
   margin-top:8px; max-width:520px;
 }
 .home-story .sp-fact{background:rgba(234,226,208,0.02); padding:18px;}
-.home-story .sp-fact-l{font-family:var(--font-jbmono),monospace;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--quiet);margin-bottom:6px;}
+.home-story .sp-fact-l{font-family:var(--font-sora),sans-serif;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--quiet);margin-bottom:6px;}
 .home-story .sp-fact-v{font-size:16px;color:var(--sandstone);}
 .home-story .sp-latin{font-style:italic; color:var(--quiet); font-size:14px; margin-bottom:24px;}
 
@@ -253,7 +254,7 @@ export function HomeStoryClient({ regions, challengeEntries }: Props) {
 .home-story .tech-steps{display:flex;flex-direction:column;max-width:600px;}
 .home-story .tech-step{display:flex; gap:20px; padding:20px 0; border-bottom:1px solid var(--rule-d);}
 .home-story .tech-step:last-child{border-bottom:none;}
-.home-story .tech-step-n{font-family:var(--font-jbmono),monospace;color:var(--gold);font-size:14px;flex-shrink:0;width:24px;}
+.home-story .tech-step-n{font-family:var(--font-sora),sans-serif;color:var(--gold);font-size:14px;flex-shrink:0;width:24px;}
 .home-story .tech-step-t{font-size:15px;color:rgba(234,226,208,0.7);font-weight:300;line-height:1.6;}
 .home-story .tech-step-t strong{color:var(--sandstone);font-weight:500;}
 .home-story .gear-tag{
@@ -277,8 +278,8 @@ export function HomeStoryClient({ regions, challengeEntries }: Props) {
 }
 .home-story .region-row:hover{padding-left:12px;}
 .home-story .region-row-name{font-family:var(--font-fraunces),serif; font-size:22px;}
-.home-story .region-row-meta{font-family:var(--font-jbmono),monospace; font-size:11px; color:var(--quiet);}
-.home-story .region-row-score{font-family:var(--font-jbmono),monospace; font-size:13px; color:#7FA97B;}
+.home-story .region-row-meta{font-family:var(--font-sora),sans-serif; font-size:11px; color:var(--quiet);}
+.home-story .region-row-score{font-family:var(--font-sora),sans-serif; font-size:13px; color:#6FA88F; font-weight:600;}
 
 /* ── CH5 — CREW ── */
 .home-story .crew-split{display:grid;grid-template-columns:1fr;gap:40px;}
@@ -302,7 +303,7 @@ export function HomeStoryClient({ regions, challengeEntries }: Props) {
 }
 .home-story .challenge-mini:hover{border-color:rgba(201,154,62,0.4);}
 .home-story .challenge-mini-num{font-family:var(--font-fraunces),serif;font-size:36px;color:var(--gold);line-height:1;}
-.home-story .challenge-mini-lbl{font-family:var(--font-jbmono),monospace;font-size:10px;color:var(--quiet);letter-spacing:1px;text-transform:uppercase;margin:6px 0 14px;}
+.home-story .challenge-mini-lbl{font-family:var(--font-sora),sans-serif;font-size:10px;color:var(--quiet);letter-spacing:1px;text-transform:uppercase;margin:6px 0 14px;}
 .home-story .challenge-mini-name{font-size:15px;color:var(--sandstone);font-weight:500;}
 
 /* ── CH6 — COUNTDOWN ── */
@@ -316,7 +317,7 @@ export function HomeStoryClient({ regions, challengeEntries }: Props) {
   font-size:clamp(48px,10vw,90px);
   color:var(--gold); line-height:1; margin:24px 0 8px;
 }
-.home-story .countdown-lbl{font-family:var(--font-jbmono),monospace;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--quiet);}
+.home-story .countdown-lbl{font-family:var(--font-sora),sans-serif;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--quiet);}
 
 /* ── CH7 — CHAPTER 2 ── */
 .home-story #ch7{background:var(--ocean);}
@@ -336,7 +337,7 @@ export function HomeStoryClient({ regions, challengeEntries }: Props) {
 @media (max-width:767px){ .home-story #ch8{padding-bottom:160px;} }
 .home-story #ch8 .chapter-inner{display:flex;flex-direction:column;align-items:center;}
 .home-story .ask-title{
-  font-family:var(--font-fraunces),serif; font-weight:600;
+  font-family:var(--font-fraunces),serif; font-weight:900;
   font-size:clamp(30px,5vw,52px); margin-bottom:32px; max-width:560px;
 }
 .home-story .cta-btn{
@@ -349,7 +350,7 @@ export function HomeStoryClient({ regions, challengeEntries }: Props) {
 .home-story .cta-btn:hover{background:var(--gold-d);}
 .home-story .cta-note{
   margin-top:18px; font-size:12px; color:var(--quiet);
-  font-family:var(--font-jbmono),monospace; letter-spacing:0.5px;
+  font-family:var(--font-sora),sans-serif; letter-spacing:0.5px;
 }
 
 /* ── FULL-BLEED BLENDED PHOTOGRAPHY ── */
@@ -384,7 +385,7 @@ export function HomeStoryClient({ regions, challengeEntries }: Props) {
 .home-story .photo-caption{
   display:flex; align-items:center; justify-content:space-between;
   padding:14px 24px 0;
-  font-family:var(--font-jbmono),monospace;
+  font-family:var(--font-sora),sans-serif;
   font-size:10.5px; letter-spacing:0.5px; color:var(--quiet);
 }
 @media (min-width:768px){ .home-story .photo-caption{padding:14px 48px 0;} }
@@ -415,7 +416,7 @@ export function HomeStoryClient({ regions, challengeEntries }: Props) {
   100%{r:14; opacity:0;}
 }
 .home-story .map-label{
-  font-family:var(--font-jbmono),monospace; font-size:9px; fill:var(--quiet);
+  font-family:var(--font-sora),sans-serif; font-size:9px; fill:var(--quiet);
   letter-spacing:0.5px; text-transform:uppercase;
 }
 
@@ -428,7 +429,7 @@ export function HomeStoryClient({ regions, challengeEntries }: Props) {
 @keyframes hs-blinkCursor{50%{border-color:transparent;}}
 .home-story .rv-badge{
   display:none; align-items:center; gap:8px;
-  font-family:var(--font-jbmono),monospace;
+  font-family:var(--font-sora),sans-serif;
   font-size:11px; color:var(--gold);
   background:rgba(201,154,62,0.08);
   border:1px solid rgba(201,154,62,0.2);

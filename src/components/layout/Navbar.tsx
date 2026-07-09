@@ -13,10 +13,10 @@ export function Navbar() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 flex h-14 items-center justify-between">
         <Link href="/" className="flex items-center gap-2.5">
           <span className="flex items-center justify-center w-8 h-8 rounded-lg bg-ocean-500">
-            <Compass className="h-4 w-4 text-[#0A1C28]" />
+            <Compass className="h-4 w-4 text-[#0B1D2A]" />
           </span>
           <span
-            className="font-semibold text-[#EAE2D0] text-xl"
+            className="font-black text-[#F2EDE2] text-xl"
             style={{ fontFamily: "var(--font-fraunces), Georgia, serif" }}
           >
             Fish Tripper

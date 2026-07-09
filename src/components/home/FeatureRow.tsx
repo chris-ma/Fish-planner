@@ -24,10 +24,10 @@ export function FeatureRow({ href, image, imageAlt, title, body, cta }: FeatureR
         />
       </div>
       <div className="flex-1 p-5 md:p-6 flex flex-col justify-center">
-        <p className="font-bold text-[#C99A3E] text-base md:text-lg mb-1.5">{title}</p>
+        <p className="font-bold text-[#FFC423] text-base md:text-lg mb-1.5">{title}</p>
         <p className="text-slate-600 text-sm leading-relaxed">{body}</p>
         {cta && (
-          <span className="mt-3 inline-block text-[#C99A3E] text-xs font-semibold group-hover:text-[#AD8232] transition-colors w-fit">
+          <span className="mt-3 inline-block text-[#FFC423] text-xs font-semibold group-hover:text-[#D9A61C] transition-colors w-fit">
             {cta}
           </span>
         )}

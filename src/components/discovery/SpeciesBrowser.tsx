@@ -17,7 +17,7 @@ const CATEGORIES = [
 const CATEGORY_BADGE_COLORS: Record<string, string> = {
   pelagic: "bg-blue-600",
   reef: "bg-orange-600",
-  estuary: "bg-teal-600",
+  estuary: "bg-[#2E5E4E]",
   inshore: "bg-sky-600",
   freshwater: "bg-emerald-600",
 };
@@ -31,7 +31,7 @@ export function SpeciesBrowser({ species }: { species: Species[] }) {
       : species.filter((s) => s.category === activeCategory);
 
   return (
-    <div className="bg-[#EAE2D0]">
+    <div className="bg-[#F2EDE2]">
       {/* Category filter tabs */}
       <div className="px-4 sm:px-6 pt-5 overflow-x-auto">
         <div className="flex gap-2 pb-4 min-w-max">
@@ -41,7 +41,7 @@ export function SpeciesBrowser({ species }: { species: Species[] }) {
               onClick={() => setActiveCategory(cat.value)}
               className={`px-4 py-1.5 rounded-full text-sm font-medium whitespace-nowrap transition-colors border ${
                 activeCategory === cat.value
-                  ? "border-[#C99A3E] text-[#C99A3E] bg-[#C99A3E]/10"
+                  ? "border-[#FFC423] text-[#FFC423] bg-[#FFC423]/10"
                   : "border-[#0F2635]/20 text-[#0F2635]/50 hover:border-[#0F2635]/40 hover:text-[#0F2635]/70"
               }`}
             >

@@ -37,7 +37,7 @@ export function IntentSearch() {
             onClick={() => setMode("species")}
             className={`px-4 py-1.5 rounded-full text-sm font-semibold transition-all ${
               mode === "species"
-                ? "bg-[#C99A3E] text-[#0A1C28]"
+                ? "bg-[#FFC423] text-[#0B1D2A]"
                 : "bg-white/10 text-white/70 hover:bg-white/20"
             }`}
           >
@@ -47,7 +47,7 @@ export function IntentSearch() {
             onClick={() => setMode("location")}
             className={`px-4 py-1.5 rounded-full text-sm font-semibold transition-all ${
               mode === "location"
-                ? "bg-[#C99A3E] text-[#0A1C28]"
+                ? "bg-[#FFC423] text-[#0B1D2A]"
                 : "bg-white/10 text-white/70 hover:bg-white/20"
             }`}
           >

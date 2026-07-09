@@ -24,7 +24,7 @@ function IntentBanner({ commonName }: Props) {
     <div className="mb-5 bg-white/10 border border-white/20 rounded-xl px-4 py-3 backdrop-blur-sm">
       <div className="flex items-center justify-between gap-4 flex-wrap">
         <div className="flex items-center gap-2 text-white/80 text-sm min-w-0">
-          <MapPin className="h-4 w-4 text-[#C99A3E] shrink-0" />
+          <MapPin className="h-4 w-4 text-[#FFC423] shrink-0" />
           <span className="truncate">
             <span className="text-white font-semibold">{commonName}</span>
             {regionName && (
@@ -43,7 +43,7 @@ function IntentBanner({ commonName }: Props) {
         </div>
         <Link
           href={`/trips/new?region=${regionSlug}&species=${encodeURIComponent(commonName)}`}
-          className="inline-flex items-center gap-1.5 bg-[#C99A3E] hover:bg-[#AD8232] text-[#0A1C28] text-sm font-semibold px-4 py-2 rounded-lg transition-colors shrink-0"
+          className="inline-flex items-center gap-1.5 bg-[#FFC423] hover:bg-[#D9A61C] text-[#0B1D2A] text-sm font-semibold px-4 py-2 rounded-lg transition-colors shrink-0"
         >
           Plan This Trip
           <ArrowRight className="h-3.5 w-3.5" />

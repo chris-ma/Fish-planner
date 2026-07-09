@@ -25,8 +25,8 @@ function AvatarImg({ src, fallback, className }: { src: string; fallback: string
   const [broken, setBroken] = useState(false);
   if (broken) {
     return (
-      <div className="w-8 h-8 rounded-full bg-[#C99A3E]/20 flex items-center justify-center shrink-0">
-        <span className="text-xs font-bold text-[#C99A3E]">{fallback}</span>
+      <div className="w-8 h-8 rounded-full bg-[#FFC423]/20 flex items-center justify-center shrink-0">
+        <span className="text-xs font-bold text-[#FFC423]">{fallback}</span>
       </div>
     );
   }
@@ -186,11 +186,11 @@ export default function ChallengeDetailClient({
           style={{ backgroundImage: `url(${challenge.image})` }}
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-black/10" />
-        <div className="absolute top-0 left-0 right-0 h-1 bg-[#C99A3E]" />
+        <div className="absolute top-0 left-0 right-0 h-1 bg-[#FFC423]" />
         <div className="absolute bottom-0 left-0 right-0 p-6 md:p-10">
           <Link
             href="/challenges"
-            className="text-[#C99A3E] text-xs font-semibold mb-3 inline-block hover:underline"
+            className="text-[#FFC423] text-xs font-semibold mb-3 inline-block hover:underline"
           >
             ← All Challenges
           </Link>
@@ -204,8 +204,8 @@ export default function ChallengeDetailClient({
         {/* Leaderboard / Gallery */}
         <section>
           <div className="mb-5">
-            <div className="h-1 w-12 bg-[#C99A3E] rounded mb-3" />
-            <h2 className="text-xl font-bold text-[#C99A3E]">
+            <div className="h-1 w-12 bg-[#FFC423] rounded mb-3" />
+            <h2 className="text-xl font-bold text-[#FFC423]">
               {isGallery ? "Gallery" : "Leaderboard"}
             </h2>
           </div>
@@ -258,11 +258,11 @@ export default function ChallengeDetailClient({
                     <AvatarImg
                       src={currentUserAvatarUrl}
                       fallback={initials(e.catcherName)}
-                      className="w-8 h-8 rounded-full object-cover shrink-0 border border-[#C99A3E]/30"
+                      className="w-8 h-8 rounded-full object-cover shrink-0 border border-[#FFC423]/30"
                     />
                   ) : (
-                    <div className="w-8 h-8 rounded-full bg-[#C99A3E]/20 flex items-center justify-center shrink-0">
-                      <span className="text-xs font-bold text-[#C99A3E]">{initials(e.catcherName)}</span>
+                    <div className="w-8 h-8 rounded-full bg-[#FFC423]/20 flex items-center justify-center shrink-0">
+                      <span className="text-xs font-bold text-[#FFC423]">{initials(e.catcherName)}</span>
                     </div>
                   )}
                   <div className="flex-1 min-w-0">
@@ -272,7 +272,7 @@ export default function ChallengeDetailClient({
                     )}
                   </div>
                   <div className="text-right shrink-0">
-                    <p className="font-bold text-sm text-[#C99A3E]">
+                    <p className="font-bold text-sm text-[#FFC423]">
                       {e.metric} {challenge.unit}
                     </p>
                     <p className="text-xs text-slate-400">{formatDate(e.caughtAt)}</p>
@@ -289,8 +289,8 @@ export default function ChallengeDetailClient({
         {/* Log Your Entry */}
         <section>
           <div className="mb-5">
-            <div className="h-1 w-12 bg-[#C99A3E] rounded mb-3" />
-            <h2 className="text-xl font-bold text-[#C99A3E]">
+            <div className="h-1 w-12 bg-[#FFC423] rounded mb-3" />
+            <h2 className="text-xl font-bold text-[#FFC423]">
               {challenge.dataSource === "bucket_list" ? "How to Enter" : "Log Your Entry"}
             </h2>
           </div>
@@ -302,7 +302,7 @@ export default function ChallengeDetailClient({
               </p>
               <Link
                 href="/bucket-list"
-                className="inline-block bg-[#C99A3E] hover:bg-[#AD8232] text-[#0A1C28] font-semibold py-2.5 px-6 rounded-xl text-sm transition-colors"
+                className="inline-block bg-[#FFC423] hover:bg-[#D9A61C] text-[#0B1D2A] font-semibold py-2.5 px-6 rounded-xl text-sm transition-colors"
               >
                 Go to my Bucket List →
               </Link>
@@ -319,7 +319,7 @@ export default function ChallengeDetailClient({
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 placeholder="e.g. Mick"
-                className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#C99A3E]/30"
+                className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#FFC423]/30"
               />
             </div>
 
@@ -334,7 +334,7 @@ export default function ChallengeDetailClient({
                   value={lengthCm}
                   onChange={(e) => setLengthCm(e.target.value)}
                   placeholder="e.g. 87.5"
-                  className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#C99A3E]/30"
+                  className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#FFC423]/30"
                 />
               </div>
             )}
@@ -348,7 +348,7 @@ export default function ChallengeDetailClient({
                   value={weightKg}
                   onChange={(e) => setWeightKg(e.target.value)}
                   placeholder="e.g. 2.3"
-                  className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#C99A3E]/30"
+                  className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#FFC423]/30"
                 />
               </div>
             )}
@@ -363,7 +363,7 @@ export default function ChallengeDetailClient({
                     value={lengthCm}
                     onChange={(e) => setLengthCm(e.target.value)}
                     placeholder="e.g. 60"
-                    className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#C99A3E]/30"
+                    className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#FFC423]/30"
                   />
                 </div>
                 <div>
@@ -375,7 +375,7 @@ export default function ChallengeDetailClient({
                     value={lineWeightLb}
                     onChange={(e) => setLineWeightLb(e.target.value)}
                     placeholder="e.g. 2"
-                    className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#C99A3E]/30"
+                    className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#FFC423]/30"
                   />
                 </div>
               </div>
@@ -395,7 +395,7 @@ export default function ChallengeDetailClient({
                   <select
                     value={species}
                     onChange={(e) => setSpecies(e.target.value)}
-                    className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#C99A3E]/30"
+                    className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#FFC423]/30"
                   >
                     <option value="">Select species…</option>
                     {SPECIES_OPTIONS.map((s) => (
@@ -414,7 +414,7 @@ export default function ChallengeDetailClient({
                   type="datetime-local"
                   value={caughtAt}
                   onChange={(e) => setCaughtAt(e.target.value)}
-                  className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#C99A3E]/30"
+                  className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#FFC423]/30"
                 />
               </div>
             </div>
@@ -426,7 +426,7 @@ export default function ChallengeDetailClient({
                 value={location}
                 onChange={(e) => setLocation(e.target.value)}
                 placeholder="e.g. Jervis Bay"
-                className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#C99A3E]/30"
+                className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#FFC423]/30"
               />
             </div>
 
@@ -435,20 +435,20 @@ export default function ChallengeDetailClient({
               <label className="block text-xs font-semibold text-slate-600 mb-1">
                 {challenge.dataSource === "instagram" ? "Instagram Post URL" : "Photo URL"}{" "}
                 {isGallery && challenge.dataSource !== "instagram" && (
-                  <span className="text-[#C99A3E] font-normal">(encouraged)</span>
+                  <span className="text-[#FFC423] font-normal">(encouraged)</span>
                 )}
               </label>
               <input
                 value={photoUrl}
                 onChange={(e) => setPhotoUrl(e.target.value)}
                 placeholder={challenge.dataSource === "instagram" ? "https://www.instagram.com/p/…" : "https://…"}
-                className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#C99A3E]/30"
+                className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#FFC423]/30"
               />
               {challenge.dataSource === "instagram" && challenge.hashtags && (
                 <p className="text-xs text-slate-400 mt-1">
                   Remember to tag{" "}
                   {challenge.hashtags.map((h) => (
-                    <span key={h} className="text-[#C99A3E] font-semibold">#{h}</span>
+                    <span key={h} className="text-[#FFC423] font-semibold">#{h}</span>
                   ))}{" "}
                   in your post before submitting.
                 </p>
@@ -463,13 +463,13 @@ export default function ChallengeDetailClient({
                 onChange={(e) => setNotes(e.target.value)}
                 rows={2}
                 placeholder="Story, conditions, brag…"
-                className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#C99A3E]/30 resize-none"
+                className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#FFC423]/30 resize-none"
               />
             </div>
 
             {error && <p className="text-red-500 text-xs">{error}</p>}
             {submitted && (
-              <p className="text-[#C99A3E] text-xs font-semibold">
+              <p className="text-[#FFC423] text-xs font-semibold">
                 Entry logged! Leaderboard updated.
               </p>
             )}
@@ -477,7 +477,7 @@ export default function ChallengeDetailClient({
             <button
               type="submit"
               disabled={submitting}
-              className="w-full bg-[#C99A3E] hover:bg-[#AD8232] disabled:opacity-60 text-[#0A1C28] font-semibold py-2.5 rounded-xl transition-colors text-sm"
+              className="w-full bg-[#FFC423] hover:bg-[#D9A61C] disabled:opacity-60 text-[#0B1D2A] font-semibold py-2.5 rounded-xl transition-colors text-sm"
             >
               {submitting ? "Submitting…" : "Submit Entry"}
             </button>

@@ -36,16 +36,16 @@ export default async function TripsIndexPage() {
     .orderBy(trips.createdAt);
 
   return (
-    <div className="bg-[#EAE2D0] min-h-screen">
-      <div className="relative bg-[#0A1C28] pt-24 pb-12 px-4 overflow-hidden">
-        <div className="absolute bottom-0 left-1/4 w-96 h-64 bg-[#C99A3E]/10 rounded-full blur-3xl pointer-events-none" />
+    <div className="bg-[#F2EDE2] min-h-screen">
+      <div className="relative bg-[#0B1D2A] pt-24 pb-12 px-4 overflow-hidden">
+        <div className="absolute bottom-0 left-1/4 w-96 h-64 bg-[#FFC423]/10 rounded-full blur-3xl pointer-events-none" />
         <div className="max-w-5xl mx-auto relative z-10 flex items-end justify-between gap-4 flex-wrap">
           <div>
-            <h1 className="text-4xl md:text-5xl font-bold text-[#EAE2D0] mb-2">My Trips</h1>
+            <h1 className="text-4xl md:text-5xl font-bold text-[#F2EDE2] mb-2">My Trips</h1>
             <p className="text-white/60 max-w-xl">Every trip you've planned, in one place.</p>
           </div>
           <Link href="/trips/new">
-            <button className="inline-flex items-center gap-2 bg-[#C99A3E] hover:bg-[#AD8232] text-[#0A1C28] font-semibold px-5 py-2.5 rounded-xl transition-colors text-sm">
+            <button className="inline-flex items-center gap-2 bg-[#FFC423] hover:bg-[#D9A61C] text-[#0B1D2A] font-semibold px-5 py-2.5 rounded-xl transition-colors text-sm">
               <Plus className="h-4 w-4" /> New Trip
             </button>
           </Link>
@@ -57,7 +57,7 @@ export default async function TripsIndexPage() {
           <div className="flex flex-col items-center justify-center py-20 text-center">
             <p className="text-slate-500 mb-6">You haven't planned a trip yet.</p>
             <Link href="/trips/new">
-              <button className="inline-flex items-center gap-2 bg-[#C99A3E] hover:bg-[#AD8232] text-[#0A1C28] font-semibold px-6 py-3 rounded-xl transition-colors text-sm">
+              <button className="inline-flex items-center gap-2 bg-[#FFC423] hover:bg-[#D9A61C] text-[#0B1D2A] font-semibold px-6 py-3 rounded-xl transition-colors text-sm">
                 Build a Trip Plan <ArrowRight className="h-4 w-4" />
               </button>
             </Link>

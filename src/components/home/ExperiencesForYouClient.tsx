@@ -15,7 +15,7 @@ type ParsedExperience = {
 const CATEGORY_COLORS: Record<string, string> = {
   offshore: "bg-blue-500/20 text-blue-300",
   reef: "bg-orange-500/20 text-orange-300",
-  estuary: "bg-teal-500/20 text-teal-300",
+  estuary: "bg-[#2E5E4E]/30 text-[#8FC7AE]",
   inshore: "bg-cyan-500/20 text-cyan-300",
   freshwater: "bg-emerald-500/20 text-emerald-300",
 };
@@ -52,8 +52,8 @@ export function ExperiencesForYouClient({ experiences }: { experiences: ParsedEx
   return (
     <section>
       <div className="mb-4">
-        <div className="h-1 w-12 bg-[#C99A3E] rounded mb-3" />
-        <h2 className="text-2xl font-bold text-[#C99A3E]">Experiences you might like</h2>
+        <div className="h-1 w-12 bg-[#FFC423] rounded mb-3" />
+        <h2 className="text-2xl font-bold text-[#FFC423]">Experiences you might like</h2>
         <p className="text-sm text-slate-500 mt-1">Based on your favourite fish.</p>
       </div>
       <div className="flex gap-4 overflow-x-auto pb-3 snap-x snap-mandatory">
@@ -77,7 +77,7 @@ export function ExperiencesForYouClient({ experiences }: { experiences: ParsedEx
                   {exp.category}
                 </span>
                 <p className="text-white font-bold text-sm leading-tight mb-1">{exp.name}</p>
-                <p className="text-[#C99A3E] text-xs font-semibold group-hover:text-[#D9B15E] transition-colors">
+                <p className="text-[#FFC423] text-xs font-semibold group-hover:text-[#FFD666] transition-colors">
                   Plan this trip →
                 </p>
               </div>

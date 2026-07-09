@@ -30,7 +30,7 @@ export function SeasonalCalendar({ rows, highlightMonth, linkRowsTo }: SeasonalC
               key={m}
               className={cn(
                 "text-center text-xs font-medium py-1 rounded",
-                highlightMonth === i + 1 ? "text-[#AD8232] bg-teal-50 font-bold" : "text-muted-foreground"
+                highlightMonth === i + 1 ? "text-[#D9A61C] bg-teal-50 font-bold" : "text-muted-foreground"
               )}
             >
               {m}
@@ -44,7 +44,7 @@ export function SeasonalCalendar({ rows, highlightMonth, linkRowsTo }: SeasonalC
             <div key={row.slug} className="grid grid-cols-[160px_repeat(12,1fr)] gap-px items-center">
               <Link
                 href={`/${linkRowsTo}/${row.slug}`}
-                className="text-xs font-medium text-foreground hover:text-[#AD8232] truncate pr-2 leading-tight"
+                className="text-xs font-medium text-foreground hover:text-[#D9A61C] truncate pr-2 leading-tight"
               >
                 {row.label}
               </Link>
@@ -55,7 +55,7 @@ export function SeasonalCalendar({ rows, highlightMonth, linkRowsTo }: SeasonalC
                   className={cn(
                     "h-7 rounded text-[10px] flex items-center justify-center font-medium transition-opacity",
                     rating ? ratingColor(rating as Rating) : "bg-slate-100 text-slate-300",
-                    highlightMonth === i + 1 && "ring-2 ring-[#C99A3E] ring-offset-1"
+                    highlightMonth === i + 1 && "ring-2 ring-[#FFC423] ring-offset-1"
                   )}
                 >
                   {rating === "peak" ? "P" : rating === "good" ? "G" : rating === "fair" ? "F" : ""}

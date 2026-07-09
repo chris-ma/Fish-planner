@@ -12,7 +12,7 @@ import type { TripParticipant, ChecklistItem, TripNote, TripTask } from "@/db/sc
 type Availability = "going" | "tentative" | "out";
 
 const AVAIL: Record<Availability, { label: string; active: string; inactive: string }> = {
-  going:     { label: "Going",     active: "bg-teal-100 text-teal-800 border-teal-300",   inactive: "border-slate-200 text-slate-400" },
+  going:     { label: "Going",     active: "bg-[#2E5E4E]/10 text-[#2E5E4E] border-[#2E5E4E]/30",   inactive: "border-slate-200 text-slate-400" },
   tentative: { label: "Tentative", active: "bg-amber-100 text-amber-800 border-amber-300", inactive: "border-slate-200 text-slate-400" },
   out:       { label: "Out",       active: "bg-red-100 text-red-700 border-red-300",       inactive: "border-slate-200 text-slate-400" },
 };

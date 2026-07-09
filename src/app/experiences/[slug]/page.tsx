@@ -18,7 +18,7 @@ import { breadcrumbSchema } from "@/lib/seo/breadcrumbs";
 const CATEGORY_BADGE: Record<string, string> = {
   offshore:   "bg-blue-500/20 text-blue-300",
   reef:       "bg-orange-500/20 text-orange-300",
-  estuary:    "bg-teal-500/20 text-teal-300",
+  estuary:    "bg-[#2E5E4E]/30 text-[#8FC7AE]",
   inshore:    "bg-cyan-500/20 text-cyan-300",
   freshwater: "bg-emerald-500/20 text-emerald-300",
 };
@@ -88,7 +88,7 @@ export default async function ExperiencePage({ params }: { params: Promise<{ slu
   const categoryImageUrl = CATEGORY_IMAGE[exp.category] ?? CATEGORY_IMAGE.offshore;
 
   return (
-    <div className="bg-[#0F2635] min-h-screen text-[#EAE2D0]">
+    <div className="bg-[#0F2635] min-h-screen text-[#F2EDE2]">
       {/* Hero */}
       <div className="relative py-16 px-4 overflow-hidden">
         {/* Background tinted image from category */}
@@ -118,7 +118,7 @@ export default async function ExperiencePage({ params }: { params: Promise<{ slu
           <h1 className="text-4xl md:text-5xl font-bold mb-4">{exp.name}</h1>
           <p className="text-white/70 text-lg max-w-2xl mb-8">{exp.description}</p>
           <Link href={`/trips/new?experience=${exp.slug}`}>
-            <button className="bg-[#C99A3E] hover:bg-[#AD8232] text-[#0A1C28] font-semibold px-6 py-3 rounded-xl transition-colors">
+            <button className="bg-[#FFC423] hover:bg-[#D9A61C] text-[#0B1D2A] font-semibold px-6 py-3 rounded-xl transition-colors">
               Plan this trip →
             </button>
           </Link>
@@ -128,8 +128,8 @@ export default async function ExperiencePage({ params }: { params: Promise<{ slu
       <div className="max-w-4xl mx-auto px-4 pb-16 space-y-12">
         {/* Target Species */}
         <section>
-          <div className="h-1 w-12 bg-[#C99A3E] rounded mb-3" />
-          <h2 className="text-2xl font-bold text-[#C99A3E] mb-6">Target Species</h2>
+          <div className="h-1 w-12 bg-[#FFC423] rounded mb-3" />
+          <h2 className="text-2xl font-bold text-[#FFC423] mb-6">Target Species</h2>
           <div className="flex flex-wrap gap-3">
             {speciesSlugs.map((s) => (
               <Link key={s} href={`/species/${s}`}>
@@ -144,12 +144,12 @@ export default async function ExperiencePage({ params }: { params: Promise<{ slu
         {/* Fishing Locations grouped by region */}
         {locationRows.length > 0 && (
           <section>
-            <div className="h-1 w-12 bg-[#C99A3E] rounded mb-3" />
-            <h2 className="text-2xl font-bold text-[#C99A3E] mb-6">Fishing Locations</h2>
+            <div className="h-1 w-12 bg-[#FFC423] rounded mb-3" />
+            <h2 className="text-2xl font-bold text-[#FFC423] mb-6">Fishing Locations</h2>
             <div className="grid md:grid-cols-2 gap-6">
               {Array.from(groupedLocations.entries()).map(([regionId, { region, dests }]) => (
                 <div key={regionId} className="bg-white/5 rounded-2xl p-5 border border-white/10">
-                  <Link href={`/regions/${region.slug}`} className="font-bold text-[#C99A3E] hover:underline text-lg mb-3 block">
+                  <Link href={`/regions/${region.slug}`} className="font-bold text-[#FFC423] hover:underline text-lg mb-3 block">
                     {region.name}
                   </Link>
                   <ul className="space-y-2">
@@ -166,12 +166,12 @@ export default async function ExperiencePage({ params }: { params: Promise<{ slu
         {/* Fishing Tips */}
         {tips.length > 0 && (
           <section>
-            <div className="h-1 w-12 bg-[#C99A3E] rounded mb-3" />
-            <h2 className="text-2xl font-bold text-[#C99A3E] mb-6">Fishing Tips</h2>
+            <div className="h-1 w-12 bg-[#FFC423] rounded mb-3" />
+            <h2 className="text-2xl font-bold text-[#FFC423] mb-6">Fishing Tips</h2>
             <ol className="space-y-4">
               {tips.map((tip, i) => (
                 <li key={i} className="flex gap-4 bg-white/5 rounded-2xl p-5 border border-white/10">
-                  <span className="shrink-0 w-7 h-7 rounded-full bg-[#C99A3E] text-[#0A1C28] text-sm font-bold flex items-center justify-center mt-0.5">
+                  <span className="shrink-0 w-7 h-7 rounded-full bg-[#FFC423] text-[#0B1D2A] text-sm font-bold flex items-center justify-center mt-0.5">
                     {i + 1}
                   </span>
                   <p className="text-white/80 text-sm leading-relaxed">{tip}</p>
@@ -184,8 +184,8 @@ export default async function ExperiencePage({ params }: { params: Promise<{ slu
         {/* Gear Setup */}
         {gearSpecs.length > 0 && (
           <section>
-            <div className="h-1 w-12 bg-[#C99A3E] rounded mb-3" />
-            <h2 className="text-2xl font-bold text-[#C99A3E] mb-6">Gear Setup</h2>
+            <div className="h-1 w-12 bg-[#FFC423] rounded mb-3" />
+            <h2 className="text-2xl font-bold text-[#FFC423] mb-6">Gear Setup</h2>
             <div className="space-y-6">
               {gearSpecs.map((gear) => {
                 const rows: { label: string; value: string }[] = [

@@ -8,11 +8,11 @@ export function Footer() {
         <div className="grid grid-cols-2 md:grid-cols-5 gap-8 mb-8">
           <div className="col-span-2 md:col-span-1">
             <div
-              className="flex items-center gap-2 font-semibold text-white mb-3"
+              className="flex items-center gap-2 font-black text-white mb-3"
               style={{ fontFamily: "var(--font-fraunces), Georgia, serif" }}
             >
               <span className="flex items-center justify-center w-7 h-7 rounded-lg bg-ocean-500">
-                <Compass className="h-3.5 w-3.5 text-[#0A1C28]" />
+                <Compass className="h-3.5 w-3.5 text-[#0B1D2A]" />
               </span>
               Fish Tripper 🌊
             </div>

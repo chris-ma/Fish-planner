@@ -189,7 +189,7 @@ function CalendarPicker({
     const isStart = dateStr === startDate;
     const isEnd = dateStr === endDate;
     const inRange = startDate && endDate && dateStr > startDate && dateStr < endDate;
-    if (isStart || isEnd) return "bg-[#C99A3E] text-[#0A1C28] rounded-full font-semibold";
+    if (isStart || isEnd) return "bg-[#FFC423] text-[#0B1D2A] rounded-full font-semibold";
     if (inRange) return "bg-teal-100 text-teal-800";
     return "hover:bg-slate-100 rounded-full";
   }
@@ -258,7 +258,7 @@ function StepProgress({ current, total }: { current: number; total: number }) {
           <div
             key={i}
             className={`h-1.5 flex-1 rounded-full transition-all duration-300 ${
-              i + 1 <= current ? "bg-[#C99A3E]" : "bg-slate-200"
+              i + 1 <= current ? "bg-[#FFC423]" : "bg-slate-200"
             }`}
           />
         ))}
@@ -539,11 +539,11 @@ function NewTripForm() {
   return (
     <div>
       {/* Hero */}
-      <div className="relative bg-[#0A1C28] py-12 px-4 overflow-hidden">
-        <div className="absolute bottom-0 left-1/4 w-96 h-64 bg-[#C99A3E]/10 rounded-full blur-3xl pointer-events-none" />
+      <div className="relative bg-[#0B1D2A] py-12 px-4 overflow-hidden">
+        <div className="absolute bottom-0 left-1/4 w-96 h-64 bg-[#FFC423]/10 rounded-full blur-3xl pointer-events-none" />
         <div className="absolute top-0 right-1/4 w-64 h-64 bg-blue-600/10 rounded-full blur-3xl pointer-events-none" />
         <div className="max-w-2xl mx-auto relative z-10">
-          <h1 className="text-4xl font-bold text-[#EAE2D0] mb-2">Plan a Trip</h1>
+          <h1 className="text-4xl font-bold text-[#F2EDE2] mb-2">Plan a Trip</h1>
           <p className="text-white/60">Create a shareable workspace for your crew in seconds.</p>
         </div>
       </div>
@@ -557,9 +557,9 @@ function NewTripForm() {
               <a
                 key={trip.id}
                 href={`/trips/${trip.id}`}
-                className="shrink-0 w-48 bg-white rounded-xl border border-slate-200 p-3.5 hover:border-[#C99A3E] hover:shadow-sm transition-all group"
+                className="shrink-0 w-48 bg-white rounded-xl border border-slate-200 p-3.5 hover:border-[#FFC423] hover:shadow-sm transition-all group"
               >
-                <p className="font-semibold text-[#0F2635] text-sm leading-tight line-clamp-2 group-hover:text-[#C99A3E] transition-colors">
+                <p className="font-semibold text-[#0F2635] text-sm leading-tight line-clamp-2 group-hover:text-[#FFC423] transition-colors">
                   {trip.title}
                 </p>
                 {(trip.startDate || trip.endDate) && (
@@ -586,7 +586,7 @@ function NewTripForm() {
       )}
 
       <div className="max-w-2xl mx-auto px-4 sm:px-6 py-10">
-        <div className="bg-[#EAE2D0] rounded-2xl p-6 shadow-sm border border-slate-100">
+        <div className="bg-[#F2EDE2] rounded-2xl p-6 shadow-sm border border-slate-100">
           <StepProgress current={currentStep} total={6} />
 
           <h2 className="text-2xl font-bold text-[#0F2635] mb-6">
@@ -616,7 +616,7 @@ function NewTripForm() {
                 endDate={form.endDate}
                 onSelect={(s, e) => setForm((f) => ({ ...f, startDate: s, endDate: e }))}
               />
-              <p className="text-xs text-[#AD8232] bg-teal-50 rounded-xl px-4 py-2.5">
+              <p className="text-xs text-[#D9A61C] bg-teal-50 rounded-xl px-4 py-2.5">
                 {MONTH_NAMES_FULL[month]} is an active month for many Australian coastal species.
               </p>
             </div>
@@ -633,7 +633,7 @@ function NewTripForm() {
                     const region = REGION_OPTIONS.find((r) => r.slug === slug);
                     if (!region) return null;
                     return (
-                      <span key={slug} className="flex items-center gap-1 px-3 py-1 bg-[#C99A3E] text-[#0A1C28] rounded-full text-sm font-medium">
+                      <span key={slug} className="flex items-center gap-1 px-3 py-1 bg-[#FFC423] text-[#0B1D2A] rounded-full text-sm font-medium">
                         {region.name}
                         <button type="button" onClick={() => toggleRegion(slug)} className="ml-0.5 hover:text-white/70">
                           <X className="h-3 w-3" />
@@ -659,7 +659,7 @@ function NewTripForm() {
               />
 
               {activeZonesFromSpecies.size > 0 && filteredRegions.length < REGION_OPTIONS.length && (
-                <p className="text-xs text-[#AD8232]">
+                <p className="text-xs text-[#D9A61C]">
                   Showing {filteredRegions.length} region{filteredRegions.length !== 1 ? "s" : ""} where your target species are active
                 </p>
               )}
@@ -674,13 +674,13 @@ function NewTripForm() {
                       onClick={() => toggleRegion(r.slug)}
                       className={`w-full text-left px-3 py-2.5 rounded-xl text-sm border transition-all flex items-center justify-between ${
                         selected
-                          ? "border-[#C99A3E] bg-teal-50 text-[#AD8232] font-medium"
+                          ? "border-[#FFC423] bg-teal-50 text-[#D9A61C] font-medium"
                           : "border-slate-200 bg-white text-slate-700 hover:border-slate-300"
                       }`}
                     >
                       {r.name}
                       {selected && (
-                        <span className="w-4 h-4 rounded-full bg-[#C99A3E] flex items-center justify-center shrink-0">
+                        <span className="w-4 h-4 rounded-full bg-[#FFC423] flex items-center justify-center shrink-0">
                           <Check className="h-2.5 w-2.5 text-white" />
                         </span>
                       )}
@@ -713,7 +713,7 @@ function NewTripForm() {
                     const CATEGORY_COLORS: Record<string, string> = {
                       offshore: "bg-blue-50 text-blue-700 border-blue-200",
                       reef: "bg-orange-50 text-orange-700 border-orange-200",
-                      estuary: "bg-teal-50 text-teal-700 border-teal-200",
+                      estuary: "bg-[#2E5E4E]/10 text-[#2E5E4E] border-[#2E5E4E]/30",
                       inshore: "bg-sky-50 text-sky-700 border-sky-200",
                       freshwater: "bg-emerald-50 text-emerald-700 border-emerald-200",
                     };
@@ -734,12 +734,12 @@ function NewTripForm() {
                         }}
                         className={`w-full text-left px-3 py-3 rounded-xl border transition-all ${
                           isSelected
-                            ? "border-[#C99A3E] bg-teal-50"
+                            ? "border-[#FFC423] bg-teal-50"
                             : "border-slate-200 bg-white hover:border-slate-300"
                         }`}
                       >
                         <div className="flex items-start justify-between gap-2 mb-1">
-                          <p className={`font-semibold text-sm ${isSelected ? "text-[#AD8232]" : "text-[#0F2635]"}`}>{exp.name}</p>
+                          <p className={`font-semibold text-sm ${isSelected ? "text-[#D9A61C]" : "text-[#0F2635]"}`}>{exp.name}</p>
                           <span className={`shrink-0 text-[10px] font-bold px-2 py-0.5 rounded-full border uppercase tracking-wide ${badgeColor}`}>
                             {exp.category}
                           </span>
@@ -781,11 +781,11 @@ function NewTripForm() {
                           }
                           className={`w-full text-left px-3 py-2 rounded-lg border text-sm transition-all flex items-center gap-2 ${
                             checked
-                              ? "border-[#C99A3E] bg-teal-50 text-[#AD8232]"
+                              ? "border-[#FFC423] bg-teal-50 text-[#D9A61C]"
                               : "border-slate-200 bg-white text-slate-700 hover:border-slate-300"
                           }`}
                         >
-                          <div className={`w-4 h-4 rounded border shrink-0 flex items-center justify-center ${checked ? "bg-[#C99A3E] border-[#C99A3E]" : "border-slate-300"}`}>
+                          <div className={`w-4 h-4 rounded border shrink-0 flex items-center justify-center ${checked ? "bg-[#FFC423] border-[#FFC423]" : "border-slate-300"}`}>
                             {checked && <Check className="h-2.5 w-2.5 text-white" />}
                           </div>
                           <span className="font-medium">{dest.name}</span>
@@ -873,7 +873,7 @@ function NewTripForm() {
                           <button
                             type="button"
                             onClick={() => openDialog(dayKey)}
-                            className="flex items-center gap-1.5 text-xs text-[#C99A3E] hover:text-[#AD8232] font-medium py-0.5 transition-colors"
+                            className="flex items-center gap-1.5 text-xs text-[#FFC423] hover:text-[#D9A61C] font-medium py-0.5 transition-colors"
                           >
                             <Plus className="h-3.5 w-3.5" />
                             Add event
@@ -924,8 +924,8 @@ function NewTripForm() {
                                   onClick={() => toggleEventSpecies(sp)}
                                   className={`px-2.5 py-0.5 rounded-full text-xs border transition-all ${
                                     eventForm.species.includes(sp)
-                                      ? "bg-[#C99A3E] text-[#0A1C28] border-[#C99A3E]"
-                                      : "border-slate-200 text-slate-600 hover:border-[#C99A3E]"
+                                      ? "bg-[#FFC423] text-[#0B1D2A] border-[#FFC423]"
+                                      : "border-slate-200 text-slate-600 hover:border-[#FFC423]"
                                   }`}
                                 >
                                   {sp}
@@ -982,7 +982,7 @@ function NewTripForm() {
                     )}
                   </div>
                   {selectedRegions.length > 0 && filteredSpecies.length < SPECIES_OPTIONS.length && (
-                    <p className="text-xs text-[#AD8232]">
+                    <p className="text-xs text-[#D9A61C]">
                       Showing {filteredSpecies.length} species active in the selected region{selectedRegions.length !== 1 ? "s" : ""}
                     </p>
                   )}
@@ -994,8 +994,8 @@ function NewTripForm() {
                         onClick={() => toggleSpecies(name)}
                         className={`px-3 py-1.5 rounded-full text-sm border transition-all ${
                           selectedSpecies.includes(name)
-                            ? "bg-[#C99A3E] text-[#0A1C28] border-[#C99A3E]"
-                            : "border-slate-200 text-slate-600 hover:border-[#C99A3E] hover:text-[#AD8232]"
+                            ? "bg-[#FFC423] text-[#0B1D2A] border-[#FFC423]"
+                            : "border-slate-200 text-slate-600 hover:border-[#FFC423] hover:text-[#D9A61C]"
                         }`}
                       >
                         {name}
@@ -1040,7 +1040,7 @@ function NewTripForm() {
                     {selectedRegions.map((slug) => {
                       const region = REGION_OPTIONS.find((r) => r.slug === slug);
                       return region ? (
-                        <span key={slug} className="px-3 py-1 rounded-full text-sm bg-teal-50 text-[#AD8232] border border-teal-200">
+                        <span key={slug} className="px-3 py-1 rounded-full text-sm bg-teal-50 text-[#D9A61C] border border-teal-200">
                           {region.name}
                         </span>
                       ) : null;
@@ -1105,7 +1105,7 @@ function NewTripForm() {
                 type="button"
                 onClick={goNext}
                 disabled={!canAdvance[currentStep]}
-                className="inline-flex items-center gap-1.5 bg-[#C99A3E] hover:bg-[#AD8232] disabled:opacity-40 disabled:cursor-not-allowed text-[#0A1C28] font-semibold px-5 py-2.5 rounded-xl transition-colors text-sm"
+                className="inline-flex items-center gap-1.5 bg-[#FFC423] hover:bg-[#D9A61C] disabled:opacity-40 disabled:cursor-not-allowed text-[#0B1D2A] font-semibold px-5 py-2.5 rounded-xl transition-colors text-sm"
               >
                 Next
                 <ArrowRight className="h-4 w-4" />

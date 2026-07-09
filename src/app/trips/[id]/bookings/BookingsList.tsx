@@ -81,7 +81,7 @@ function AffiliateSuggestions({ type, regionName }: { type: string; regionName: 
         <p className="text-xs font-semibold text-teal-800 mb-2">Find fishing charters in {location}</p>
         <div className="flex flex-wrap gap-2">
           <a href={viatorUrl(location)} target="_blank" rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-lg bg-[#C99A3E] text-[#0A1C28] hover:bg-[#AD8232] transition-colors">
+            className="inline-flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-lg bg-[#FFC423] text-[#0B1D2A] hover:bg-[#D9A61C] transition-colors">
             Viator <ExternalLink className="h-3 w-3 opacity-70" />
           </a>
         </div>

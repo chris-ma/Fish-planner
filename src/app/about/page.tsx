@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 
 export default function AboutPage() {
   return (
-    <div className="min-h-screen bg-[#0A1C28]">
+    <div className="min-h-screen bg-[#0B1D2A]">
       <div className="max-w-3xl mx-auto px-4 py-12">
         <Link
           href="/"
@@ -22,13 +22,13 @@ export default function AboutPage() {
         </Link>
 
         <div className="flex items-center gap-3 mb-4">
-          <div className="w-10 h-10 rounded-xl bg-[#C99A3E]/20 flex items-center justify-center">
-            <Compass className="h-5 w-5 text-[#C99A3E]" />
+          <div className="w-10 h-10 rounded-xl bg-[#FFC423]/20 flex items-center justify-center">
+            <Compass className="h-5 w-5 text-[#FFC423]" />
           </div>
-          <span className="text-[#C99A3E] text-sm font-semibold uppercase tracking-wider">About</span>
+          <span className="text-[#FFC423] text-sm font-semibold uppercase tracking-wider">About</span>
         </div>
 
-        <h1 className="text-4xl font-bold text-[#EAE2D0] mb-4 leading-tight">
+        <h1 className="text-4xl font-bold text-[#F2EDE2] mb-4 leading-tight">
           Plan the trip, not just the idea
         </h1>
         <p className="text-white/60 text-lg mb-12 leading-relaxed">
@@ -37,7 +37,7 @@ export default function AboutPage() {
 
         <div className="space-y-12 text-white/75 leading-relaxed">
           <section>
-            <h2 className="text-xl font-bold text-[#EAE2D0] mb-4">What we do</h2>
+            <h2 className="text-xl font-bold text-[#F2EDE2] mb-4">What we do</h2>
             <p className="mb-3">
               Fish Tripper is a trip planning platform for recreational anglers. We bring together seasonal
               species data, destination guides, gear recommendations, and guided charter operators in one
@@ -51,7 +51,7 @@ export default function AboutPage() {
           </section>
 
           <section>
-            <h2 className="text-xl font-bold text-[#EAE2D0] mb-4">Why we built it</h2>
+            <h2 className="text-xl font-bold text-[#F2EDE2] mb-4">Why we built it</h2>
             <p>
               The best fishing trips aren't accidents. Someone picked the right month, knew the species and
               technique, sorted the gear list, and kept the crew out of four different group chats. That's the
@@ -61,10 +61,10 @@ export default function AboutPage() {
           </section>
 
           <section>
-            <h2 className="text-xl font-bold text-[#EAE2D0] mb-4">Get in touch</h2>
+            <h2 className="text-xl font-bold text-[#F2EDE2] mb-4">Get in touch</h2>
             <p>
               Questions, feedback, or want to list your charter business?{" "}
-              <Link href="/contact" className="text-[#C99A3E] hover:underline">
+              <Link href="/contact" className="text-[#FFC423] hover:underline">
                 Reach out here
               </Link>
               .

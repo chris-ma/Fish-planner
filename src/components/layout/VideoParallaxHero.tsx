@@ -35,7 +35,7 @@ export function VideoParallaxHero({ children }: Props) {
   }, []);
 
   return (
-    <section className="relative overflow-hidden bg-[#0A1C28] min-h-screen flex flex-col items-center justify-center text-center px-4">
+    <section className="relative overflow-hidden bg-[#0B1D2A] min-h-screen flex flex-col items-center justify-center text-center px-4">
       <div
         ref={bgRef}
         className="absolute inset-0 -top-[20%] h-[140%] will-change-transform pointer-events-none"
@@ -51,7 +51,7 @@ export function VideoParallaxHero({ children }: Props) {
             <source key={src} src={src} type="video/mp4" />
           ))}
         </video>
-        <div className="absolute inset-0 bg-gradient-to-b from-[#0A1C28]/70 via-[#0A1C28]/25 to-[#0A1C28]" />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#0B1D2A]/70 via-[#0B1D2A]/25 to-[#0B1D2A]" />
       </div>
 
       <div className="relative z-10 w-full flex flex-col items-center">

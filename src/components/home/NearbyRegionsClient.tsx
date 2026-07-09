@@ -47,8 +47,8 @@ export function NearbyRegionsClient({ month }: Props) {
   return (
     <section className="px-4 py-12 max-w-7xl mx-auto">
       <div className="mb-6">
-        <div className="h-1 w-12 bg-[#C99A3E] rounded mb-3" />
-        <h2 className="text-2xl font-bold text-[#C99A3E]">Fisheries near {locationName ?? "you"}</h2>
+        <div className="h-1 w-12 bg-[#FFC423] rounded mb-3" />
+        <h2 className="text-2xl font-bold text-[#FFC423]">Fisheries near {locationName ?? "you"}</h2>
       </div>
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
@@ -69,7 +69,7 @@ export function NearbyRegionsClient({ month }: Props) {
               <div className="absolute bottom-0 left-0 right-0 p-3">
                 <p className="font-bold text-white text-sm leading-tight">{region.name}</p>
                 <p className="text-white/60 text-xs mt-0.5">{region.state}</p>
-                <p className="text-[#C99A3E] text-[10px] font-semibold mt-1">{km} km away</p>
+                <p className="text-[#FFC423] text-[10px] font-semibold mt-1">{km} km away</p>
               </div>
             </Link>
           );

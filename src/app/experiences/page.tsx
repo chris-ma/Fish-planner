@@ -62,7 +62,7 @@ export default async function ExperiencesPage() {
   });
 
   return (
-    <div className="pt-14 bg-[#0A1C28]">
+    <div className="pt-14 bg-[#0B1D2A]">
       <ExperiencesBrowser
         experiences={parsedExperiences}
         regions={allRegions}

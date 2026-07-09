@@ -17,7 +17,7 @@ const CATEGORY_LABELS: Record<string, string> = {
 const CATEGORY_GRADIENTS: Record<string, string> = {
   pelagic: "from-blue-900/80 to-indigo-900/60",
   reef: "from-orange-900/80 to-red-900/60",
-  estuary: "from-teal-900/80 to-green-900/60",
+  estuary: "from-[#1F4438]/80 to-[#12291f]/60",
   inshore: "from-cyan-900/80 to-sky-900/60",
   freshwater: "from-emerald-900/80 to-green-900/60",
 };
@@ -25,8 +25,8 @@ const CATEGORY_GRADIENTS: Record<string, string> = {
 const CATEGORY_BADGE_COLORS: Record<string, string> = {
   pelagic: "bg-blue-100 text-blue-700",
   reef: "bg-orange-100 text-orange-700",
-  estuary: "bg-teal-100 text-teal-700",
-  inshore: "bg-teal-100 text-teal-700",
+  estuary: "bg-[#2E5E4E]/10 text-[#2E5E4E]",
+  inshore: "bg-cyan-100 text-cyan-700",
   freshwater: "bg-emerald-100 text-emerald-700",
 };
 
@@ -73,7 +73,7 @@ export function SpeciesCard({ species, bestRating, bestMonth }: SpeciesCardProps
           </div>
         </div>
 
-        <div className="bg-[#EAE2D0] flex-1 p-3 flex flex-col gap-2">
+        <div className="bg-[#F2EDE2] flex-1 p-3 flex flex-col gap-2">
           <div className="flex items-center gap-2 flex-wrap">
             <span className={`text-xs px-2.5 py-0.5 rounded-full font-medium ${badgeColor}`}>
               {categoryLabel}

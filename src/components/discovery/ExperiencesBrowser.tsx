@@ -41,7 +41,7 @@ const CATEGORY_BG: Record<string, string> = {
 const CATEGORY_BADGE: Record<string, string> = {
   offshore:   "bg-blue-600",
   reef:       "bg-orange-600",
-  estuary:    "bg-teal-600",
+  estuary:    "bg-[#2E5E4E]",
   inshore:    "bg-cyan-600",
   freshwater: "bg-emerald-600",
 };
@@ -49,7 +49,7 @@ const CATEGORY_BADGE: Record<string, string> = {
 const CATEGORY_OVERLAY: Record<string, string> = {
   offshore:   "from-blue-900/50 to-transparent",
   reef:       "from-orange-900/50 to-transparent",
-  estuary:    "from-teal-900/50 to-transparent",
+  estuary:    "from-[#1F4438]/50 to-transparent",
   inshore:    "from-cyan-900/50 to-transparent",
   freshwater: "from-emerald-900/50 to-transparent",
 };
@@ -140,7 +140,7 @@ function ExperienceCard({
             )}
 
             {/* CTA */}
-            <p className="text-[#C99A3E] text-sm font-medium mt-3">Plan this trip →</p>
+            <p className="text-[#FFC423] text-sm font-medium mt-3">Plan this trip →</p>
           </div>
         </div>
       </div>
@@ -176,18 +176,18 @@ export function ExperiencesBrowser({ experiences, regions, regionSpeciesMap, cha
   }`;
 
   return (
-    <div className="min-h-screen bg-[#EAE2D0]">
+    <div className="min-h-screen bg-[#F2EDE2]">
       {/* ── Guided Experiences ── */}
       {charters.length > 0 && (
         <div className="bg-[#DCD0B6] px-4 sm:px-6 py-8 border-b border-black/10">
           <div className="max-w-7xl mx-auto">
-            <div className="h-1 w-12 bg-[#C99A3E] rounded mb-3" />
+            <div className="h-1 w-12 bg-[#FFC423] rounded mb-3" />
             <div className="flex items-end justify-between mb-5">
               <div>
-                <h2 className="text-2xl font-bold text-[#C99A3E]">Guided Experiences</h2>
+                <h2 className="text-2xl font-bold text-[#FFC423]">Guided Experiences</h2>
                 <p className="text-black/40 text-sm mt-1">Guided trips with expert local operators</p>
               </div>
-              <Link href="/charters" className="text-[#C99A3E] text-sm hover:underline hidden sm:block">
+              <Link href="/charters" className="text-[#FFC423] text-sm hover:underline hidden sm:block">
                 View all →
               </Link>
             </div>
@@ -210,7 +210,7 @@ export function ExperiencesBrowser({ experiences, regions, regionSpeciesMap, cha
             id="region-filter"
             value={selectedRegionId ?? ""}
             onChange={(e) => setSelectedRegionId(e.target.value || null)}
-            className="w-full sm:w-72 px-3 py-2 rounded-lg border border-black/15 bg-white text-[#0F2635] text-sm focus:outline-none focus:ring-2 focus:ring-[#C99A3E]"
+            className="w-full sm:w-72 px-3 py-2 rounded-lg border border-black/15 bg-white text-[#0F2635] text-sm focus:outline-none focus:ring-2 focus:ring-[#FFC423]"
           >
             <option value="">All regions</option>
             {Object.entries(zoneMap).map(([zone, zoneRegions]) => (

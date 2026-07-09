@@ -48,11 +48,11 @@ export default async function PlanPage() {
 
   return (
     <div>
-      <div className="relative bg-[#0A1C28] py-12 px-4 overflow-hidden">
-        <div className="absolute bottom-0 left-1/4 w-96 h-64 bg-[#C99A3E]/10 rounded-full blur-3xl pointer-events-none" />
+      <div className="relative bg-[#0B1D2A] py-12 px-4 overflow-hidden">
+        <div className="absolute bottom-0 left-1/4 w-96 h-64 bg-[#FFC423]/10 rounded-full blur-3xl pointer-events-none" />
         <div className="absolute top-0 right-1/4 w-64 h-48 bg-blue-600/10 rounded-full blur-3xl pointer-events-none" />
         <div className="max-w-7xl mx-auto relative z-10">
-          <h1 className="text-4xl md:text-5xl font-bold text-[#EAE2D0] mb-2">Explore</h1>
+          <h1 className="text-4xl md:text-5xl font-bold text-[#F2EDE2] mb-2">Explore</h1>
           <p className="text-white/60 max-w-xl">
             Browse species and destinations for your next Australian fishing trip.
           </p>

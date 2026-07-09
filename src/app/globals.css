@@ -2,30 +2,30 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Brand bible tokens: Deep Ocean #0A1C28, Sandstone #EAE2D0, Golden Hour
-   #C99A3E (single accent, used sparingly), River Green #5F7A5C, Slate #767B7D,
-   paper #F6F3EA. */
+/* Brand bible v1.0 tokens: Deep Ocean #0B1D2A (40% usage), River Green
+   #2E5E4E (25%), Sandstone #F2EDE2 (20%), Golden Hour #FFC423 (10%),
+   Slate #5A646B (5%). */
 @layer base {
   :root {
-    --background: 45 38% 94%;        /* paper #F6F3EA */
-    --foreground: 200 60% 10%;       /* deep ocean ink */
-    --card: 45 38% 94%;
-    --card-foreground: 200 60% 10%;
+    --background: 41 38% 92%;        /* sandstone #F2EDE2 */
+    --foreground: 205 58% 10%;       /* deep ocean ink */
+    --card: 41 38% 92%;
+    --card-foreground: 205 58% 10%;
     --popover: 0 0% 100%;
-    --popover-foreground: 200 60% 10%;
-    --primary: 38 56% 52%;           /* golden hour #C99A3E */
-    --primary-foreground: 203 60% 10%;
-    --secondary: 42 39% 87%;         /* sandstone #EAE2D0 */
-    --secondary-foreground: 200 60% 10%;
-    --muted: 42 30% 90%;
-    --muted-foreground: 200 6% 42%;  /* slate */
-    --accent: 38 56% 52%;
-    --accent-foreground: 203 60% 10%;
+    --popover-foreground: 205 58% 10%;
+    --primary: 44 100% 57%;          /* golden hour #FFC423 */
+    --primary-foreground: 205 58% 10%;
+    --secondary: 41 38% 87%;         /* sandstone, slightly deeper */
+    --secondary-foreground: 205 58% 10%;
+    --muted: 41 25% 90%;
+    --muted-foreground: 205 9% 39%;  /* slate */
+    --accent: 44 100% 57%;
+    --accent-foreground: 205 58% 10%;
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
-    --border: 42 20% 82%;
-    --input: 42 20% 82%;
-    --ring: 38 56% 52%;
+    --border: 41 20% 82%;
+    --input: 41 20% 82%;
+    --ring: 44 100% 57%;
     --radius: 0.75rem;
   }
 }
@@ -34,7 +34,7 @@
   * { @apply border-border; }
   body {
     @apply bg-background text-foreground antialiased;
-    font-family: var(--font-lato), system-ui, sans-serif;
+    font-family: var(--font-sora), system-ui, sans-serif;
   }
   h1, h2, h3, h4 {
     font-family: var(--font-fraunces), Georgia, serif;

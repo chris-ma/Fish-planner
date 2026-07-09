@@ -8,8 +8,8 @@ export default function ChallengesIndexClient({ challenges }: { challenges: Enri
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 py-12">
       <div className="mb-8">
-        <div className="h-1 w-12 bg-[#C99A3E] rounded mb-3" />
-        <h2 className="text-3xl font-bold text-[#C99A3E]">Challenges</h2>
+        <div className="h-1 w-12 bg-[#FFC423] rounded mb-3" />
+        <h2 className="text-3xl font-bold text-[#FFC423]">Challenges</h2>
         <p className="text-sm text-slate-500 mt-2 max-w-2xl">
           Self-imposed rules. No prizes, just bragging rights — and a public leaderboard.
         </p>
@@ -23,7 +23,7 @@ export default function ChallengesIndexClient({ challenges }: { challenges: Enri
                 className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-105"
                 style={{ backgroundImage: `url(${c.image})` }}
               />
-              <div className="absolute top-0 left-0 right-0 h-1 bg-[#C99A3E]" />
+              <div className="absolute top-0 left-0 right-0 h-1 bg-[#FFC423]" />
               <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent" />
               <div className="absolute bottom-0 left-0 right-0 p-3 md:p-4 z-10">
                 <p className="font-bold text-white text-sm mb-1 leading-tight">{c.title}</p>
@@ -39,7 +39,7 @@ export default function ChallengesIndexClient({ challenges }: { challenges: Enri
                   <span className="text-white/40 text-[10px]">
                     {c.entryCount} {c.entryCount === 1 ? "entry" : "entries"}
                   </span>
-                  <span className="text-[#C99A3E] text-[10px] font-semibold group-hover:text-[#D9B15E] transition-colors">
+                  <span className="text-[#FFC423] text-[10px] font-semibold group-hover:text-[#FFD666] transition-colors">
                     View Rankings →
                   </span>
                 </div>
