@@ -30,6 +30,40 @@ function pinLabel(name: string): string {
   return name.split("/")[0].split(",")[0].trim().toUpperCase().slice(0, 14);
 }
 
+const CAMPAIGN_VIDEOS = "/campaign/videos";
+
+// Boxed 21:9 video panel — the video's real src is set lazily by the
+// data-video IntersectionObserver in the mount effect below, so nothing
+// downloads until the panel is about to scroll into view.
+function VideoPanel({ slug, alt, captionLeft, captionRight }: { slug: string; alt: string; captionLeft: string; captionRight: string }) {
+  const base = `${CAMPAIGN_VIDEOS}/${slug}`;
+  return (
+    <div className="photo-panel reveal d4">
+      <div className="hs-video-surface" data-video role="img" aria-label={alt}>
+        <video className="hs-video" muted loop playsInline preload="none" poster={`${base}.jpg`}>
+          <source data-src={`${base}.mp4`} type="video/mp4" />
+        </video>
+        <div className="hs-video-grain" />
+        <div className="hs-video-vignette" />
+      </div>
+      <div className="photo-caption"><span>{captionLeft}</span><span>{captionRight}</span></div>
+    </div>
+  );
+}
+
+// Full-bleed chapter background video (CH7, CH8) — same lazy-play behavior.
+function ChapterBgVideo({ slug, alt }: { slug: string; alt: string }) {
+  const base = `${CAMPAIGN_VIDEOS}/${slug}`;
+  return (
+    <div className="chapter-bg-video" data-video role="img" aria-label={alt}>
+      <video className="hs-video" muted loop playsInline preload="none" poster={`${base}.jpg`}>
+        <source data-src={`${base}.mp4`} type="video/mp4" />
+      </video>
+      <div className="hs-video-tint" />
+    </div>
+  );
+}
+
 export function HomeStoryClient({ regions, challengeEntries }: Props) {
   const rootRef = useRef<HTMLDivElement>(null);
 
@@ -54,6 +88,30 @@ export function HomeStoryClient({ regions, challengeEntries }: Props) {
       );
       mapIO.observe(mapWrap);
     }
+
+    // Lazy video panels — nothing downloads until a panel is about to enter
+    // the viewport; playback pauses again once it scrolls out. Respects
+    // prefers-reduced-motion by never starting playback (poster stays put).
+    const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const videoIO = new IntersectionObserver(
+      (entries) => entries.forEach((entry) => {
+        const wrap = entry.target as HTMLElement;
+        const video = wrap.querySelector("video");
+        if (!video) return;
+        if (entry.isIntersecting) {
+          const source = video.querySelector("source");
+          if (source && !source.src && source.dataset.src) {
+            source.src = source.dataset.src;
+            video.load();
+          }
+          if (!reduceMotion) video.play().catch(() => {});
+        } else {
+          video.pause();
+        }
+      }),
+      { rootMargin: "200px 0px" }
+    );
+    root.querySelectorAll("[data-video]").forEach((el) => videoIO.observe(el));
 
     // Progress rail + active chapter dots
     const fill = root.querySelector<HTMLElement>("#hs-progress-fill");
@@ -105,6 +163,7 @@ export function HomeStoryClient({ regions, challengeEntries }: Props) {
     return () => {
       io.disconnect();
       mapIO?.disconnect();
+      videoIO.disconnect();
       removeEventListener("scroll", onScroll);
       clickHandlers.forEach(([el, h]) => el.removeEventListener("click", h));
     };
@@ -379,9 +438,41 @@ export function HomeStoryClient({ regions, challengeEntries }: Props) {
     radial-gradient(ellipse 90% 80% at 50% 50%, transparent 40%, rgba(10,28,40,0.4) 100%);
   pointer-events:none; z-index:2;
 }
-.home-story .photo-dawn{background-image:url('https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=1600&q=75&auto=format&fit=crop');}
-.home-story .photo-gear{background-image:url('https://images.unsplash.com/photo-1516132006923-6cf348e5dee2?w=1600&q=75&auto=format&fit=crop');}
-.home-story .photo-water{background-image:url('https://images.unsplash.com/photo-1500375592092-40eb2168fd21?w=1600&q=75&auto=format&fit=crop');}
+.home-story .photo-trophy{background-image:url('/home/trophy-gt.png'); background-position:center 25%;}
+
+/* Video variant of .photo-surface — a <video> is a replaced element, so grain/vignette
+   live on sibling divs rather than ::before/::after (unreliable cross-browser on <video>). */
+.home-story .hs-video-surface{
+  position:relative; aspect-ratio:21/9; overflow:hidden;
+  -webkit-mask-image:linear-gradient(180deg, transparent 0%, black 12%, black 88%, transparent 100%);
+  mask-image:linear-gradient(180deg, transparent 0%, black 12%, black 88%, transparent 100%);
+}
+.home-story .hs-video{
+  position:absolute; inset:0; width:100%; height:100%;
+  object-fit:cover; transform:scale(1.03);
+}
+.home-story .hs-video-grain{
+  position:absolute; inset:0; filter:url(#hs-grain); opacity:0.35;
+  mix-blend-mode:overlay; pointer-events:none; z-index:2;
+}
+.home-story .hs-video-vignette{
+  position:absolute; inset:0;
+  background:
+    linear-gradient(180deg, rgba(10,28,40,0.55) 0%, rgba(10,28,40,0.15) 30%, rgba(10,28,40,0.15) 70%, rgba(10,28,40,0.7) 100%),
+    radial-gradient(ellipse 90% 80% at 50% 50%, transparent 40%, rgba(10,28,40,0.4) 100%);
+  pointer-events:none; z-index:2;
+}
+
+/* Full-bleed chapter background video (CH7, CH8) — sits behind chapter-inner. */
+.home-story .chapter-bg-video{position:absolute; inset:0; z-index:0; overflow:hidden;}
+.home-story .chapter-bg-video .hs-video{transform:scale(1.06);}
+.home-story .chapter-bg-video .hs-video-tint{
+  position:absolute; inset:0;
+  background:linear-gradient(180deg, rgba(11,29,42,0.75) 0%, rgba(11,29,42,0.55) 40%, rgba(11,29,42,0.85) 100%);
+  pointer-events:none;
+}
+.home-story .chapter-video-bg > .chapter-inner{position:relative; z-index:1;}
+
 .home-story .photo-caption{
   display:flex; align-items:center; justify-content:space-between;
   padding:14px 24px 0;
@@ -489,8 +580,8 @@ export function HomeStoryClient({ regions, challengeEntries }: Props) {
             <span className="typewriter"><strong>5:52am</strong> · Outgoing tide, first light</span>
           </div>
           <div className="photo-panel reveal d4">
-            <div className="photo-surface photo-dawn" role="img" aria-label="First light over Ningaloo Reef, Western Australia" />
-            <div className="photo-caption"><span>NINGALOO REEF · WA</span><span><strong>05:52</strong> AWST</span></div>
+            <div className="photo-surface photo-trophy" role="img" aria-label="Angler holding a 112cm giant trevally caught at Ningaloo Reef" />
+            <div className="photo-caption"><span>NINGALOO REEF · WA</span><span><strong>112CM</strong> · GT</span></div>
           </div>
         </div>
         <div className="scroll-cue"><span>Where it starts</span><div className="scroll-cue-line" /></div>
@@ -509,6 +600,7 @@ export function HomeStoryClient({ regions, challengeEntries }: Props) {
             <div className="sp-fact"><div className="sp-fact-l">Time of day</div><div className="sp-fact-v">Dawn only</div></div>
             <div className="sp-fact"><div className="sp-fact-l">Structure</div><div className="sp-fact-v">Reef edges, bomboras</div></div>
           </div>
+          <VideoPanel slug="bg-wild" alt="Open reef water, the kind of ground GT patrol" captionLeft="THE WATER" captionRight="REEF EDGE" />
         </div>
       </section>
 
@@ -524,10 +616,7 @@ export function HomeStoryClient({ regions, challengeEntries }: Props) {
             <div className="tech-step"><div className="tech-step-n">03</div><div className="tech-step-t"><strong>Maximum drag, immediately.</strong> A GT will run straight for the reef and cut you off in seconds. Pressure starts on the strike, not after.</div></div>
           </div>
           <div className="gear-tag reveal d4">🎣 Size 8000+ sealed-drag reel, 100lb+ fluoro leader — non-negotiable for reef GT</div>
-          <div className="photo-panel reveal d4">
-            <div className="photo-surface photo-gear" role="img" aria-label="Heavy popping tackle laid out and ready" />
-            <div className="photo-caption"><span>THE SETUP</span><span><strong>8000+</strong> · Sealed drag</span></div>
-          </div>
+          <VideoPanel slug="bg-strike" alt="The line going tight the moment a GT strikes" captionLeft="THE STRIKE" captionRight="LINE TIGHT" />
         </div>
       </section>
 
@@ -564,6 +653,7 @@ export function HomeStoryClient({ regions, challengeEntries }: Props) {
               </svg>
             </div>
           )}
+          <VideoPanel slug="bg-dawn-sunrise" alt="Sunrise over the water, where the bite is best right now" captionLeft="RIGHT NOW" captionRight="FIRST LIGHT" />
         </div>
       </section>
 
@@ -585,6 +675,7 @@ export function HomeStoryClient({ regions, challengeEntries }: Props) {
               <div className="challenge-mini-name">3 Metre Flatty Challenge</div>
             </Link>
           </div>
+          <VideoPanel slug="bg-dawn-drive" alt="Driving out before dawn with the crew, gear rattling in the tray" captionLeft="THE DRIVE" captionRight="4:12 AM" />
         </div>
       </section>
 
@@ -596,10 +687,7 @@ export function HomeStoryClient({ regions, challengeEntries }: Props) {
           <div className="countdown-num reveal d2">6</div>
           <div className="countdown-lbl reveal d2">Days until the trip</div>
           <p className="ch-body reveal d3" style={{ marginTop: 24 }}>Gear checked. Bags packed. The last few things that matter before you leave.</p>
-          <div className="photo-panel reveal d3" style={{ maxWidth: 480 }}>
-            <div className="photo-surface photo-water" role="img" aria-label="Calm water at the ramp, packed and ready" />
-            <div className="photo-caption"><span>PACKED &amp; READY</span><span>T-minus <strong>6 days</strong></span></div>
-          </div>
+          <VideoPanel slug="bg-dawn-detail" alt="Tackle laid out and packed, ready to go" captionLeft="PACKED & READY" captionRight="T-MINUS 6 DAYS" />
           <div className="checklist reveal d4">
             <div className="check-row"><div className="check-box filled" /><div className="check-label">8000+ reel, sealed drag serviced — checked</div></div>
             <div className="check-row"><div className="check-box filled" /><div className="check-label">Poppers and 100lb fluoro leader — checked</div></div>
@@ -610,7 +698,8 @@ export function HomeStoryClient({ regions, challengeEntries }: Props) {
       </section>
 
       {/* CH7 — CHAPTER 2 */}
-      <section className="chapter" id="ch7">
+      <section className="chapter chapter-video-bg" id="ch7">
+        <ChapterBgVideo slug="bg-after-fire" alt="Fire going after the trip, the story already getting bigger" />
         <div className="chapter-inner">
           <div className="ch-num reveal">CHAPTER SEVEN</div>
           <p className="ch7-q reveal d1">That was <span className="accent">someone&apos;s</span> trip.<br />Every part of it — the fish, the water, the mates, the six days of waiting — started the same way yours can.<br /><br /><span className="accent">How will you write chapter 2?</span></p>
@@ -618,7 +707,8 @@ export function HomeStoryClient({ regions, challengeEntries }: Props) {
       </section>
 
       {/* CH8 — THE ASK */}
-      <section className="chapter" id="ch8">
+      <section className="chapter chapter-video-bg" id="ch8">
+        <ChapterBgVideo slug="bg-cta" alt="Clear water, boat idling, ready for the next trip" />
         <div className="chapter-inner">
           <div className="ch-num reveal" style={{ justifyContent: "center" }}>CHAPTER EIGHT</div>
           <h2 className="ask-title reveal d1">Your trophy fish<br />is still out there.</h2>
