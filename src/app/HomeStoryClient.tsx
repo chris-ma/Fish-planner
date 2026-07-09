@@ -114,33 +114,30 @@ function makeParticles(
   return () => { removeEventListener("resize", fit); cancelAnimationFrame(raf); };
 }
 
-// Boxed 21:9 video panel — the video's real src is set lazily by the
-// data-video IntersectionObserver in the mount effect below, so nothing
-// downloads until the panel is about to scroll into view.
-function VideoPanel({ slug, alt, captionLeft, captionRight }: { slug: string; alt: string; captionLeft: string; captionRight: string }) {
-  const base = `${CAMPAIGN_VIDEOS}/${slug}`;
-  return (
-    <div className="photo-panel reveal d4">
-      <div className="hs-video-surface" data-video role="img" aria-label={alt}>
-        <video className="hs-video" muted loop playsInline preload="none" poster={`${base}.jpg`}>
-          <source data-src={`${base}.mp4`} type="video/mp4" />
-        </video>
-        <div className="hs-video-grain" />
-        <div className="hs-video-vignette" />
-      </div>
-      <div className="photo-caption"><span>{captionLeft}</span><span>{captionRight}</span></div>
-    </div>
-  );
-}
-
-// Full-bleed chapter background video (CH7, CH8) — same lazy-play behavior.
-function ChapterBgVideo({ slug, alt }: { slug: string; alt: string }) {
+// Full-bleed chapter background video — the video's real src is set lazily
+// by the data-video IntersectionObserver in the mount effect below, so
+// nothing downloads until the chapter is about to scroll into view.
+function ChapterBgVideo({ slug, alt, children }: { slug: string; alt: string; children?: React.ReactNode }) {
   const base = `${CAMPAIGN_VIDEOS}/${slug}`;
   return (
     <div className="chapter-bg-video" data-video role="img" aria-label={alt}>
       <video className="hs-video" muted loop playsInline preload="none" poster={`${base}.jpg`}>
         <source data-src={`${base}.mp4`} type="video/mp4" />
       </video>
+      {children}
+      <div className="hs-video-grain" />
+      <div className="hs-video-tint" />
+    </div>
+  );
+}
+
+// Full-bleed chapter background photo (CH1's trophy shot) — same structural
+// treatment as ChapterBgVideo, just a background-image instead of <video>.
+function ChapterBgPhoto({ src, alt, children }: { src: string; alt: string; children?: React.ReactNode }) {
+  return (
+    <div className="chapter-bg-video chapter-bg-photo" style={{ backgroundImage: `url('${src}')` }} role="img" aria-label={alt}>
+      {children}
+      <div className="hs-video-grain" />
       <div className="hs-video-tint" />
     </div>
   );
@@ -218,7 +215,7 @@ export function HomeStoryClient({ regions, challengeEntries }: Props) {
       "rgba(255,196,35,0.5)",   // CH8 — gold CTA
     ];
     const ch1El = document.getElementById("ch1");
-    const ch1Photo = root.querySelector<HTMLElement>("#ch1 .photo-surface");
+    const ch1Photo = root.querySelector<HTMLElement>("#ch1 .chapter-bg-photo");
     const ch3El = document.getElementById("ch3");
     const ch3Steps = Array.from(root.querySelectorAll<HTMLElement>(".tech-step"));
     const ch3DragFill = root.querySelector<HTMLElement>("#hs-drag3-fill");
@@ -705,7 +702,7 @@ export function HomeStoryClient({ regions, challengeEntries }: Props) {
 .home-story .sp-fact-bars span{height:6px;border-radius:2px;background:rgba(234,226,208,0.14);}
 .home-story .sp-fact-bars span.peak{background:var(--gold);}
 .home-story .ch2-lineart{
-  position:absolute; top:8%; right:2%; width:240px; height:240px;
+  position:absolute; top:8%; right:2%; z-index:1; width:240px; height:240px;
   color:var(--sandstone); opacity:0.07; pointer-events:none;
   animation:hs-drift 46s ease-in-out infinite alternate;
 }
@@ -852,78 +849,37 @@ export function HomeStoryClient({ regions, challengeEntries }: Props) {
 }
 @keyframes hs-burst{ to { transform:translate(calc(-50% + var(--bx)), calc(-50% + var(--by))); opacity:0; } }
 
-/* ── FULL-BLEED BLENDED PHOTOGRAPHY ── */
-.home-story .photo-panel{position:relative; margin:36px -24px 0; overflow:hidden;}
-@media (min-width:768px){ .home-story .photo-panel{margin:36px -48px 0;} }
-.home-story .photo-surface{
-  position:relative; aspect-ratio:21/9; overflow:hidden;
-  background-size:cover; background-position:center;
-  -webkit-mask-image:linear-gradient(180deg, transparent 0%, black 12%, black 88%, transparent 100%);
-  mask-image:linear-gradient(180deg, transparent 0%, black 12%, black 88%, transparent 100%);
-  animation:hs-kenburns 22s ease-in-out infinite alternate;
-}
-@keyframes hs-kenburns{
-  0%{transform:scale(1.02) translate(0,0);}
-  100%{transform:scale(1.1) translate(-1.5%,-1%);}
-}
-.home-story #ch1 .photo-surface{animation:none;}
-.home-story .photo-surface::before{
-  content:''; position:absolute; inset:0;
-  filter:url(#hs-grain); opacity:0.35;
-  mix-blend-mode:overlay; pointer-events:none; z-index:2;
-}
-.home-story .photo-surface::after{
-  content:''; position:absolute; inset:0;
-  background:
-    linear-gradient(180deg, rgba(10,28,40,0.55) 0%, rgba(10,28,40,0.15) 30%, rgba(10,28,40,0.15) 70%, rgba(10,28,40,0.7) 100%),
-    radial-gradient(ellipse 90% 80% at 50% 50%, transparent 40%, rgba(10,28,40,0.4) 100%);
-  pointer-events:none; z-index:2;
-}
-.home-story .photo-trophy{background-image:url('/home/trophy-gt.png'); background-position:center 25%;}
-.home-story .hs-motes{position:absolute; inset:0; z-index:3; pointer-events:none; width:100%; height:100%;}
-
-/* Video variant of .photo-surface — a <video> is a replaced element, so grain/vignette
-   live on sibling divs rather than ::before/::after (unreliable cross-browser on <video>). */
-.home-story .hs-video-surface{
-  position:relative; aspect-ratio:21/9; overflow:hidden;
-  -webkit-mask-image:linear-gradient(180deg, transparent 0%, black 12%, black 88%, transparent 100%);
-  mask-image:linear-gradient(180deg, transparent 0%, black 12%, black 88%, transparent 100%);
-}
-.home-story .hs-video{
-  position:absolute; inset:0; width:100%; height:100%;
-  object-fit:cover; transform:scale(1.03);
-}
-.home-story .hs-video-grain{
-  position:absolute; inset:0; filter:url(#hs-grain); opacity:0.35;
-  mix-blend-mode:overlay; pointer-events:none; z-index:2;
-}
-.home-story .hs-video-vignette{
-  position:absolute; inset:0;
-  background:
-    linear-gradient(180deg, rgba(10,28,40,0.55) 0%, rgba(10,28,40,0.15) 30%, rgba(10,28,40,0.15) 70%, rgba(10,28,40,0.7) 100%),
-    radial-gradient(ellipse 90% 80% at 50% 50%, transparent 40%, rgba(10,28,40,0.4) 100%);
-  pointer-events:none; z-index:2;
-}
-
-/* Full-bleed chapter background video (CH7, CH8) — sits behind chapter-inner. */
+/* ── FULL-BLEED CINEMATIC CHAPTER BACKGROUNDS (CH1–CH8) ── */
 .home-story .chapter-bg-video{position:absolute; inset:0; z-index:0; overflow:hidden;}
-.home-story .chapter-bg-video .hs-video{transform:scale(1.06);}
+.home-story .chapter-bg-video .hs-video{
+  position:absolute; inset:0; width:100%; height:100%;
+  object-fit:cover; transform:scale(1.06);
+}
+.home-story .chapter-bg-photo{background-size:cover; background-position:center 25%;}
+.home-story .chapter-bg-video .hs-video-grain{
+  position:absolute; inset:0; z-index:2;
+  filter:url(#hs-grain); opacity:0.3;
+  mix-blend-mode:overlay; pointer-events:none;
+}
 .home-story .chapter-bg-video .hs-video-tint{
-  position:absolute; inset:0;
-  background:linear-gradient(180deg, rgba(11,29,42,0.75) 0%, rgba(11,29,42,0.55) 40%, rgba(11,29,42,0.85) 100%);
+  position:absolute; inset:0; z-index:1;
+  background:
+    linear-gradient(180deg, rgba(9,20,29,0.82) 0%, rgba(9,20,29,0.5) 25%, rgba(9,20,29,0.55) 60%, rgba(9,20,29,0.88) 100%),
+    radial-gradient(ellipse 85% 75% at 50% 45%, transparent 30%, rgba(6,15,22,0.5) 100%);
   pointer-events:none;
 }
 .home-story .chapter-video-bg > .chapter-inner{position:relative; z-index:1;}
-.home-story .hs-embers{position:absolute; inset:0; z-index:1; pointer-events:none; width:100%; height:100%;}
+.home-story .hs-motes{position:absolute; inset:0; z-index:3; pointer-events:none; width:100%; height:100%;}
+.home-story .hs-embers{position:absolute; inset:0; z-index:3; pointer-events:none; width:100%; height:100%;}
 
-.home-story .photo-caption{
+.home-story .hs-bg-caption{
+  position:absolute; left:24px; right:24px; bottom:76px; z-index:1;
   display:flex; align-items:center; justify-content:space-between;
-  padding:14px 24px 0;
   font-family:var(--font-sora),sans-serif;
   font-size:10.5px; letter-spacing:0.5px; color:var(--quiet);
 }
-@media (min-width:768px){ .home-story .photo-caption{padding:14px 48px 0;} }
-.home-story .photo-caption strong{color:var(--gold); font-weight:500;}
+@media (min-width:768px){ .home-story .hs-bg-caption{left:48px; right:48px;} }
+.home-story .hs-bg-caption strong{color:var(--gold); font-weight:500;}
 
 /* ── GT BELT MAP ── */
 .home-story .map-wrap{
@@ -987,7 +943,6 @@ export function HomeStoryClient({ regions, challengeEntries }: Props) {
 @media (prefers-reduced-motion: reduce){
   .home-story .reveal{opacity:1;transform:none;transition:none;}
   .home-story .scroll-cue-line{animation:none;}
-  .home-story .photo-surface{animation:none;}
   .home-story .map-pin circle:first-child{animation:none;}
   .home-story .ch2-lineart{animation:none;}
   .home-story .ch7-glow{animation:none;}
@@ -1025,7 +980,10 @@ export function HomeStoryClient({ regions, challengeEntries }: Props) {
       </div>
 
       {/* CH1 — THE TROPHY */}
-      <section className="chapter" id="ch1">
+      <section className="chapter chapter-video-bg" id="ch1">
+        <ChapterBgPhoto src="/home/trophy-gt.png" alt="Angler holding a 112cm giant trevally caught at Ningaloo Reef">
+          <canvas className="hs-motes" id="hs-motes" aria-hidden="true" />
+        </ChapterBgPhoto>
         <div className="chapter-inner">
           <div className="rv-badge" id="hs-rv-badge">◈ Welcome back</div>
           <div className="ch-num reveal">CHAPTER ONE</div>
@@ -1036,18 +994,13 @@ export function HomeStoryClient({ regions, challengeEntries }: Props) {
             <span><strong>Ningaloo Reef, WA</strong></span>
             <span className="typewriter"><strong>5:52am</strong> · Outgoing tide, first light</span>
           </div>
-          <div className="photo-panel reveal d4">
-            <div className="photo-surface photo-trophy" role="img" aria-label="Angler holding a 112cm giant trevally caught at Ningaloo Reef">
-              <canvas className="hs-motes" id="hs-motes" aria-hidden="true" />
-            </div>
-            <div className="photo-caption"><span>NINGALOO REEF · WA</span><span><strong>112CM</strong> · GT</span></div>
-          </div>
         </div>
         <div className="scroll-cue"><span>Where it starts</span><div className="scroll-cue-line" /></div>
       </section>
 
       {/* CH2 — RESEARCH THE SPECIES */}
-      <section className="chapter" id="ch2">
+      <section className="chapter chapter-video-bg" id="ch2">
+        <ChapterBgVideo slug="bg-wild" alt="Open reef water, the kind of ground GT patrol" />
         <svg className="ch2-lineart" viewBox="0 0 200 200" aria-hidden="true">
           <circle cx="100" cy="100" r="70" fill="none" stroke="currentColor" strokeWidth="1" />
           <line x1="100" y1="20" x2="100" y2="180" stroke="currentColor" strokeWidth="1" />
@@ -1073,12 +1026,13 @@ export function HomeStoryClient({ regions, challengeEntries }: Props) {
             <div className="sp-fact"><div className="sp-fact-l">Time of day</div><div className="sp-fact-v">Dawn only</div></div>
             <div className="sp-fact"><div className="sp-fact-l">Structure</div><div className="sp-fact-v">Reef edges, bomboras</div></div>
           </div>
-          <VideoPanel slug="bg-wild" alt="Open reef water, the kind of ground GT patrol" captionLeft="THE WATER" captionRight="REEF EDGE" />
         </div>
+        <div className="hs-bg-caption"><span>THE WATER</span><span>REEF EDGE</span></div>
       </section>
 
       {/* CH3 — HOW TO CATCH IT */}
-      <section className="chapter" id="ch3">
+      <section className="chapter chapter-video-bg" id="ch3">
+        <ChapterBgVideo slug="bg-strike" alt="The line going tight the moment a GT strikes" />
         <div className="chapter-inner">
           <div className="ch-num reveal">CHAPTER THREE</div>
           <h2 className="ch-title reveal d1">Learn the<br /><em>technique.</em></h2>
@@ -1093,12 +1047,13 @@ export function HomeStoryClient({ regions, challengeEntries }: Props) {
             <div className="hs-drag3-track"><div className="hs-drag3-fill" id="hs-drag3-fill" /></div>
             <div className="hs-drag3-label">Drag · Pressure</div>
           </div>
-          <VideoPanel slug="bg-strike" alt="The line going tight the moment a GT strikes" captionLeft="THE STRIKE" captionRight="LINE TIGHT" />
         </div>
+        <div className="hs-bg-caption"><span>THE STRIKE</span><span>LINE TIGHT</span></div>
       </section>
 
       {/* CH4 — WHERE TO GO */}
-      <section className="chapter" id="ch4">
+      <section className="chapter chapter-video-bg" id="ch4">
+        <ChapterBgVideo slug="bg-itch-office" alt="Coral reef seen underwater, the kind of ground worth choosing" />
         <div className="chapter-inner">
           <div className="ch-num reveal">CHAPTER FOUR</div>
           <h2 className="ch-title reveal d1">Pick your<br /><em>water.</em></h2>
@@ -1136,12 +1091,13 @@ export function HomeStoryClient({ regions, challengeEntries }: Props) {
               </svg>
             </div>
           )}
-          <VideoPanel slug="bg-dawn-sunrise" alt="Sunrise over the water, where the bite is best right now" captionLeft="RIGHT NOW" captionRight="FIRST LIGHT" />
         </div>
+        <div className="hs-bg-caption"><span>THE REEF</span><span>PICK YOUR SPOT</span></div>
       </section>
 
       {/* CH5 — FORMING THE CREW */}
-      <section className="chapter" id="ch5">
+      <section className="chapter chapter-video-bg" id="ch5">
+        <ChapterBgVideo slug="bg-itch-water" alt="The highway before dawn, driving out with the crew" />
         <div className="chapter-inner">
           <div className="ch-num reveal">CHAPTER FIVE</div>
           <h2 className="ch-title reveal d1">Get the<br /><em>crew together.</em></h2>
@@ -1158,19 +1114,19 @@ export function HomeStoryClient({ regions, challengeEntries }: Props) {
               <div className="challenge-mini-name">3 Metre Flatty Challenge</div>
             </Link>
           </div>
-          <VideoPanel slug="bg-dawn-drive" alt="Driving out before dawn with the crew, gear rattling in the tray" captionLeft="THE DRIVE" captionRight="4:12 AM" />
         </div>
+        <div className="hs-bg-caption"><span>THE DRIVE</span><span>4:12 AM</span></div>
       </section>
 
       {/* CH6 — DAYS LEADING UP */}
-      <section className="chapter" id="ch6">
+      <section className="chapter chapter-video-bg" id="ch6">
+        <ChapterBgVideo slug="bg-dawn-drive" alt="A small boat sitting calm on the water, the last quiet moment before the trip" />
         <div className="chapter-inner">
           <div className="ch-num reveal">CHAPTER SIX</div>
           <h2 className="ch-title reveal d1">The days<br /><em>before.</em></h2>
           <div className="countdown-num reveal d2">6</div>
           <div className="countdown-lbl reveal d2">Days until the trip</div>
           <p className="ch-body reveal d3" style={{ marginTop: 24 }}>Gear checked. Bags packed. The last few things that matter before you leave.</p>
-          <VideoPanel slug="bg-dawn-detail" alt="Tackle laid out and packed, ready to go" captionLeft="PACKED & READY" captionRight="T-MINUS 6 DAYS" />
           <div className="checklist reveal d4">
             <div className="check-row"><div className="check-box filled" role="checkbox" aria-checked="true" tabIndex={0} /><div className="check-label">8000+ reel, sealed drag serviced — checked</div></div>
             <div className="check-row"><div className="check-box filled" role="checkbox" aria-checked="true" tabIndex={0} /><div className="check-label">Poppers and 100lb fluoro leader — checked</div></div>
@@ -1178,6 +1134,7 @@ export function HomeStoryClient({ regions, challengeEntries }: Props) {
             <div className="check-row"><div className="check-box" role="checkbox" aria-checked="false" tabIndex={0} /><div className="check-label">Crew confirmed on dates — pending</div></div>
           </div>
         </div>
+        <div className="hs-bg-caption"><span>READY TO GO</span><span>T-MINUS 6 DAYS</span></div>
       </section>
 
       {/* CH7 — CHAPTER 2 */}
