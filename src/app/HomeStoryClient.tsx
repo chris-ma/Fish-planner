@@ -117,25 +117,17 @@ function makeParticles(
 // Full-bleed chapter background video — the video's real src is set lazily
 // by the data-video IntersectionObserver in the mount effect below, so
 // nothing downloads until the chapter is about to scroll into view.
-function ChapterBgVideo({ slug, alt, children }: { slug: string; alt: string; children?: React.ReactNode }) {
-  const base = `${CAMPAIGN_VIDEOS}/${slug}`;
+// `dir`/`poster` let a chapter point outside /campaign/videos (e.g. CH1's
+// trophy shot lives in /home) without needing a separate photo component.
+function ChapterBgVideo({ slug, alt, dir = CAMPAIGN_VIDEOS, poster, children }: {
+  slug: string; alt: string; dir?: string; poster?: string; children?: React.ReactNode;
+}) {
+  const base = `${dir}/${slug}`;
   return (
     <div className="chapter-bg-video" data-video role="img" aria-label={alt}>
-      <video className="hs-video" muted loop playsInline preload="none" poster={`${base}.jpg`}>
+      <video className="hs-video" muted loop playsInline preload="none" poster={poster ?? `${base}.jpg`}>
         <source data-src={`${base}.mp4`} type="video/mp4" />
       </video>
-      {children}
-      <div className="hs-video-grain" />
-      <div className="hs-video-tint" />
-    </div>
-  );
-}
-
-// Full-bleed chapter background photo (CH1's trophy shot) — same structural
-// treatment as ChapterBgVideo, just a background-image instead of <video>.
-function ChapterBgPhoto({ src, alt, children }: { src: string; alt: string; children?: React.ReactNode }) {
-  return (
-    <div className="chapter-bg-video chapter-bg-photo" style={{ backgroundImage: `url('${src}')` }} role="img" aria-label={alt}>
       {children}
       <div className="hs-video-grain" />
       <div className="hs-video-tint" />
@@ -215,7 +207,7 @@ export function HomeStoryClient({ regions, challengeEntries }: Props) {
       "rgba(255,196,35,0.5)",   // CH8 — gold CTA
     ];
     const ch1El = document.getElementById("ch1");
-    const ch1Photo = root.querySelector<HTMLElement>("#ch1 .chapter-bg-photo");
+    const ch1Video = root.querySelector<HTMLElement>("#ch1 .hs-video");
     const ch3El = document.getElementById("ch3");
     const ch3Steps = Array.from(root.querySelectorAll<HTMLElement>(".tech-step"));
     const ch3DragFill = root.querySelector<HTMLElement>("#hs-drag3-fill");
@@ -285,9 +277,9 @@ export function HomeStoryClient({ regions, challengeEntries }: Props) {
           bleed.style.backgroundColor = bleedColors[activeIdx] ?? bleedColors[0];
         }
 
-        if (ch1Photo && ch1El) {
+        if (ch1Video && ch1El) {
           const p = prog(ch1El);
-          ch1Photo.style.transform = `scale(${1.02 + p * 0.08}) translate(${p * -1.5}%, ${p * -1}%)`;
+          ch1Video.style.transform = `scale(${1.06 + p * 0.08}) translate(${p * -1.5}%, ${p * -1}%)`;
         }
 
         if (ch3El) {
@@ -835,7 +827,6 @@ export function HomeStoryClient({ regions, challengeEntries }: Props) {
   position:absolute; inset:0; width:100%; height:100%;
   object-fit:cover; transform:scale(1.06);
 }
-.home-story .chapter-bg-photo{background-size:cover; background-position:center 25%;}
 .home-story .chapter-bg-video .hs-video-grain{
   position:absolute; inset:0; z-index:2;
   filter:url(#hs-grain); opacity:0.3;
@@ -959,9 +950,9 @@ export function HomeStoryClient({ regions, challengeEntries }: Props) {
 
       {/* CH1 — THE TROPHY */}
       <section className="chapter chapter-video-bg" id="ch1">
-        <ChapterBgPhoto src="/home/trophy-gt.png" alt="Angler holding a 112cm giant trevally caught at Ningaloo Reef">
+        <ChapterBgVideo slug="trophy-gt" alt="Angler holding a 112cm giant trevally caught at Ningaloo Reef" dir="/home" poster="/home/trophy-gt.png">
           <canvas className="hs-motes" id="hs-motes" aria-hidden="true" />
-        </ChapterBgPhoto>
+        </ChapterBgVideo>
         <div className="chapter-inner">
           <div className="rv-badge" id="hs-rv-badge">◈ Welcome back</div>
           <div className="ch-num reveal">CHAPTER ONE</div>
