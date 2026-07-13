@@ -1,5 +1,8 @@
 // Maps experience slugs to destination slugs
 export const EXPERIENCE_DESTINATIONS: { experienceSlug: string; destinationSlug: string }[] = [
+  // Dogtooth Tuna Jigging
+  { experienceSlug: "dogtooth-jigging", destinationSlug: "cairns--osprey-reef-coral-sea" },
+  { experienceSlug: "dogtooth-jigging", destinationSlug: "cocos-keeling-islands--cocos-blue-water" },
   // Topwater GT Fishing
   { experienceSlug: "topwater-gt", destinationSlug: "cairns--ribbon-reefs" },
   { experienceSlug: "topwater-gt", destinationSlug: "cairns--lizard-island-grounds" },

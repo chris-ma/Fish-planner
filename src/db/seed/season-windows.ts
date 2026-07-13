@@ -200,6 +200,14 @@ export const SEASON_DATA: Record<string, ZoneRatings> = {
     christmas_island:[null, "good", "good", "good", "fair", "fair", "fair", "fair", "good", "good", "peak", "peak", "good"],
     cocos_islands:   [null, "good", "good", "good", "fair", "fair", "fair", "fair", "good", "good", "peak", "peak", "good"],
   },
+  // No verified season data exists for dogtooth tuna yet — these ratings are a
+  // reasonable estimate (calmer dry-season weather windows for reaching remote
+  // offshore reef structure), not sourced facts. Replace once real data lands.
+  "dogtooth-tuna": {
+    far_north_qld:   [null, "fair", "fair", "fair", "good", "good", "peak", "peak", "peak", "good", "good", "fair", "fair"],
+    christmas_island:[null, "good", "good", "good", "peak", "peak", "peak", "peak", "peak", "good", "good", "good", "good"],
+    cocos_islands:   [null, "good", "good", "good", "peak", "peak", "peak", "peak", "peak", "good", "good", "good", "good"],
+  },
   "red-emperor": {
     far_north_qld: [null, "fair", "fair", "fair", "good", "peak", "peak", "peak", "peak", "good", "good", "fair", "fair"],
     central_qld:   [null, "fair", "fair", "fair", "good", "peak", "peak", "peak", "good", "good", "good", "fair", "fair"],

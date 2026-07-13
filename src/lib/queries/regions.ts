@@ -1,8 +1,8 @@
 import { db } from "@/db";
 import { regions, seasonWindows, species, destinations, experiences, experienceDestinations } from "@/db/schema";
-import { eq, inArray } from "drizzle-orm";
+import { and, eq, inArray } from "drizzle-orm";
 import { nanoid } from "nanoid";
-import { ratingScore, type Rating } from "@/lib/utils/season";
+import { ratingLabel, ratingScore, type Rating } from "@/lib/utils/season";
 
 const NZ_REGIONS = [
   { id: "nzr001", slug: "bay-of-islands", name: "Bay of Islands", state: "NZ", zone: "nz_north_island", latitude: -35.2667, longitude: 174.1333, description: "NZ's premier big-game fishing destination. World-class marlin in summer, year-round snapper and kingfish in the 144-island bay system. Cape Brett and the Poor Knights Islands hold trophy yellowtail kingfish and hapuku.", tags: null, createdAt: "2025-01-01T00:00:00.000Z" },
@@ -231,6 +231,48 @@ export async function getTopRegionsWithStats(month: number, limit = 3): Promise<
     const pct = count > 0 ? Math.round((score / (count * 4)) * 100) : 0;
     const label = pct >= 85 ? "Excellent" : pct >= 70 ? "Very Good" : pct >= 55 ? "Good" : "Fair";
     return { region, speciesTracked: count, pct, label };
+  });
+}
+
+export interface SpeciesRegionRow {
+  region: typeof regions.$inferSelect;
+  rating: Rating | null;
+  pct: number;
+  label: string;
+}
+
+// Same as getTopRegionsWithStats but scoped to a single species — used by
+// per-species campaign pages so "pick your water" reflects that species'
+// actual season windows, not the site-wide bite score.
+export async function getTopRegionsForSpecies(speciesSlug: string, month: number, limit = 3): Promise<SpeciesRegionRow[]> {
+  const speciesRow = await db.select({ id: species.id }).from(species).where(eq(species.slug, speciesSlug)).limit(1);
+  const speciesId = speciesRow[0]?.id;
+  if (!speciesId) return [];
+
+  const windows = await db
+    .select({ regionId: seasonWindows.regionId, rating: seasonWindows.rating })
+    .from(seasonWindows)
+    .where(and(eq(seasonWindows.month, month), eq(seasonWindows.speciesId, speciesId)));
+
+  const scoreMap = new Map<string, Rating>();
+  for (const w of windows) {
+    scoreMap.set(w.regionId, w.rating as Rating);
+  }
+
+  const topIds = Array.from(scoreMap.entries())
+    .sort((a, b) => ratingScore(b[1]) - ratingScore(a[1]))
+    .slice(0, limit)
+    .map(([id]) => id);
+
+  if (topIds.length === 0) return [];
+
+  const rows = await db.select().from(regions).where(inArray(regions.id, topIds));
+  rows.sort((a, b) => ratingScore(scoreMap.get(b.id) ?? null) - ratingScore(scoreMap.get(a.id) ?? null));
+
+  return rows.map((region) => {
+    const rating = scoreMap.get(region.id) ?? null;
+    const pct = Math.round((ratingScore(rating) / 4) * 100);
+    return { region, rating, pct, label: ratingLabel(rating) };
   });
 }
 

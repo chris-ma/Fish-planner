@@ -36,6 +36,15 @@ export const EXPERIENCES: ExperienceSeed[] = [
     primaryTechniqueSlug: "trolling",
   },
   {
+    slug: "dogtooth-jigging",
+    name: "Dogtooth Tuna Jigging",
+    description:
+      "Vertical jigging over remote Coral Sea and Indian Ocean reef structure for dogtooth tuna — a reef-associated tuna, unlike its open-water cousins, that ambushes from deep drop-offs and current-swept pinnacles. Dropping a jig to the mark and working it back with short, violent strokes produces one of the most explosive first runs in reef fishing, with the fish sprinting straight back to structure the instant it eats.",
+    category: "reef",
+    targetSpeciesSlugs: ["dogtooth-tuna"],
+    primaryTechniqueSlug: "jigging",
+  },
+  {
     slug: "kingfish-jigging",
     name: "Kingfish Jigging",
     description:

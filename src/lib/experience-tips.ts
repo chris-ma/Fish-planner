@@ -1,4 +1,11 @@
 export const EXPERIENCE_TIPS: Record<string, string[]> = {
+  "dogtooth-jigging": [
+    "Drop the jig fast and get it to the bottom of the mark before the school moves off — dogtooth hold tight to structure and won't chase a slow-falling lure far.",
+    "Work the jig back in short, violent strokes rather than a smooth wind — the erratic action triggers reaction strikes from fish holding on the drop-off.",
+    "Lock the drag up and strike immediately on the take; a dogtooth's first move is straight back to the reef, and there's no time to wind down slack once it eats.",
+    "Fish the slack water either side of the tide change where possible — less current makes it easier to stay vertical over the mark and keep pressure on once hooked up.",
+    "Use heavy-duty assist hooks and check them after every hookup — dogtooth have genuinely sharp teeth (hence the name) and will shred a worn hook or split ring.",
+  ],
   "topwater-gt": [
     "Cast beyond breaking structure and work a large popper (150–230 g) with hard, sweeping rod strokes to create a loud splashing commotion — GTs respond to aggression, not subtlety.",
     "Keep your rod tip low and pointed at the lure during the retrieve; this gives maximum hook-up leverage when a GT crashes the surface at full speed.",

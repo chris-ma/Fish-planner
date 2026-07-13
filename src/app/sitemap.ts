@@ -5,6 +5,7 @@ import { listRegions } from "@/lib/queries/regions";
 import { getExperiences } from "@/lib/queries/experiences";
 import { getCharters } from "@/lib/queries/charters";
 import { CHALLENGES } from "@/lib/challenges";
+import { SPECIES_STORIES } from "@/lib/species-stories";
 
 export const dynamic = "force-dynamic";
 
@@ -75,6 +76,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.5,
   }));
 
+  const campaignEntries: MetadataRoute.Sitemap = SPECIES_STORIES.map((s) => ({
+    url: `${SITE_URL}/campaign/${s.speciesSlug}`,
+    lastModified: new Date(),
+    changeFrequency: "monthly",
+    priority: 0.6,
+  }));
+
   return [
     ...staticEntries,
     ...speciesEntries,
@@ -82,5 +90,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...experienceEntries,
     ...charterEntries,
     ...challengeEntries,
+    ...campaignEntries,
   ];
 }

@@ -40,6 +40,7 @@ const SPECIES_TECHNIQUES: Record<string, string[]> = {
   "mahi-mahi": ["trolling", "popping", "jigging"],
   "yellowtail-kingfish": ["popping", "stickbaiting", "jigging", "slow-pitch-jigging", "live-bait"],
   "giant-trevally": ["popping", "stickbaiting", "live-bait"],
+  "dogtooth-tuna": ["jigging", "popping", "trolling"],
   "coral-trout": ["soft-plastics", "live-bait", "bottom-bait"],
   "red-emperor": ["bottom-bait", "slow-pitch-jigging"],
   "nannygai": ["bottom-bait", "slow-pitch-jigging", "jigging"],

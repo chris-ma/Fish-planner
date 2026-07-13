@@ -12,6 +12,7 @@ import { getExperienceBySlug, getExperiences, getDestinationsForExperienceAllReg
 import type { Region, Destination } from "@/db/schema";
 import { EXPERIENCE_TIPS } from "@/lib/experience-tips";
 import { SPECIES_GEAR } from "@/lib/gear-specs";
+import { SPECIES_STORIES } from "@/lib/species-stories";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { breadcrumbSchema } from "@/lib/seo/breadcrumbs";
 
@@ -86,6 +87,7 @@ export default async function ExperiencePage({ params }: { params: Promise<{ slu
 
   const categoryBadge = CATEGORY_BADGE[exp.category] ?? "bg-slate-500/20 text-slate-300";
   const categoryImageUrl = CATEGORY_IMAGE[exp.category] ?? CATEGORY_IMAGE.offshore;
+  const story = SPECIES_STORIES.find((s) => s.experienceSlug === exp.slug);
 
   return (
     <div className="bg-[#0F2635] min-h-screen text-[#F2EDE2]">
@@ -117,11 +119,21 @@ export default async function ExperiencePage({ params }: { params: Promise<{ slu
           </span>
           <h1 className="text-4xl md:text-5xl font-bold mb-4">{exp.name}</h1>
           <p className="text-white/70 text-lg max-w-2xl mb-8">{exp.description}</p>
-          <Link href={`/trips/new?experience=${exp.slug}`}>
-            <button className="bg-[#FFC423] hover:bg-[#D9A61C] text-[#0B1D2A] font-semibold px-6 py-3 rounded-xl transition-colors">
-              Plan this trip →
-            </button>
-          </Link>
+          <div className="flex flex-wrap items-center gap-4">
+            <Link href={`/trips/new?experience=${exp.slug}`}>
+              <button className="bg-[#FFC423] hover:bg-[#D9A61C] text-[#0B1D2A] font-semibold px-6 py-3 rounded-xl transition-colors">
+                Plan this trip →
+              </button>
+            </Link>
+            {story && (
+              <Link
+                href={`/campaign/${story.speciesSlug}`}
+                className="text-[#FFC423] font-semibold text-sm hover:underline underline-offset-4"
+              >
+                Read the story →
+              </Link>
+            )}
+          </div>
         </div>
       </div>
 
